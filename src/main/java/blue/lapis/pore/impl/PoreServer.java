@@ -117,7 +117,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     private final Messenger messenger = new StandardMessenger();
     private final Warning.WarningState warnState = Warning.WarningState.DEFAULT;
     private final HelpMap helpMap = new PoreHelpMap();
-    private final File pluginsDir = new File(".", "bukkit-plugins");
+    private final File pluginsDir = new File(".", "plugins");
     //TODO: use actual server directory, currently set to working directory
 
     private final BukkitScheduler scheduler = new PoreBukkitScheduler();
