@@ -41,6 +41,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
@@ -54,6 +55,7 @@ public final class PoreBlockPlaceEvent extends BlockPlaceEvent implements PoreEv
     private final Player player;
     private final Transaction<BlockSnapshot> transaction;
 
+    @SuppressWarnings("deprecation") //TODO fix this
     public PoreBlockPlaceEvent(ChangeBlockEvent.Place handle, Player player, Transaction<BlockSnapshot> transaction) {
         super(null, null, null, null, null, false);
         this.handle = checkNotNull(handle, "handle");
@@ -93,7 +95,7 @@ public final class PoreBlockPlaceEvent extends BlockPlaceEvent implements PoreEv
 
     @Override
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(this.player.getItemInHand().orElse(null));
+        return ItemStackConverter.of(this.player.getItemInHand(null).orElse(null)); //TODO : Better Hand Value
     }
 
     @Override
@@ -121,6 +123,11 @@ public final class PoreBlockPlaceEvent extends BlockPlaceEvent implements PoreEv
         return toStringHelper()
                 .add("transaction", this.transaction)
                 .toString();
+    }
+
+    @Override
+    public EquipmentSlot getHand() {
+        throw new NotImplementedException("TODO"); // TODO
     }
 
     @RegisterEvent

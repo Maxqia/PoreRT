@@ -153,4 +153,52 @@ public class PoreEntityEquipment implements EntityEquipment {
     public Entity getHolder() {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public ItemStack getItemInMainHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInMainHand(ItemStack item) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public ItemStack getItemInOffHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInOffHand(ItemStack item) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public float getItemInMainHandDropChance() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInMainHandDropChance(float chance) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public float getItemInOffHandDropChance() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInOffHandDropChance(float chance) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
 }

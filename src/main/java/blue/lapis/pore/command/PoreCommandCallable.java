@@ -37,6 +37,8 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +62,7 @@ public class PoreCommandCallable extends PoreWrapper<Command> implements Command
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
         // TODO: Label
         return getHandle().tabComplete(PoreCommandSender.of(source), getHandle().getLabel(),
                 StringUtils.split(arguments));
@@ -72,20 +74,17 @@ public class PoreCommandCallable extends PoreWrapper<Command> implements Command
     }
 
     @Override
-    public Optional<? extends Text> getShortDescription(CommandSource source) {
+    public Optional<Text> getShortDescription(CommandSource source) {
         return getHelp(source);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public Optional<? extends Text> getHelp(CommandSource source) {
+    public Optional<Text> getHelp(CommandSource source) {
         return Optional.of(PoreText.convert(getHandle().getDescription()));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Text getUsage(CommandSource source) {
         return PoreText.convert(getHandle().getUsage());
     }
-
 }

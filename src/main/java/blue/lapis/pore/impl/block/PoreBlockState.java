@@ -75,6 +75,7 @@ public class PoreBlockState extends PoreWrapper<BlockSnapshot> implements org.bu
     }
 
     @Override
+    @SuppressWarnings("deprecation") //TODO: Find non-deprecated way to do this
     public MaterialData getData() {
         return new MaterialData(getBlock().getData());
     }
@@ -171,13 +172,12 @@ public class PoreBlockState extends PoreWrapper<BlockSnapshot> implements org.bu
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "deprecation"})
-    public byte getRawData() {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public byte getRawData() { //TODO: fix rawtypes warning
         return BlockDataConverter.INSTANCE.getDataValue((Collection) getHandle().getManipulators(),
                 getHandle().getExtendedState().getType());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setRawData(byte data) {
         throw new NotImplementedException("TODO");

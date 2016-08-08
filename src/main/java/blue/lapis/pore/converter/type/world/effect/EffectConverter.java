@@ -35,6 +35,7 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.effect.sound.SoundTypes;
 
+@SuppressWarnings("deprecation") //TODO fix this
 public final class EffectConverter {
 
     private EffectConverter() {
@@ -44,29 +45,29 @@ public final class EffectConverter {
         if (effect.getType() == Effect.Type.SOUND) {
             switch (effect) {
                 case CLICK2:
-                    return SoundTypes.WOOD_CLICK;
+                    return SoundTypes.BLOCK_WOOD_BUTTON_CLICK_ON; //TODO check if it's the right sound
                 case CLICK1:
-                    return SoundTypes.CLICK;
+                    return SoundTypes.BLOCK_STONE_BUTTON_CLICK_ON;
                 case BOW_FIRE:
-                    return SoundTypes.SHOOT_ARROW;
+                    return SoundTypes.ENTITY_ARROW_SHOOT;
                 case DOOR_TOGGLE:
-                    return Math.random() >= 0.5 ? SoundTypes.DOOR_OPEN : SoundTypes.DOOR_CLOSE;
+                    return Math.random() >= 0.5 ? SoundTypes.BLOCK_WOODEN_DOOR_OPEN : SoundTypes.BLOCK_WOODEN_DOOR_CLOSE;
                 case EXTINGUISH:
-                    return SoundTypes.FIZZ; //TODO: verify this is the correct sound
+                    return SoundTypes.BLOCK_FIRE_EXTINGUISH;
                 case RECORD_PLAY:
                     throw new NotImplementedException("TODO");
                 case GHAST_SHRIEK:
-                    return SoundTypes.GHAST_SCREAM;
+                    return SoundTypes.ENTITY_GHAST_SCREAM;
                 case GHAST_SHOOT:
-                    return SoundTypes.GHAST_FIREBALL;
+                    return SoundTypes.ENTITY_GHAST_SHOOT;
                 case BLAZE_SHOOT:
-                    return SoundTypes.BLAZE_BREATH;
+                    return SoundTypes.ENTITY_BLAZE_SHOOT;
                 case ZOMBIE_CHEW_WOODEN_DOOR:
-                    return SoundTypes.ZOMBIE_WOOD;
+                    return SoundTypes.ENTITY_ZOMBIE_ATTACK_DOOR_WOOD;
                 case ZOMBIE_CHEW_IRON_DOOR:
-                    return SoundTypes.ZOMBIE_METAL;
+                    return SoundTypes.ENTITY_ZOMBIE_ATTACK_IRON_DOOR;
                 case ZOMBIE_DESTROY_DOOR:
-                    return SoundTypes.ZOMBIE_WOODBREAK;
+                    return SoundTypes.ENTITY_ZOMBIE_BREAK_DOOR_WOOD;
                 case STEP_SOUND:
                     throw new NotImplementedException("TODO"); //TODO: determine generic type of block
                 default:
@@ -88,7 +89,6 @@ public final class EffectConverter {
         return null;
     }
 
-    @SuppressWarnings("deprecation")
     public static <T> int getDataValue(Effect effect, T data) {
         switch (effect) {
             case POTION_BREAK:

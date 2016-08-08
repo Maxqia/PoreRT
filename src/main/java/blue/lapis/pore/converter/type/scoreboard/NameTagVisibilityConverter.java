@@ -32,6 +32,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 import org.spongepowered.api.scoreboard.Visibilities;
 import org.spongepowered.api.scoreboard.Visibility;
 
+@SuppressWarnings("deprecation")
 public final class NameTagVisibilityConverter {
 
     private NameTagVisibilityConverter() {

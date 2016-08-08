@@ -27,6 +27,7 @@ package blue.lapis.pore.impl.entity;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.entity.living.golem.SnowGolem;
 
@@ -48,5 +49,17 @@ public class PoreSnowman extends PoreGolem implements org.bukkit.entity.Snowman 
     @Override
     public EntityType getType() {
         return EntityType.SNOWMAN;
+    }
+
+    @Override
+    public boolean isDerp() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setDerp(boolean derpMode) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

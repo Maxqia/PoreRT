@@ -105,7 +105,6 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
         return PoreObjective.of(getHandle().getObjective(DisplaySlotConverter.of(slot)).orElse(null));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Set<Score> getScores(OfflinePlayer player) throws IllegalArgumentException {
         checkArgument(player != null, "Offline player must not be null");
@@ -113,7 +112,6 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Set<Score> getScores(String entry) throws IllegalArgumentException {
         checkArgument(entry != null, "Entry must not be null");
         return Sets.newHashSet(Collections2.transform(
@@ -122,7 +120,6 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
         ));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void resetScores(OfflinePlayer player) throws IllegalArgumentException {
         checkArgument(player != null, "Offline player must not be null");
@@ -130,20 +127,17 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void resetScores(String entry) throws IllegalArgumentException {
         checkArgument(entry != null, "Entry must not be null");
         getHandle().removeScores(PoreText.convert(entry));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Team getPlayerTeam(OfflinePlayer player) throws IllegalArgumentException {
         checkArgument(player != null, "Offline player must not be null");
         return PoreTeam.of(getHandle().getMemberTeam(Text.of(player.getName())).orElse(null));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Team getEntryTeam(String entry) throws IllegalArgumentException {
         for (org.spongepowered.api.scoreboard.Team team : getHandle().getTeams()) {

@@ -51,6 +51,10 @@ import org.bukkit.UnsafeValues;
 import org.bukkit.Warning;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -107,6 +111,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("deprecation") //TODO : fix this
 public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implements Server {
 
     private final Game game;
@@ -223,7 +228,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return PoreVersion.API_VERSION + '@' + game.getPlatform().getApi().getVersion();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Player[] _INVALID_getOnlinePlayers() {
         Collection<? extends Player> online = getOnlinePlayers();
@@ -348,7 +352,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Player getPlayer(String name) {
         Preconditions.checkNotNull(name, "name");
@@ -372,14 +375,12 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return result != null ? PorePlayer.of(result) : null;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Player getPlayerExact(String name) {
         Optional<org.spongepowered.api.entity.living.player.Player> player = getHandle().getPlayer(name);
         return player.isPresent() ? PorePlayer.of(player.get()) : null;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<Player> matchPlayer(String name) {
         Preconditions.checkNotNull(name, "name");
@@ -458,7 +459,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return world.isPresent() ? PoreWorld.of(world.get()) : null;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public MapView getMap(short id) {
         throw new NotImplementedException("TODO");
@@ -563,7 +563,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean useExactLoginLocation() {
         throw new NotImplementedException("TODO");
@@ -590,7 +589,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return count;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public OfflinePlayer getOfflinePlayer(String name) {
         throw new NotImplementedException("TODO");
@@ -732,7 +730,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String getMotd() {
         return PoreText.convert(getHandle().getMotd());
     }
@@ -789,7 +786,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Deprecated
     @Override
-    @SuppressWarnings("deprecation")
     public UnsafeValues getUnsafe() {
         return PoreUnsafeValues.INSTANCE;
     }
@@ -812,5 +808,11 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         }
 
         return result;
+    }
+
+    @Override
+    public BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

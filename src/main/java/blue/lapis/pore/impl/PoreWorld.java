@@ -59,6 +59,7 @@ import org.bukkit.Difficulty;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.TreeType;
 import org.bukkit.WorldBorder;
@@ -66,7 +67,6 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -136,7 +136,6 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
         return getBlockAt(x, y, z).getTypeId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int getBlockTypeIdAt(Location location) {
         return getBlockTypeIdAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -243,6 +242,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean unloadChunk(int x, int z, boolean save, boolean safe) {
         return getChunkAt(x, z).unload(save, safe);
     }
@@ -263,7 +263,6 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean refreshChunk(int x, int z) {
         throw new NotImplementedException("TODO");
@@ -272,13 +271,13 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     @Override
     public Item dropItem(Location location, ItemStack item) {
         //noinspection ConstantConditions
-        Optional<org.spongepowered.api.entity.Entity> created =
+        org.spongepowered.api.entity.Entity created =
                 getHandle().createEntity(EntityTypes.ITEM, VectorConverter.create3d(location));
-        if (!created.isPresent()) {
+        if (created == null) {
             return null;
         }
 
-        org.spongepowered.api.entity.Item drop = (org.spongepowered.api.entity.Item) created.get();
+        //org.spongepowered.api.entity.Item drop = (org.spongepowered.api.entity.Item) created.get();
         //TODO: drop.setPickupDelay(10);
         //TODO: set ItemStack
         throw new NotImplementedException("TODO");
@@ -321,29 +320,13 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     @Override
     public Entity spawnEntity(Location loc, EntityType type) {
         org.spongepowered.api.entity.Entity entity = getHandle().createEntity(EntityConverter.of(type),
-                VectorConverter.create3d(loc)).orElse(null);
+                VectorConverter.create3d(loc));
         if (entity == null) {
             return null;
         }
 
         getHandle().spawnEntity(entity, Cause.of(NamedCause.source(Pore.getPlugin())));
         return PoreEntity.of(entity);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public LivingEntity spawnCreature(Location loc, EntityType type) {
-        Entity spawned = spawnEntity(loc, type);
-        if (!(spawned instanceof LivingEntity)) {
-            throw new IllegalArgumentException("Call to spawnCreature non-living entity type");
-        }
-        return (LivingEntity) spawned;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public LivingEntity spawnCreature(Location loc, CreatureType type) {
-        return spawnCreature(loc, type.toEntityType());
     }
 
     @Override
@@ -388,7 +371,6 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Entity> getEntitiesByClasses(final Class<?>... classes) {
         return Collections2.filter(getEntities(), entity -> {
             for (Class<?> clazz : classes) {
@@ -522,8 +504,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     @Override
     public boolean createExplosion(Location loc, float power) {
         Explosion explosion = Explosion.builder()
-                .world(((PoreWorld) loc.getWorld()).getHandle())
-                .origin(LocationConverter.toVector3d(loc))
+                .location(LocationConverter.of(loc))
                 .radius(power)
                 .build();
 
@@ -543,7 +524,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public long getSeed() {
-        return getHandle().getCreationSettings().getSeed();
+        return getHandle().getProperties().getSeed();
     }
 
     @Override
@@ -584,7 +565,6 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public FallingBlock spawnFallingBlock(Location location, Material material, byte data)
             throws IllegalArgumentException {
@@ -727,7 +707,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public WorldType getWorldType() {
-        return GeneratorTypeConverter.of(getHandle().getCreationSettings().getGeneratorType());
+        return GeneratorTypeConverter.of(getHandle().getProperties().getGeneratorType());
     }
 
     @Override
@@ -858,6 +838,99 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public Set<String> getListeningPluginChannels() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T extends Arrow> T spawnArrow(Location location, Vector direction, float speed, float spread,
+            Class<T> clazz) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, double extra) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, double extra) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, double extra, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, double extra, T data) {
+        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 public class PorePermissible extends PoreWrapper<Subject> implements Permissible {
 
     private List<PermissionAttachment> attachments = new ArrayList<>();
-    private List<String> attachedNodes = new ArrayList<>();
 
     protected PorePermissible(Subject handle) {
         super(handle);

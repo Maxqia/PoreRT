@@ -72,7 +72,6 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
         super(handle);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public byte getData() {
         // TODO: This is broken
@@ -80,13 +79,11 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
         return 0;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setData(byte data) {
         setData(data, true);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setData(byte data, boolean applyPhysics) {
         BlockDataConverter.INSTANCE.setDataValue(getHandle(), data);
@@ -115,7 +112,7 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
 
     @Override
     public void setType(Material type) {
-        getHandle().setBlockType(MaterialConverter.asBlock(type));
+        getHandle().setBlockType(MaterialConverter.asBlock(type), null); //TODO : better cause
     }
 
     @Override
@@ -195,7 +192,6 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean setTypeId(int type) {
         return this.setTypeId(type, true);
@@ -206,11 +202,10 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
     public boolean setTypeId(int type, boolean applyPhysics) {
         //TODO: applyPhysics
         BlockType blockType = MaterialConverter.asBlock(Material.getMaterial(type));
-        getHandle().setBlockType(blockType);
+        getHandle().setBlockType(blockType, null); // TODO: better cause
         return getHandle().getBlockType().equals(blockType);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean setTypeIdAndData(int type, byte data, boolean applyPhysics) {
         this.setData(data, applyPhysics);

@@ -215,7 +215,6 @@ import org.spongepowered.api.entity.living.monster.Zombie;
 import org.spongepowered.api.entity.living.monster.ZombiePigman;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.entity.projectile.Arrow;
 import org.spongepowered.api.entity.projectile.Egg;
 import org.spongepowered.api.entity.projectile.EnderPearl;
 import org.spongepowered.api.entity.projectile.EyeOfEnder;
@@ -225,8 +224,9 @@ import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.entity.projectile.ThrownExpBottle;
 import org.spongepowered.api.entity.projectile.ThrownPotion;
-import org.spongepowered.api.entity.projectile.explosive.ExplosiveProjectile;
+import org.spongepowered.api.entity.projectile.arrow.Arrow;
 import org.spongepowered.api.entity.projectile.explosive.WitherSkull;
+import org.spongepowered.api.entity.projectile.explosive.fireball.Fireball;
 import org.spongepowered.api.entity.projectile.explosive.fireball.LargeFireball;
 import org.spongepowered.api.entity.projectile.explosive.fireball.SmallFireball;
 import org.spongepowered.api.entity.vehicle.Boat;
@@ -329,7 +329,7 @@ public final class WrapperConverter {
                     .register(Arrow.class, PoreArrow.class)
                     .register(Egg.class, PoreEgg.class)
                     .register(EnderPearl.class, PoreEnderPearl.class)
-                    .register(ExplosiveProjectile.class, PoreFireball.class)
+                    .register(Fireball.class, PoreFireball.class)
                         .register(LargeFireball.class, PoreLargeFireball.class)
                         .register(SmallFireball.class, PoreSmallFireball.class)
                         .register(WitherSkull.class, PoreWitherSkull.class)
@@ -397,7 +397,7 @@ public final class WrapperConverter {
         return converter.get(type, handle);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" }) //TODO fix this
     public static <S, P extends PoreWrapper<?>> Function<S, P> getConverter() {
         return (Function) converter;
     }

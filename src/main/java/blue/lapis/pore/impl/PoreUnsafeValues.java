@@ -45,10 +45,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Deprecated
-@SuppressWarnings("deprecation")
 public class PoreUnsafeValues implements UnsafeValues {
 
-    @SuppressWarnings("deprecation")
     protected static final UnsafeValues INSTANCE = new PoreUnsafeValues();
 
     @Override

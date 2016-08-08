@@ -27,7 +27,9 @@ package blue.lapis.pore.impl.inventory;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.MerchantInventory;
+import org.bukkit.inventory.MerchantRecipe;
 import org.spongepowered.api.item.inventory.Inventory;
 
 public class PoreMerchantInventory extends PoreInventory implements MerchantInventory {
@@ -38,6 +40,18 @@ public class PoreMerchantInventory extends PoreInventory implements MerchantInve
 
     protected PoreMerchantInventory(Inventory handle) {
         super(handle);
+    }
+
+    @Override
+    public int getSelectedRecipeIndex() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public MerchantRecipe getSelectedRecipe() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 
 }

@@ -27,6 +27,7 @@ package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -75,6 +76,18 @@ public class PorePotionMeta extends PoreItemMeta implements PotionMeta {
 
     @Override
     public PotionMeta clone() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setBasePotionData(PotionData data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public PotionData getBasePotionData() {
+        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 

@@ -108,4 +108,22 @@ public class PoreBookMeta extends PoreItemMeta implements BookMeta {
     public BookMeta clone() {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public boolean hasGeneration() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Generation getGeneration() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setGeneration(Generation generation) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
 }

@@ -61,13 +61,11 @@ public class PoreCommandSender extends PorePermissible implements CommandSender 
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String message) {
         getHandle().sendMessage(PoreText.convert(message));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String[] messages) {
         Text[] texts = new Text[messages.length];
         for (int i = 0; i < messages.length; i++) {

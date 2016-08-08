@@ -41,7 +41,6 @@ import org.spongepowered.api.event.message.MessageChannelEvent;
 import java.util.Set;
 
 @Deprecated
-@SuppressWarnings("deprecation")
 @RegisterEvent
 public final class PorePlayerChatEvent extends PlayerChatEvent implements PoreEvent<MessageChannelEvent.Chat> {
 

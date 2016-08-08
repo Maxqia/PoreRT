@@ -57,12 +57,12 @@ public class PoreTNTPrimed extends PoreEntity implements TNTPrimed {
 
     @Override
     public int getFuseTicks() {
-        return getHandle().getFuseData().getFuseDuration().get();
+        return getHandle().getFuseData().fuseDuration().get();
     }
 
     @Override
     public void setFuseTicks(int fuseTicks) {
-        MutableBoundedValue<Integer> value = getHandle().getFuseData().getFuseDuration();
+        MutableBoundedValue<Integer> value = (MutableBoundedValue<Integer>) getHandle().getFuseData().fuseDuration();
         Preconditions.checkArgument(fuseTicks >= value.getMinValue() && fuseTicks <= value.getMaxValue(),
                 "Value for fuse duration is outside acceptable range (" + value.getMinValue() + ", "
                         + value.getMaxValue() + ")");

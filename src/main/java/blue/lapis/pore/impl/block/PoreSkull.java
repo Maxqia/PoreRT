@@ -28,6 +28,7 @@ package blue.lapis.pore.impl.block;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockFace;
 import org.spongepowered.api.block.tileentity.Skull;
@@ -79,6 +80,18 @@ public class PoreSkull extends PoreBlockState implements org.bukkit.block.Skull 
 
     @Override
     public void setSkullType(SkullType skullType) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public OfflinePlayer getOwningPlayer() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setOwningPlayer(OfflinePlayer player) {
+        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

@@ -59,12 +59,12 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
 
     @Override
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(getHandle().getItemInHand().orElse(null));
+        return ItemStackConverter.of(getHandle().getItemInHand(null).orElse(null)); //TODO: Better hand value
     }
 
     @Override
     public void setItemInHand(ItemStack item) {
-        getHandle().setItemInHand(ItemStackConverter.of(item));
+        getHandle().setItemInHand(null, ItemStackConverter.of(item));
     }
 
     @Override
@@ -167,21 +167,26 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
         getHandle().getBodyPartRotationalData().rightLegDirection().set(EulerAngleConverter.of(pose));
     }
 
+    //TODO fix deprecation
+    @SuppressWarnings("deprecation")
     @Override
     public boolean hasBasePlate() {
         return getHandle().hasBasePlate();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setBasePlate(boolean basePlate) {
         getHandle().setHasBasePlate(basePlate);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean hasGravity() {
         return this.getHandle().hasGravity();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setGravity(boolean gravity) {
         this.getHandle().setGravity(gravity);
@@ -197,21 +202,26 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
         getHandle().getOrCreate(INVISIBILITY_DATA);
     }
 
+    //TODO fix deprecation
+    @SuppressWarnings("deprecation")
     @Override
     public boolean hasArms() {
         return getHandle().doesShowArms();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setArms(boolean arms) {
         this.getHandle().setShowArms(arms);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isSmall() {
         return getHandle().isSmall();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setSmall(boolean small) {
         getHandle().setSmall(small);

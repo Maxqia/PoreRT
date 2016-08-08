@@ -77,19 +77,16 @@ public final class PorePlayerCommandPreprocessEvent extends PlayerCommandPreproc
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String getFormat() {
         throw new NotImplementedException("TODO"); // TODO
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void setFormat(String format) {
         throw new NotImplementedException("TODO"); // TODO
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Set<org.bukkit.entity.Player> getRecipients() {
         return ImmutableSet.of();
     }

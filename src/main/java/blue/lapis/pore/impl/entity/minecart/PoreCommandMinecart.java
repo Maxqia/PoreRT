@@ -83,13 +83,11 @@ public class PoreCommandMinecart extends PoreMinecart implements CommandMinecart
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String message) {
         getHandle().sendMessage(PoreText.convert(message));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String[] messages) {
         Text[] texts = new Text[messages.length];
         Arrays.stream(messages).map(PoreText::convert).collect(Collectors.toList()).toArray(texts);

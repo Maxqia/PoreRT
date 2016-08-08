@@ -33,6 +33,7 @@ import blue.lapis.pore.impl.entity.PorePlayer;
 
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -189,5 +190,41 @@ public class PorePlayerInventory extends PoreInventory implements PlayerInventor
             }
         }
         return null;
+    }
+
+    @Override
+    public ItemStack[] getExtraContents() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setExtraContents(ItemStack[] items) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public ItemStack getItemInMainHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInMainHand(ItemStack item) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public ItemStack getItemInOffHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setItemInOffHand(ItemStack item) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

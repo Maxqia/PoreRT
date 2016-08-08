@@ -27,6 +27,8 @@ package blue.lapis.pore.impl.entity;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.entity.EnderCrystal;
 
@@ -48,6 +50,30 @@ public class PoreEnderCrystal extends PoreEntity implements org.bukkit.entity.En
     @Override
     public EntityType getType() {
         return EntityType.ENDER_CRYSTAL;
+    }
+
+    @Override
+    public boolean isShowingBottom() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setShowingBottom(boolean showing) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Location getBeamTarget() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setBeamTarget(Location location) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 
 }

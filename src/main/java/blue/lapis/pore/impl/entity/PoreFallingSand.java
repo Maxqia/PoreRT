@@ -61,7 +61,6 @@ public class PoreFallingSand extends PoreEntity implements FallingSand {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public int getBlockId() {
         return getMaterial().getId();
     }

@@ -57,14 +57,12 @@ public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String getDisplayName() throws IllegalStateException {
         checkState();
         return PoreText.convert(getHandle().getDisplayName());
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void setDisplayName(String displayName) throws IllegalStateException, IllegalArgumentException {
         checkState();
         checkArgument(displayName != null, "Display name must not be null");
@@ -114,7 +112,6 @@ public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Score getScore(OfflinePlayer player) throws IllegalArgumentException, IllegalStateException {
         checkState();
@@ -123,7 +120,6 @@ public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.
         return getScore(player.getName());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Score getScore(String entry) throws IllegalArgumentException, IllegalStateException {
         checkState();

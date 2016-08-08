@@ -78,6 +78,7 @@ public class AbstractDataValue<T extends DataManipulator<T, ?>, V> {
     }
 
     @Override
+    @SuppressWarnings("rawtypes") //TODO: Fix this
     public boolean equals(Object otherDataValue) {
         return otherDataValue instanceof AbstractDataValue
                 && nullSafeEquals(getDataClass(), ((AbstractDataValue) otherDataValue).getDataClass())

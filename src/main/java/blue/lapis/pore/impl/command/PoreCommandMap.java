@@ -27,7 +27,6 @@ package blue.lapis.pore.impl.command;
 
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.command.PoreCommandCallable;
-import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -44,7 +43,6 @@ import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
 
 import java.util.Collection;
 import java.util.List;
@@ -129,7 +127,7 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine) {
-        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine);
+        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, null); // TODO: Better target position?
     }
 
     @Override

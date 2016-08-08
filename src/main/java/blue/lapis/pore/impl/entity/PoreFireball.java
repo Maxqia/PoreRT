@@ -31,21 +31,23 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
-import org.spongepowered.api.entity.projectile.explosive.ExplosiveProjectile;
+import org.spongepowered.api.entity.projectile.DamagingProjectile;
+import org.spongepowered.api.entity.projectile.explosive.fireball.Fireball;
+import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.EXPLOSIVE_RADIUS_DATA;
 
 public class PoreFireball extends PoreProjectile implements org.bukkit.entity.Fireball {
 
-    public static PoreFireball of(ExplosiveProjectile handle) {
+    public static PoreFireball of(DamagingProjectile handle) {
         return WrapperConverter.of(PoreFireball.class, handle);
     }
 
-    protected PoreFireball(ExplosiveProjectile handle) {
+    protected PoreFireball(Fireball handle) {
         super(handle);
     }
 
     @Override
-    public ExplosiveProjectile getHandle() {
-        return (ExplosiveProjectile) super.getHandle();
+    public DamagingProjectile getHandle() {
+        return (Fireball) super.getHandle();
     }
 
     @Override
@@ -66,12 +68,12 @@ public class PoreFireball extends PoreProjectile implements org.bukkit.entity.Fi
 
     @Override
     public float getYield() { // TODO: ???
-        return getHandle().getExplosiveRadiusData().explosiveRadius().get();
+        return getHandle().get(EXPLOSIVE_RADIUS_DATA).get().explosionRadius().get().get();
     }
 
     @Override
     public void setYield(float yield) {
-        getHandle().offer(getHandle().getExplosiveRadiusData().explosiveRadius().set((int) yield));
+        getHandle().get(EXPLOSIVE_RADIUS_DATA).get().explosionRadius().setTo((int) yield);
     }
 
     @Override

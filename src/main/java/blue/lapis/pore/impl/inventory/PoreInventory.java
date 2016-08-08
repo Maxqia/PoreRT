@@ -32,6 +32,9 @@ import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
@@ -449,6 +452,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
     }
 
     @Override
+    @SuppressWarnings("rawtypes") //TODO fix this
     public InventoryHolder getHolder() {
         if (this.getHandle() instanceof CarriedInventory) {
             Optional<?> carrier = ((CarriedInventory) this.getHandle()).getCarrier();
@@ -488,5 +492,23 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
             }
         }
         return null;
+    }
+
+    @Override
+    public ItemStack[] getStorageContents() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Location getLocation() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

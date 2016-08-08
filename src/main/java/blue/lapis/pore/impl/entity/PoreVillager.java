@@ -29,7 +29,13 @@ import blue.lapis.pore.converter.type.entity.ProfessionConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import com.google.common.collect.Iterables;
+import java.util.List;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.MerchantRecipe;
 import org.spongepowered.api.data.type.Career;
 import org.spongepowered.api.data.type.Careers;
 import org.spongepowered.api.entity.living.Villager;
@@ -64,5 +70,65 @@ public class PoreVillager extends PoreAgeable implements org.bukkit.entity.Villa
         Career career = Iterables.getFirst(ProfessionConverter.of(profession).getCareers(), Careers.FARMER);
         assert career != null;
         getHandle().getCareerData().type().set(career);
+    }
+
+    @Override
+    public List<MerchantRecipe> getRecipes() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setRecipes(List<MerchantRecipe> recipes) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public MerchantRecipe getRecipe(int i) throws IndexOutOfBoundsException {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setRecipe(int i, MerchantRecipe recipe) throws IndexOutOfBoundsException {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public int getRecipeCount() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Inventory getInventory() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isTrading() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public HumanEntity getTrader() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public int getRiches() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setRiches(int riches) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

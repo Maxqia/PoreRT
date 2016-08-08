@@ -40,14 +40,13 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -130,6 +129,7 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static Set<Material> toMaterial(Set<Byte> uglyBytes) {
         return uglyBytes != null ? uglyBytes.stream().map(Material::getMaterial).collect(Collectors.toSet()) : null;
     }
@@ -146,7 +146,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return BlockRay.from(getHandle()).filter(new IncludeTargetFilter(filter)).blockLimit(maxDistance);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
         return getLineOfSight(toMaterial(transparent), maxDistance);
@@ -161,7 +160,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return blocks;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
         return getTargetBlock(toMaterial(transparent), maxDistance);
@@ -172,7 +170,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return PoreBlock.of(getBlockRay(transparent, maxDistance).end().map(BlockRayHit::getLocation).orElse(null));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
         return getLastTwoTargetBlocks(toMaterial(transparent), maxDistance);
@@ -194,47 +191,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         } else {
             return ImmutableList.of(PoreBlock.of(last.getLocation()), PoreBlock.of(current.getLocation()));
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public Egg throwEgg() {
-        if (getHandle() instanceof ProjectileSource) {
-            return PoreEgg.of(
-                    ((ProjectileSource) getHandle()).launchProjectile(
-                            org.spongepowered.api.entity.projectile.Egg.class
-                    ).orElse(null)
-            );
-        }
-        // CB never returns null here so we shouldn't either
-        // this will prevent ambiguity if something breaks (as opposed to if we let a plugin throw an NPE)
-        throw new UnsupportedOperationException("Not a ProjectileSource");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public Snowball throwSnowball() {
-        if (getHandle() instanceof ProjectileSource) {
-            return PoreSnowball.of(
-                    ((ProjectileSource) getHandle()).launchProjectile(
-                            org.spongepowered.api.entity.projectile.Snowball.class
-                    ).orElse(null)
-            );
-        }
-        throw new UnsupportedOperationException("Not a ProjectileSource");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public Arrow shootArrow() {
-        if (getHandle() instanceof ProjectileSource) {
-            return PoreArrow.of(
-                    ((ProjectileSource) getHandle()).launchProjectile(
-                            org.spongepowered.api.entity.projectile.Arrow.class
-                    ).orElse(null)
-            );
-        }
-        throw new UnsupportedOperationException("Not a ProjectileSource");
     }
 
     @Override
@@ -272,7 +228,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return getHandle().get(Keys.LAST_DAMAGE).get().orElse(0.0);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int _INVALID_getLastDamage() {
         return (int) this.getLastDamage();
@@ -283,7 +238,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         getHandle().offer(Keys.LAST_DAMAGE, Optional.of(damage));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_setLastDamage(int damage) {
         this.setLastDamage(damage);
@@ -432,13 +386,11 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_damage(int amount) {
         damage((double) amount);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_damage(int amount, Entity source) {
         damage((double) amount, source);
@@ -449,7 +401,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return getHandle().get(Keys.HEALTH).orElse(0.0);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int _INVALID_getHealth() {
         return (int) getHealth();
@@ -460,7 +411,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         getHandle().offer(Keys.HEALTH, health);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_setHealth(int health) {
         setHealth((double) health);
@@ -471,7 +421,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         return getHandle().get(Keys.MAX_HEALTH).orElse(0.0);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int _INVALID_getMaxHealth() {
         return (int) getMaxHealth();
@@ -482,7 +431,6 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
         getHandle().offer(Keys.MAX_HEALTH, health);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_setMaxHealth(int health) {
         setMaxHealth((double) health);
@@ -504,5 +452,47 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
             return ProjectileUtil.launchProjectile((ProjectileSource) getHandle(), projectile, velocity).orNull();
         }
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AttributeInstance getAttribute(Attribute attribute) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isGliding() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setGliding(boolean gliding) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setAI(boolean ai) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean hasAI() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setCollidable(boolean collidable) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isCollidable() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

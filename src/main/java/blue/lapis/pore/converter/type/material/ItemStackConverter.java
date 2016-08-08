@@ -46,7 +46,6 @@ public final class ItemStackConverter {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static org.spongepowered.api.item.inventory.ItemStack of(org.bukkit.inventory.ItemStack stack) {
         ItemType type = MaterialConverter.asItem(stack.getType());
         if (type == null) {

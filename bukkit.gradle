@@ -1,6 +1,6 @@
 defaultTasks 'clean', 'build'
 
-version = '1.8.8-R0.1-SNAPSHOT' // TODO: Keep up to date
+version = '1.10.2-R0.1-SNAPSHOT' // TODO: Keep up to date
 
 // Project dependencies
 dependencies {

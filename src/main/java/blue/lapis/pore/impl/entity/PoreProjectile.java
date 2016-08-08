@@ -50,7 +50,6 @@ public class PoreProjectile extends PoreEntity implements org.bukkit.entity.Proj
         return (Projectile) super.getHandle();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public LivingEntity _INVALID_getShooter() {
         ProjectileSource shooter = getShooter();
@@ -72,7 +71,6 @@ public class PoreProjectile extends PoreEntity implements org.bukkit.entity.Proj
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void _INVALID_setShooter(LivingEntity shooter) {
         Living spongeShooter = ((PoreLivingEntity) shooter).getHandle();

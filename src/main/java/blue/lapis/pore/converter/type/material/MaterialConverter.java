@@ -303,7 +303,7 @@ public final class MaterialConverter {
                     .add(Material.WORKBENCH, ItemTypes.CRAFTING_TABLE)
                     .add(Material.SOIL, ItemTypes.FARMLAND)
                     .add(Material.FURNACE, ItemTypes.FURNACE)
-                    .add(Material.BURNING_FURNACE, ItemTypes.LIT_FURNACE)
+                    //.add(Material.BURNING_FURNACE, ItemTypes.LIT_FURNACE) //TODO type doesn't exist anymore
                     .add(Material.LADDER, ItemTypes.LADDER)
                     .add(Material.RAILS, ItemTypes.RAIL)
                     .add(Material.COBBLESTONE_STAIRS, ItemTypes.STONE_STAIRS)

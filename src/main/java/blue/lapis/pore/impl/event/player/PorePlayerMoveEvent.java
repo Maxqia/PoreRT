@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package blue.lapis.pore.impl.event.player;
+/*package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,20 +36,20 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 
 @RegisterEvent
 public final class PorePlayerMoveEvent extends PlayerMoveEvent
-        implements PoreEvent<DisplaceEntityEvent.Move.TargetPlayer> {
+        implements PoreEvent<MoveEntityEvent> {
 
-    private final DisplaceEntityEvent.Move.TargetPlayer handle;
+    private final MoveEntityEvent handle;
 
-    public PorePlayerMoveEvent(DisplaceEntityEvent.Move.TargetPlayer handle) {
+    public PorePlayerMoveEvent(MoveEntityEvent handle) {
         super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public DisplaceEntityEvent.Move.TargetPlayer getHandle() {
+    public MoveEntityEvent getHandle() {
         return handle;
     }
 
@@ -92,5 +92,4 @@ public final class PorePlayerMoveEvent extends PlayerMoveEvent
     public String toString() {
         return toStringHelper().toString();
     }
-
-}
+}*/

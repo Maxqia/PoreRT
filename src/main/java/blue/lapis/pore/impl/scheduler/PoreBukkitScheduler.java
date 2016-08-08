@@ -177,41 +177,35 @@ public class PoreBukkitScheduler implements BukkitScheduler {
                 .submit(Pore.getPlugin(plugin)), id.incrementAndGet()));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTask(Plugin plugin, BukkitRunnable task) throws IllegalArgumentException {
         return runTask(plugin, (Runnable) task);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTaskAsynchronously(Plugin plugin, BukkitRunnable task)
             throws IllegalArgumentException {
         return runTaskAsynchronously(plugin, (Runnable) task);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTaskLater(Plugin plugin, BukkitRunnable task, long delay)
             throws IllegalArgumentException {
         return runTaskLater(plugin, (Runnable) task, delay);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTaskLaterAsynchronously(Plugin plugin, BukkitRunnable task, long delay)
             throws IllegalArgumentException {
         return runTaskLaterAsynchronously(plugin, (Runnable) task, delay);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTaskTimer(Plugin plugin, BukkitRunnable task, long delay, long period)
             throws IllegalArgumentException {
         return runTaskTimer(plugin, (Runnable) task, delay, period);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BukkitTask runTaskTimerAsynchronously(Plugin plugin, BukkitRunnable task, long delay, long period)
             throws IllegalArgumentException {
@@ -223,7 +217,6 @@ public class PoreBukkitScheduler implements BukkitScheduler {
         return runTaskLater(plugin, task, delay).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleSyncDelayedTask(Plugin plugin, BukkitRunnable task, long delay) {
         return runTaskLater(plugin, task, delay).getTaskId();
@@ -234,7 +227,6 @@ public class PoreBukkitScheduler implements BukkitScheduler {
         return runTask(plugin, task).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleSyncDelayedTask(Plugin plugin, BukkitRunnable task) {
         return runTask(plugin, task).getTaskId();
@@ -245,25 +237,21 @@ public class PoreBukkitScheduler implements BukkitScheduler {
         return runTaskTimer(plugin, task, delay, period).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleSyncRepeatingTask(Plugin plugin, BukkitRunnable task, long delay, long period) {
         return runTaskTimer(plugin, task, delay, period).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task, long delay) {
         return runTaskLaterAsynchronously(plugin, task, delay).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleAsyncDelayedTask(Plugin plugin, Runnable task) {
         return runTaskAsynchronously(plugin, task).getTaskId();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public int scheduleAsyncRepeatingTask(Plugin plugin, Runnable task, long delay, long period) {
         return runTaskTimerAsynchronously(plugin, task, delay, period).getTaskId();

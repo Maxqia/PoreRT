@@ -38,10 +38,11 @@ import blue.lapis.pore.impl.inventory.PorePlayerInventory;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.GameMode;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -156,12 +157,12 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
 
     @Override
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(this.getHandle().getItemInHand().orElse(null));
+        return ItemStackConverter.of(this.getHandle().getItemInHand(null).orElse(null)); // TODO: better hand value
     }
 
     @Override
     public void setItemInHand(ItemStack item) {
-        this.getHandle().setItemInHand(ItemStackConverter.of(item));
+        this.getHandle().setItemInHand(null, ItemStackConverter.of(item));
     }
 
     @Override
@@ -272,6 +273,18 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
 
     @Override
     public void setOp(boolean value) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public MainHand getMainHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public InventoryView openMerchant(Villager trader, boolean force) {
+        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

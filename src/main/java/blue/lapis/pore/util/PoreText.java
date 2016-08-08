@@ -28,6 +28,7 @@ package blue.lapis.pore.util;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+@SuppressWarnings("deprecation") //TODO fix this
 public final class PoreText {
 
     private PoreText() {

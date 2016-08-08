@@ -51,6 +51,7 @@ import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
@@ -58,6 +59,9 @@ import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.MainHand;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -118,7 +122,6 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String getPlayerListName() {
         throw new NotImplementedException("TODO");
         /*Optional<PlayerTabInfo> info = this.getHandle().getTabList().getPlayer(this.getUniqueId());
@@ -126,7 +129,6 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void setPlayerListName(String name) {
         throw new NotImplementedException("TODO");
         /*Optional<PlayerTabInfo> info = this.getHandle().getTabList().getPlayer(this.getUniqueId());
@@ -530,10 +532,10 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public void setExp(float exp) {
-        int newExp = (int)
-                (getHandle().getOrCreate(EXPERIENCE_HOLDER_DATA).get().getExperienceBetweenLevels().get() * exp);
+        //int newExp = (int)
+        //        (getHandle().getOrCreate(EXPERIENCE_HOLDER_DATA).get().getExperienceBetweenLevels().get() * exp);
         //TODO: setExperienceSinceLevel(newExp)
-        getHandle().get(EXPERIENCE_HOLDER_DATA).get().totalExperience();
+        //getHandle().get(EXPERIENCE_HOLDER_DATA).get().totalExperience();
         throw new NotImplementedException("TODO");
     }
 
@@ -785,7 +787,6 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendTitle(String title, String subtitle) {
         getHandle().sendTitle(Title.of(PoreText.convert(title), PoreText.convert(subtitle)));
     }
@@ -806,13 +807,11 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String message) {
         getHandle().sendMessage(PoreText.convert(message));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void sendMessage(String[] messages) {
         Text[] texts = new Text[messages.length];
         for (int i = 0; i < messages.length; i++) {
@@ -841,6 +840,110 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public UUID getUniqueId() {
         return getHandle().getUniqueId();
+    }
+
+    @Override
+    public MainHand getMainHand() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public InventoryView openMerchant(Villager trader, boolean force) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void stopSound(Sound sound) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void stopSound(String sound) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, double extra) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, double extra) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+            double offsetZ, double extra, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
+            double offsetY, double offsetZ, double extra, T data) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 
 }

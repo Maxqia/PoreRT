@@ -27,6 +27,7 @@ package blue.lapis.pore.impl.entity;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.ComplexEntityPart;
 import org.spongepowered.api.entity.living.complex.EnderDragon;
 
@@ -50,5 +51,17 @@ public class PoreEnderDragon extends PoreComplexLivingEntity implements org.bukk
     @Override
     public Set<ComplexEntityPart> getParts() {
         return super.getParts();
+    }
+
+    @Override
+    public Phase getPhase() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setPhase(Phase phase) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 }

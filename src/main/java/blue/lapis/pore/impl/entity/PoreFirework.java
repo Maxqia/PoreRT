@@ -64,6 +64,6 @@ public class PoreFirework extends PoreEntity implements org.bukkit.entity.Firewo
 
     @Override
     public void detonate() {
-        getHandle().detonate();
+        getHandle().detonate(null); //TODO get cause
     }
 }

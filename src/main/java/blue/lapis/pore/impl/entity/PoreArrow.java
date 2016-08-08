@@ -32,7 +32,7 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
-import org.spongepowered.api.entity.projectile.Arrow;
+import org.spongepowered.api.entity.projectile.arrow.Arrow;
 
 public class PoreArrow extends PoreProjectile implements org.bukkit.entity.Arrow {
 

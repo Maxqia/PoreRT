@@ -32,6 +32,7 @@ import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.PoreChunk;
 import blue.lapis.pore.impl.PoreWorld;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -75,6 +76,16 @@ public final class PoreChunkUnloadEvent extends ChunkUnloadEvent implements Pore
     @Override
     public String toString() {
         return toStringHelper().toString();
+    }
+
+    @Override
+    public boolean isSaveChunk() {
+        throw new NotImplementedException("TODO"); // TODO
+    }
+
+    @Override
+    public void setSaveChunk(boolean saveChunk) {
+        throw new NotImplementedException("TODO"); // TODO
     }
 
 }

@@ -40,6 +40,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -68,6 +69,7 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
     }
 
     @Override
+    @SuppressWarnings("deprecation") //TODO fix this
     public ItemStack getItem() {
         return getPlayer().getItemInHand();
     }
@@ -85,7 +87,7 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public boolean hasItem() {
-        return this.player.getItemInHand().isPresent();
+        return this.player.getItemInHand(null).isPresent(); // TODO: better hand value
     }
 
     @Override
@@ -137,6 +139,11 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
     @Override
     public String toString() {
         return toStringHelper().toString();
+    }
+
+    @Override
+    public EquipmentSlot getHand() {
+        throw new NotImplementedException("TODO"); // TODO
     }
 
     @RegisterEvent

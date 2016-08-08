@@ -28,6 +28,7 @@ package blue.lapis.pore.impl.entity.minecart;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.spongepowered.api.entity.vehicle.minecart.HopperMinecart;
@@ -55,6 +56,18 @@ public class PoreHopperMinecart extends PoreMinecart implements org.bukkit.entit
     @Override
     public Inventory getInventory() {
         return PoreInventory.of(getHandle().getInventory());
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
     }
 
 }

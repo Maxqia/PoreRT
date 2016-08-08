@@ -27,6 +27,8 @@ package blue.lapis.pore.impl.entity;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.TreeSpecies;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.entity.vehicle.Boat;
 
@@ -90,4 +92,15 @@ public class PoreBoat extends PoreVehicle implements org.bukkit.entity.Boat {
         getHandle().setMoveOnLand(workOnLand);
     }
 
+    @Override
+    public TreeSpecies getWoodType() {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setWoodType(TreeSpecies species) {
+        // TODO Auto-generated method stub
+        throw new NotImplementedException("TODO");
+    }
 }

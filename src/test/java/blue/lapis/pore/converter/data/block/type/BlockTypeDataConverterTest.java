@@ -95,7 +95,6 @@ public class BlockTypeDataConverterTest {
      *
      * - caseif
      */
-    @SuppressWarnings("unchecked")
     //@Test
     public void testLogConversion() throws Exception {
         Collection<? extends AbstractDataValue<? extends DataManipulator, ?>> expected = Arrays.asList(
@@ -105,7 +104,6 @@ public class BlockTypeDataConverterTest {
         BTDCTestUtil.testConversion(BlockTypes.LOG, (byte) 5, expected);
     }
 
-    @SuppressWarnings("unchecked")
     //@Test
     public void testLog2Conversion() throws Exception {
         Collection<? extends AbstractDataValue<? extends DataManipulator, ?>> expected = Arrays.asList(
@@ -120,7 +118,6 @@ public class BlockTypeDataConverterTest {
         BTDCTestUtil.testSingleAbstraction(BlockTypes.PLANKS, TreeData.class, (byte) 3, TreeTypes.JUNGLE);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testLeavesConversion() throws Exception {
         Collection<? extends AbstractDataValue<? extends DataManipulator, ?>> input = Arrays.asList(
@@ -136,7 +133,6 @@ public class BlockTypeDataConverterTest {
         BTDCTestUtil.testConversion(BlockTypes.LEAVES, (byte) 5, expected);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testLeaves2Conversion() throws Exception {
         Collection<? extends AbstractDataValue<? extends DataManipulator, ?>> input = Arrays.asList(

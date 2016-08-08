@@ -29,6 +29,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.potion.PotionBrewer;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.Collection;
 
@@ -40,9 +41,14 @@ public class PorePotionBrewer implements PotionBrewer {
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Collection<PotionEffect> getEffectsFromDamage(int damage) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Collection<PotionEffect> getEffects(PotionType type, boolean upgraded, boolean extended) {
+        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 

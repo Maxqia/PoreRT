@@ -29,7 +29,6 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.block.tileentity.MobSpawner;
 
@@ -48,12 +47,6 @@ public class PoreCreatureSpawner extends PoreBlockState implements CreatureSpawn
         return (MobSpawner) super.getTileEntity();
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public CreatureType getCreatureType() {
-        throw new NotImplementedException("TODO");
-    }
-
     @Override
     public EntityType getSpawnedType() {
         throw new NotImplementedException("TODO");
@@ -64,18 +57,6 @@ public class PoreCreatureSpawner extends PoreBlockState implements CreatureSpawn
         throw new NotImplementedException("TODO");
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void setCreatureType(CreatureType creatureType) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public String getCreatureTypeId() {
-        throw new NotImplementedException("TODO");
-    }
-
     @Override
     public void setCreatureTypeByName(String creatureType) {
         throw new NotImplementedException("TODO");
@@ -83,12 +64,6 @@ public class PoreCreatureSpawner extends PoreBlockState implements CreatureSpawn
 
     @Override
     public String getCreatureTypeName() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void setCreatureTypeId(String creatureType) {
         throw new NotImplementedException("TODO");
     }
 

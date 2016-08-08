@@ -56,7 +56,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -233,22 +232,21 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     @Override
     public org.bukkit.entity.Entity getPassenger() {
-        return getHandle().get(Keys.PASSENGER).map(PoreEntity::of).orElse(null);
+        return PoreEntity.of(getHandle().get(Keys.PASSENGERS).get().get(0)); // TODO : better sorting?
     }
 
     @Override
     public boolean setPassenger(final org.bukkit.entity.Entity passenger) {
         if (passenger != null) {
-            return getHandle().offer(Keys.PASSENGER, ((PoreEntity) passenger).getHandle().createSnapshot())
-                    .isSuccessful();
+            return getHandle().get(Keys.PASSENGERS).get().add(((PoreEntity) passenger).getHandle().createSnapshot());
         } else {
-            return getHandle().remove(Keys.PASSENGER).isSuccessful();
+            return getHandle().remove(Keys.PASSENGERS).isSuccessful();
         }
     }
 
     @Override
     public boolean isEmpty() {
-        return !getHandle().get(Keys.PASSENGER).isPresent();
+        return !getHandle().get(Keys.PASSENGERS).isPresent();
     }
 
     @Override
@@ -313,12 +311,10 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String getCustomName() {
         return getHandle().get(Keys.DISPLAY_NAME).map(PoreText::convert).orElse(null);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setCustomName(String name) {
         getHandle().offer(Keys.DISPLAY_NAME, PoreText.convert(name));
@@ -416,6 +412,54 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     @Override
     public void setOp(boolean value) {
         // do nothing
+    }
+
+    @Override
+    public void setGlowing(boolean flag) {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isGlowing() {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setInvulnerable(boolean flag) {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isSilent() {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setSilent(boolean flag) {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean hasGravity() {
+        // TODO
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setGravity(boolean gravity) {
+        // TODO
+        throw new NotImplementedException("TODO");
     }
 
 }

@@ -58,7 +58,6 @@ public final class BlockDataConverter implements DataConverter<Location<?>> {
 
     private static final Map<Class<?>, DataTypeConverter> CONVERTER_OBJECTS = Maps.newHashMap();
 
-    @SuppressWarnings("ConstantConditions")
     private static final Map<BlockType, DataTypeConverter> CONVERTER_MAP =
             ImmutableMap.<BlockType, DataTypeConverter>builder()
                     .put(BlockTypes.BROWN_MUSHROOM_BLOCK, getConverter(BigMushroomDataConverter.class))
@@ -92,7 +91,7 @@ public final class BlockDataConverter implements DataConverter<Location<?>> {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("unchecked") //TODO: fix this
     public byte getDataValue(Collection<DataManipulator<?, ?>> manipulators, BlockType target) {
         final DataTypeConverter converter = getConverter(target);
         Collection<DataManipulator<?, ?>> data = Collections2.filter(manipulators, input -> {
@@ -111,7 +110,7 @@ public final class BlockDataConverter implements DataConverter<Location<?>> {
         return converter.of(data);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" }) //TODO: fix this
     public byte getDataValue(BlockState target) {
         // Not sure why the compiler has an issue with this without the cast. I blame generics for being terrible.
         return getDataValue((Collection) target.getManipulators(), target.getType());
@@ -136,7 +135,6 @@ public final class BlockDataConverter implements DataConverter<Location<?>> {
         });
     }
 
-    @SuppressWarnings("rawtypes")
     private DataTypeConverter getConverter(BlockType target) {
         if (!CONVERTER_MAP.containsKey(target)) {
             throw new IllegalArgumentException("Cannot convert data for block type " + target.getName());

@@ -56,6 +56,7 @@ import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation") //TODO fix this
 public final class ProjectileUtil {
 
     private ProjectileUtil() {
@@ -75,7 +76,7 @@ public final class ProjectileUtil {
      * @throws UnsupportedOperationException If the projectile type cannot be
      *     matched to a class
      */
-    @SuppressWarnings({"deprecation", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     public static <T extends Projectile> Optional<T> launchProjectile(ProjectileSource source,
             Class<? extends T> projectile, @Nullable Vector velocity) throws UnsupportedOperationException {
         // I know this defeats the purpose of Optional, but I need a way to
@@ -84,7 +85,7 @@ public final class ProjectileUtil {
         Optional<T> entity = null;
         if (projectile.isAssignableFrom(Arrow.class)) {
             entity = Optional.fromNullable((T) PoreArrow.of(source.launchProjectile(
-                    org.spongepowered.api.entity.projectile.Arrow.class,
+                    org.spongepowered.api.entity.projectile.arrow.Arrow.class,
                     VectorConverter.create3d(velocity)
             ).orElse(null)));
         } else if (projectile.isAssignableFrom(Egg.class)) {
@@ -144,7 +145,7 @@ public final class ProjectileUtil {
             throw new UnsupportedOperationException("Could not match projectile to type (is Pore up-to-date?)"); // lel
         }
         if (entity.isPresent()) {
-            final T finalEntity = entity.get();
+            //final T finalEntity = entity.get();
             // TODO
             /*Pore.getGame().getEventManager().post(new ProjectileLaunchEvent() {
                 @Nonnull

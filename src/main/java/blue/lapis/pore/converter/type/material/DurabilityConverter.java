@@ -60,6 +60,7 @@ import org.spongepowered.api.data.type.GoldenApples;
 import java.util.Collection;
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public final class DurabilityConverter {
 
     private DurabilityConverter() {
@@ -86,7 +87,7 @@ public final class DurabilityConverter {
                 .build();
         //noinspection deprecation, ConstantConditions
         DYE_MAP = ImmutableBiMap.<DyeColor, Integer>builder()
-                .put(DyeColors.BLACK, (int) org.bukkit.DyeColor.BLACK.getDyeData())
+                .put(DyeColors.BLACK, (int) org.bukkit.DyeColor.BLACK.getDyeData()) // TODO: find non-deprecated version of this
                 .put(DyeColors.RED, (int) org.bukkit.DyeColor.RED.getDyeData())
                 .put(DyeColors.GREEN, (int) org.bukkit.DyeColor.GREEN.getDyeData())
                 .put(DyeColors.BROWN, (int) org.bukkit.DyeColor.BROWN.getDyeData())
@@ -141,6 +142,7 @@ public final class DurabilityConverter {
      * @return The raw damage value corresponding to {@code data}, or
      * {@code 0} if one cannot be obtained.
      */
+    @SuppressWarnings("rawtypes") // TODO : fix rawtypes warning
     public static int getDamageValue(DataManipulator<?, ?> data) {
         if (data instanceof VariantData) {
             return getDamageValueFromEnum((VariantData) data);
@@ -222,7 +224,6 @@ public final class DurabilityConverter {
         return null;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"}) // I can't parameterize this either; it scares the compiler
     private static <T extends VariantData<U, T, ?>, U extends CatalogType> T
         getItemData(ItemStack item, Class<T> type, BiMap<U, Integer> map) {
         int damage = item.getDurability();
