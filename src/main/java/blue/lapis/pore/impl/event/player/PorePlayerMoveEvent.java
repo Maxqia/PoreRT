@@ -23,24 +23,30 @@
  * THE SOFTWARE.
  */
 
-/*package blue.lapis.pore.impl.event.player;
+package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.impl.event.block.PoreBlockPlaceEvent;
+
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.util.GuavaCollectors;
 
-@RegisterEvent
-public final class PorePlayerMoveEvent extends PlayerMoveEvent
-        implements PoreEvent<MoveEntityEvent> {
+import com.google.common.collect.ImmutableList;
+
+public final class PorePlayerMoveEvent extends PlayerMoveEvent implements PoreEvent<MoveEntityEvent> {
 
     private final MoveEntityEvent handle;
 
@@ -55,7 +61,7 @@ public final class PorePlayerMoveEvent extends PlayerMoveEvent
 
     @Override
     public Player getPlayer() {
-        return PorePlayer.of(getHandle().getTargetEntity());
+        return (Player) PorePlayer.of(getHandle().getTargetEntity());
     }
 
     @Override
@@ -92,4 +98,17 @@ public final class PorePlayerMoveEvent extends PlayerMoveEvent
     public String toString() {
         return toStringHelper().toString();
     }
-}*/
+
+    @RegisterEvent
+    public static void register() {
+        PoreEventRegistry.register(PorePlayerMoveEvent.class, MoveEntityEvent.class, event -> {
+            org.spongepowered.api.entity.living.player.Player player =
+                    event.getCause().get(SOURCE, org.spongepowered.api.entity.living.player.Player.class).orElse(null);
+            if (player != null) {
+                return ImmutableList.of(new PorePlayerMoveEvent(event));
+            } else {
+                return ImmutableList.of();
+            }
+        });
+    }
+}

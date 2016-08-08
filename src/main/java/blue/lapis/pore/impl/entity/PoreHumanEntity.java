@@ -50,6 +50,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
@@ -157,12 +158,12 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
 
     @Override
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(this.getHandle().getItemInHand(null).orElse(null)); // TODO: better hand value
+        return ItemStackConverter.of(this.getHandle().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
     }
 
     @Override
     public void setItemInHand(ItemStack item) {
-        this.getHandle().setItemInHand(null, ItemStackConverter.of(item));
+        this.getHandle().setItemInHand(HandTypes.MAIN_HAND, ItemStackConverter.of(item));
     }
 
     @Override
@@ -278,8 +279,7 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
 
     @Override
     public MainHand getMainHand() {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("CANTDO"); // Sponge API doesn't have this
     }
 
     @Override

@@ -27,6 +27,7 @@ package blue.lapis.pore.impl.block;
 
 import static org.spongepowered.api.data.property.block.MatterProperty.Matter.LIQUID;
 
+import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.data.block.BlockDataConverter;
 import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.converter.type.world.BiomeConverter;
@@ -47,6 +48,7 @@ import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
@@ -56,6 +58,9 @@ import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.data.property.block.SkyLuminanceProperty;
 import org.spongepowered.api.data.property.block.TemperatureProperty;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;
@@ -79,7 +84,6 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
         return 0;
     }
 
-    @Override
     public void setData(byte data) {
         setData(data, true);
     }
@@ -112,7 +116,7 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
 
     @Override
     public void setType(Material type) {
-        getHandle().setBlockType(MaterialConverter.asBlock(type), null); //TODO : better cause
+        getHandle().setBlockType(MaterialConverter.asBlock(type), Cause.of(NamedCause.source(Pore.getPlugin())));
     }
 
     @Override
@@ -202,7 +206,7 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
     public boolean setTypeId(int type, boolean applyPhysics) {
         //TODO: applyPhysics
         BlockType blockType = MaterialConverter.asBlock(Material.getMaterial(type));
-        getHandle().setBlockType(blockType, null); // TODO: better cause
+        getHandle().setBlockType(blockType, Cause.of(NamedCause.source(Pore.getPlugin())));
         return getHandle().getBlockType().equals(blockType);
     }
 

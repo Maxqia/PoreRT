@@ -43,6 +43,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.property.entity.DominantHandProperty;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 
@@ -143,7 +146,8 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public EquipmentSlot getHand() {
-        throw new NotImplementedException("TODO"); // TODO
+        HandType hand = player.getProperty(DominantHandProperty.class).get().getValue();
+        return hand == HandTypes.MAIN_HAND ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
     }
 
     @RegisterEvent

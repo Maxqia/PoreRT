@@ -35,6 +35,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.ArmorStand;
 
 public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entity.ArmorStand {
@@ -59,12 +60,12 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
 
     @Override
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(getHandle().getItemInHand(null).orElse(null)); //TODO: Better hand value
+        return ItemStackConverter.of(getHandle().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
     }
 
     @Override
     public void setItemInHand(ItemStack item) {
-        getHandle().setItemInHand(null, ItemStackConverter.of(item));
+        getHandle().setItemInHand(HandTypes.MAIN_HAND, ItemStackConverter.of(item));
     }
 
     @Override

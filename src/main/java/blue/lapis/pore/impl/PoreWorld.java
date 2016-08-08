@@ -86,6 +86,8 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
 import org.spongepowered.api.world.extent.Extent;
@@ -325,7 +327,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
             return null;
         }
 
-        getHandle().spawnEntity(entity, Cause.of(NamedCause.source(Pore.getPlugin())));
+        getHandle().spawnEntity(entity, Cause.of(NamedCause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build())));
         return PoreEntity.of(entity);
     }
 

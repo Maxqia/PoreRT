@@ -45,6 +45,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.data.property.entity.DominantHandProperty;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.util.GuavaCollectors;
@@ -127,7 +130,8 @@ public final class PoreBlockPlaceEvent extends BlockPlaceEvent implements PoreEv
 
     @Override
     public EquipmentSlot getHand() {
-        throw new NotImplementedException("TODO"); // TODO
+        HandType hand = player.getProperty(DominantHandProperty.class).get().getValue();
+        return hand == HandTypes.MAIN_HAND ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
     }
 
     @RegisterEvent
