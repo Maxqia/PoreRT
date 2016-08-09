@@ -26,25 +26,22 @@
 package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
 
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PorePlayer;
-import blue.lapis.pore.impl.event.block.PoreBlockPlaceEvent;
 
-import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
-
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
-import org.spongepowered.api.util.GuavaCollectors;
 
-import com.google.common.collect.ImmutableList;
+
 
 public final class PorePlayerMoveEvent extends PlayerMoveEvent implements PoreEvent<MoveEntityEvent> {
 

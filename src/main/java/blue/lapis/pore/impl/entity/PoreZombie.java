@@ -27,10 +27,9 @@ package blue.lapis.pore.impl.entity;
 
 import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.VILLAGER_ZOMBIE_DATA;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
 import org.spongepowered.api.entity.living.monster.Zombie;
@@ -74,7 +73,8 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
     public void setVillager(boolean isVillager) {
         if (isVillager != isVillager()) {
             if (isVillager) {
-                getHandle().getOrCreate(VILLAGER_ZOMBIE_DATA); //.get().type().get().getCareers().villagerZombie().set(true);
+                getHandle().getOrCreate(VILLAGER_ZOMBIE_DATA);
+                //.get().type().get().getCareers().villagerZombie().set(true);
             } else {
                 getHandle().remove(VILLAGER_ZOMBIE_DATA);
             }

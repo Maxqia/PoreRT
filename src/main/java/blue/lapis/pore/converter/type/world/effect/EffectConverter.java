@@ -51,7 +51,8 @@ public final class EffectConverter {
                 case BOW_FIRE:
                     return SoundTypes.ENTITY_ARROW_SHOOT;
                 case DOOR_TOGGLE:
-                    return Math.random() >= 0.5 ? SoundTypes.BLOCK_WOODEN_DOOR_OPEN : SoundTypes.BLOCK_WOODEN_DOOR_CLOSE;
+                    return Math.random() >= 0.5
+                        ? SoundTypes.BLOCK_WOODEN_DOOR_OPEN : SoundTypes.BLOCK_WOODEN_DOOR_CLOSE;
                 case EXTINGUISH:
                     return SoundTypes.BLOCK_FIRE_EXTINGUISH;
                 case RECORD_PLAY:

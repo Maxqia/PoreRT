@@ -28,8 +28,6 @@ package blue.lapis.pore.impl.block;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
-import java.util.Collection;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.Inventory;
@@ -37,6 +35,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.carrier.Beacon;
+
+import java.util.Collection;
 
 public class PoreBeacon extends PoreBlockState implements org.bukkit.block.Beacon {
 

@@ -33,6 +33,7 @@ import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.block.PoreBlock;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -40,8 +41,6 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-
-import com.google.common.collect.ImmutableList;
 
 public final class PoreBlockBurnEvent extends BlockBurnEvent implements PoreEvent<ChangeBlockEvent> {
 
@@ -84,7 +83,7 @@ public final class PoreBlockBurnEvent extends BlockBurnEvent implements PoreEven
     @RegisterEvent
     public static void register() {
         PoreEventRegistry.register(PoreBlockBurnEvent.class, ChangeBlockEvent.class, event -> {
-            BlockSnapshot fire = event.getCause().get(SOURCE, org.spongepowered.api.block.BlockSnapshot.class).orElse(null);
+            BlockSnapshot fire = event.getCause().get(SOURCE, BlockSnapshot.class).orElse(null);
             if (fire != null && fire.getState().getType() == BlockTypes.FIRE) {
                 for (Transaction<BlockSnapshot> trans : event.getTransactions()) {
                     BlockType from = trans.getOriginal().getState().getType();

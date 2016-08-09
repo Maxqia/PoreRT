@@ -11,16 +11,19 @@ plugins {
 }
 
 defaultTasks 'clean', 'licenseFormat', 'build'
-
-// Project information
-group = 'blue.lapis'
-version = '1.0.0-SNAPSHOT'
-description = 'A Bukkit-Sponge Porting Layer'
-
 apply from: 'gradle/deploy.gradle'
 
+sponge {
+    plugin {
+        id = 'blue.lapis.pore'
+    }
+}
+
 allprojects {
+    // Project information
     group = 'blue.lapis'
+    version = '1.0.0-SNAPSHOT'
+    description = 'A Bukkit-Sponge Porting Layer'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'

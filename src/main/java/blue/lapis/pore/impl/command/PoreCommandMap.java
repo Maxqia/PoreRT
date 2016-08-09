@@ -127,7 +127,8 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine) {
-        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, null); // TODO: Better target position?
+        // TODO: Better target position?
+        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, null);
     }
 
     @Override

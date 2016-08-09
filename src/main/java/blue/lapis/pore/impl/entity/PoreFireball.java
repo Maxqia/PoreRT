@@ -25,6 +25,8 @@
 
 package blue.lapis.pore.impl.entity;
 
+import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.EXPLOSIVE_RADIUS_DATA;
+
 import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
@@ -33,7 +35,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import org.spongepowered.api.entity.projectile.DamagingProjectile;
 import org.spongepowered.api.entity.projectile.explosive.fireball.Fireball;
-import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.EXPLOSIVE_RADIUS_DATA;
 
 public class PoreFireball extends PoreProjectile implements org.bukkit.entity.Fireball {
 

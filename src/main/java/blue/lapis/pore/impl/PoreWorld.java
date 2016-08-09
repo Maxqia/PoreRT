@@ -27,7 +27,6 @@ package blue.lapis.pore.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.entity.EntityConverter;
 import blue.lapis.pore.converter.type.world.BiomeConverter;
 import blue.lapis.pore.converter.type.world.DifficultyConverter;
@@ -327,7 +326,8 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
             return null;
         }
 
-        getHandle().spawnEntity(entity, Cause.of(NamedCause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build())));
+        getHandle().spawnEntity(entity, Cause.of(
+                NamedCause.source(SpawnCause.builder().type(SpawnTypes.PLUGIN).build())));
         return PoreEntity.of(entity);
     }
 

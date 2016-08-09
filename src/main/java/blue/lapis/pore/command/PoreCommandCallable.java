@@ -62,7 +62,8 @@ public class PoreCommandCallable extends PoreWrapper<Command> implements Command
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition)
+            throws CommandException {
         // TODO: Label
         return getHandle().tabComplete(PoreCommandSender.of(source), getHandle().getLabel(),
                 StringUtils.split(arguments));

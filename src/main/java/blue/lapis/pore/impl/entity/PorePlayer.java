@@ -43,7 +43,6 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Achievement;
@@ -69,9 +68,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.property.entity.DominantHandProperty;
-import org.spongepowered.api.data.type.HandType;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.profile.GameProfile;
@@ -670,9 +666,11 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     public Location getBedSpawnLocation() {
         Location bed = null;
         if (getHandle().get(Keys.RESPAWN_LOCATIONS).isPresent()) {
-            RespawnLocation spongeLoc = getHandle().get(Keys.RESPAWN_LOCATIONS).get().get(getHandle().getWorld().getUniqueId());
-            if (spongeLoc.asLocation().get().getBlockType() == BlockTypes.BED)
+            RespawnLocation spongeLoc =
+                    getHandle().get(Keys.RESPAWN_LOCATIONS).get().get(getHandle().getWorld().getUniqueId());
+            if (spongeLoc.asLocation().get().getBlockType() == BlockTypes.BED) {
                 bed = LocationConverter.of(spongeLoc.asLocation().get());
+            }
         }
         return bed;
     }
@@ -688,8 +686,8 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         //noinspection ConstantConditions
         if (force || spongeLoc.getBlockType() == BlockTypes.BED) {
             UUID worldId = location.getWorld().getUID();
-            getHandle().get(Keys.RESPAWN_LOCATIONS).get()
-                    .put(location.getWorld().getUID(), RespawnLocation.builder().position(VectorConverter.create3d(location)).world(worldId).build());
+            getHandle().get(Keys.RESPAWN_LOCATIONS).get().put(location.getWorld().getUID(),
+                    RespawnLocation.builder().position(VectorConverter.create3d(location)).world(worldId).build());
         }
     }
 

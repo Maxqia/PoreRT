@@ -48,7 +48,6 @@ import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
@@ -60,7 +59,6 @@ import org.spongepowered.api.data.property.block.SkyLuminanceProperty;
 import org.spongepowered.api.data.property.block.TemperatureProperty;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.Location;
 
 import java.util.Collection;

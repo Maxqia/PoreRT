@@ -87,7 +87,8 @@ public final class DurabilityConverter {
                 .build();
         //noinspection deprecation, ConstantConditions
         DYE_MAP = ImmutableBiMap.<DyeColor, Integer>builder()
-                .put(DyeColors.BLACK, (int) org.bukkit.DyeColor.BLACK.getDyeData()) // TODO: find non-deprecated version of this
+                // TODO: find non-deprecated version of this
+                .put(DyeColors.BLACK, (int) org.bukkit.DyeColor.BLACK.getDyeData())
                 .put(DyeColors.RED, (int) org.bukkit.DyeColor.RED.getDyeData())
                 .put(DyeColors.GREEN, (int) org.bukkit.DyeColor.GREEN.getDyeData())
                 .put(DyeColors.BROWN, (int) org.bukkit.DyeColor.BROWN.getDyeData())

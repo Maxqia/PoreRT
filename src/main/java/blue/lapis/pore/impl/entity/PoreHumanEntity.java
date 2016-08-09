@@ -102,7 +102,8 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
         if (getHandle() instanceof org.spongepowered.api.entity.living.player.Player) {
             return PoreInventoryView.builder()
                     .setPlayer(this)
-                    .setTopInventory(((org.spongepowered.api.entity.living.player.Player) getHandle()).getOpenInventory().orElse(null))
+                    .setTopInventory(((org.spongepowered.api.entity.living.player.Player) getHandle())
+                            .getOpenInventory().orElse(null))
                     .setBottomInventory(this.getHandle().getInventory())
                     .build();
         }
@@ -152,7 +153,8 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
     @Override
     public void closeInventory() {
         if (getHandle() instanceof org.spongepowered.api.entity.living.player.Player) {
-            ((org.spongepowered.api.entity.living.player.Player) getHandle()).closeInventory(Cause.of(NamedCause.source(this)));
+            ((org.spongepowered.api.entity.living.player.Player) getHandle())
+                .closeInventory(Cause.of(NamedCause.source(this)));
         }
     }
 

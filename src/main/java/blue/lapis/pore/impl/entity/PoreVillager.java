@@ -29,8 +29,6 @@ import blue.lapis.pore.converter.type.entity.ProfessionConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import com.google.common.collect.Iterables;
-import java.util.List;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -39,6 +37,8 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.spongepowered.api.data.type.Career;
 import org.spongepowered.api.data.type.Careers;
 import org.spongepowered.api.entity.living.Villager;
+
+import java.util.List;
 
 public class PoreVillager extends PoreAgeable implements org.bukkit.entity.Villager {
 
