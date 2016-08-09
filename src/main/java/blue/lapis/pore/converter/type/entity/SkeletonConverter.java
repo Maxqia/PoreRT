@@ -41,6 +41,7 @@ public final class SkeletonConverter {
             TypeConverter.builder(Skeleton.SkeletonType.class, SkeletonType.class)
                     .add(Skeleton.SkeletonType.NORMAL, SkeletonTypes.NORMAL)
                     .add(Skeleton.SkeletonType.WITHER, SkeletonTypes.WITHER)
+                    .add(Skeleton.SkeletonType.STRAY, SkeletonTypes.STRAY)
                     .build();
 
     public static SkeletonType of(Skeleton.SkeletonType type) {

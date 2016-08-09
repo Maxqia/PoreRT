@@ -61,6 +61,10 @@ public final class PotionEffectTypeConverter {
                     .add(PotionEffectType.HEALTH_BOOST, PotionEffectTypes.HEALTH_BOOST)
                     .add(PotionEffectType.ABSORPTION, PotionEffectTypes.ABSORPTION)
                     .add(PotionEffectType.SATURATION, PotionEffectTypes.SATURATION)
+                    .add(PotionEffectType.GLOWING, PotionEffectTypes.GLOWING)
+                    .add(PotionEffectType.LEVITATION, PotionEffectTypes.LEVITATION)
+                    .add(PotionEffectType.LUCK, PotionEffectTypes.LUCK)
+                    .add(PotionEffectType.UNLUCK, PotionEffectTypes.UNLUCK)
                     .build();
 
     public static org.spongepowered.api.effect.potion.PotionEffectType of(PotionEffectType potionEffectType) {

@@ -104,6 +104,14 @@ public final class EntityConverter {
                     .add(EntityType.WITHER_SKULL, EntityTypes.WITHER_SKULL)
                     .add(EntityType.WOLF, EntityTypes.WOLF)
                     .add(EntityType.ZOMBIE, EntityTypes.ZOMBIE)
+                    //api5 additions
+                    .add(EntityType.AREA_EFFECT_CLOUD, EntityTypes.AREA_EFFECT_CLOUD)
+                    .add(EntityType.DRAGON_FIREBALL, EntityTypes.DRAGON_FIREBALL)
+                    .add(EntityType.SHULKER, EntityTypes.SHULKER)
+                    .add(EntityType.SHULKER_BULLET, EntityTypes.SHULKER_BULLET)
+                    .add(EntityType.SPECTRAL_ARROW, EntityTypes.SPECTRAL_ARROW)
+                    .add(EntityType.TIPPED_ARROW, EntityTypes.TIPPED_ARROW)
+                    .add(EntityType.POLAR_BEAR, EntityTypes.POLAR_BEAR)
                     .build();
 
     public static org.spongepowered.api.entity.EntityType of(org.bukkit.entity.EntityType entityType) {
