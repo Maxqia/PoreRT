@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,8 +22,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.block;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
+
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.block.PoreBlock;
 import blue.lapis.pore.impl.block.PoreBlockState;
 
@@ -31,29 +38,34 @@ import com.google.common.base.Preconditions;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockGrowEvent;
-import org.spongepowered.api.event.block.BlockChangeEvent;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.util.GuavaCollectors;
 
-public class PoreBlockGrowEvent extends BlockGrowEvent {
+public final class PoreBlockGrowEvent extends BlockGrowEvent implements PoreEvent<ChangeBlockEvent.Grow> {
 
-    private final BlockChangeEvent handle;
+    private final ChangeBlockEvent.Grow handle;
+    private final Transaction<BlockSnapshot> transaction;
 
-    public PoreBlockGrowEvent(BlockChangeEvent handle) {
+    public PoreBlockGrowEvent(ChangeBlockEvent.Grow handle, Transaction<BlockSnapshot> transaction) {
         super(null, null);
         this.handle = Preconditions.checkNotNull(handle, "handle");
+        this.transaction = checkNotNull(transaction, "transaction");
     }
 
-    public BlockChangeEvent getHandle() {
+    public ChangeBlockEvent.Grow getHandle() {
         return handle;
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(getHandle().getLocation());
+        return PoreBlock.of(handle.getCause().get(SOURCE, BlockSnapshot.class).orElse(null).getLocation().orElse(null));
     }
 
     @Override
     public BlockState getNewState() {
-        return PoreBlockState.of(getHandle().getReplacementBlock().getState());
+        return PoreBlockState.of(transaction.getOriginal());
     }
 
     @Override
@@ -66,4 +78,20 @@ public class PoreBlockGrowEvent extends BlockGrowEvent {
         getHandle().setCancelled(cancel);
     }
 
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add("transaction", this.transaction)
+                .toString();
+    }
+
+    @RegisterEvent
+    public static void register() { // TODO ChangeBlockEvent.Grow isn't implemented yet ...
+        PoreEventRegistry.register(PoreBlockGrowEvent.class, ChangeBlockEvent.Grow.class, event -> {
+            System.out.println(event.getCause().toString());
+            return event.getTransactions().stream()
+                    .map(transaction -> new PoreBlockGrowEvent(event, transaction))
+                    .collect(GuavaCollectors.toImmutableList());
+        });
+    }
 }
