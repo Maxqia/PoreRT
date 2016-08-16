@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,38 +22,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.block.PoreBlock;
 import blue.lapis.pore.impl.inventory.PoreBrewerInventory;
 
 import org.bukkit.block.Block;
 import org.bukkit.inventory.BrewerInventory;
-import org.spongepowered.api.event.inventory.BrewEvent;
+import org.spongepowered.api.event.block.tileentity.BrewingEvent;
 
-public class PoreBrewEvent extends org.bukkit.event.inventory.BrewEvent {
+// I know the bukkit javadocs says end, but you can't cancel BrewingEvent.Finish
+@RegisterEvent // TODO Not implemented in Sponge
+public final class PoreBrewEvent extends org.bukkit.event.inventory.BrewEvent implements PoreEvent<BrewingEvent.Start> {
 
-    private final BrewEvent handle;
+    private final BrewingEvent.Start handle;
 
-    public PoreBrewEvent(BrewEvent handle) {
+    public PoreBrewEvent(BrewingEvent.Start handle) {
         super(null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public BrewEvent getHandle() {
+    public BrewingEvent.Start getHandle() {
         return this.handle;
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(this.getHandle().getLocation());
+        return PoreBlock.of(this.getHandle().getTargetTile().getLocation());
     }
 
     @Override
     public BrewerInventory getContents() {
-        return PoreBrewerInventory.of(this.getHandle().getInventory());
+        return PoreBrewerInventory.of(this.getHandle().getTargetTile().getInventory());
     }
 
     @Override
@@ -66,4 +71,8 @@ public class PoreBrewEvent extends org.bukkit.event.inventory.BrewEvent {
         this.getHandle().setCancelled(cancel);
     }
 
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
 }

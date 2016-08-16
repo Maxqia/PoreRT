@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,36 +22,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.spongepowered.api.event.inventory.InventoryCloseEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 
 import java.util.List;
 
-public class PoreInventoryCloseEvent extends org.bukkit.event.inventory.InventoryCloseEvent {
+@RegisterEvent // TODO Not implemented in Sponge
+public final class PoreInventoryOpenEvent extends InventoryOpenEvent
+    implements PoreEvent<InteractInventoryEvent.Open> {
 
-    private final InventoryCloseEvent handle;
+    private final InteractInventoryEvent.Open handle;
 
-    public PoreInventoryCloseEvent(InventoryCloseEvent handle) {
+    public PoreInventoryOpenEvent(InteractInventoryEvent.Open handle) {
         super(null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public InventoryCloseEvent getHandle() {
+    public InteractInventoryEvent.Open getHandle() {
         return this.handle;
     }
 
     @Override
     public Inventory getInventory() {
-        return PoreInventory.of(this.getHandle().getContainer());
+        return PoreInventory.of(this.getHandle().getTargetInventory());
     }
 
     @Override
@@ -66,6 +74,22 @@ public class PoreInventoryCloseEvent extends org.bukkit.event.inventory.Inventor
 
     @Override
     public HumanEntity getPlayer() {
-        throw new NotImplementedException("TODO");
+        return PorePlayer.of(getHandle().getCause() //TODO check if this is right
+                .get(SOURCE, org.spongepowered.api.entity.living.player.Player.class).get());
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return handle.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        handle.setCancelled(cancelled);
+    }
+    
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

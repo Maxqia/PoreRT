@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,26 +22,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.block.Block;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spongepowered.api.event.block.tileentity.FurnaceSmeltItemEvent;
+import org.spongepowered.api.event.block.tileentity.SmeltEvent;
 
-public class PoreFurnaceSmeltEvent extends FurnaceSmeltEvent {
+@RegisterEvent // TODO Not implemented in Sponge
+public final class PoreFurnaceBurnEvent extends FurnaceBurnEvent implements PoreEvent<SmeltEvent.ConsumeFuel> {
 
-    private final FurnaceSmeltItemEvent handle;
+    private final SmeltEvent.ConsumeFuel handle;
 
-    public PoreFurnaceSmeltEvent(FurnaceSmeltItemEvent handle) {
-        super(null, null, null);
+    public PoreFurnaceBurnEvent(SmeltEvent.ConsumeFuel handle) {
+        super(null, null, -1);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public FurnaceSmeltItemEvent getHandle() {
+    public SmeltEvent.ConsumeFuel getHandle() {
         return this.handle;
     }
 
@@ -51,33 +56,42 @@ public class PoreFurnaceSmeltEvent extends FurnaceSmeltEvent {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public Block getFurnace() {
-        return this.getBlock();
-    }
-
-    @Override
-    public ItemStack getSource() {
+    public ItemStack getFuel() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public ItemStack getResult() {
+    public int getBurnTime() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public void setResult(ItemStack result) {
+    public void setBurnTime(int burnTime) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean isBurning() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setBurning(boolean burning) {
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return handle.isCancelled();
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        throw new NotImplementedException("TODO");
+    public void setCancelled(boolean cancelled) {
+        handle.setCancelled(cancelled);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }
