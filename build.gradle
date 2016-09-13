@@ -15,7 +15,7 @@ apply from: 'gradle/deploy.gradle'
 
 sponge {
     plugin {
-        id = 'blue.lapis.pore'
+        id = 'pore'
     }
 }
 
@@ -83,6 +83,7 @@ dependencies {
 
     shadow project('Porekit')
     shadowRuntime 'mysql:mysql-connector-java:5.1.38'
+    shadowRuntime 'net.sf.trove4j:trove4j:3.0.3'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
