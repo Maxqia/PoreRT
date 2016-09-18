@@ -54,25 +54,21 @@ public class PoreEnderCrystal extends PoreEntity implements org.bukkit.entity.En
 
     @Override
     public boolean isShowingBottom() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setShowingBottom(boolean showing) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public Location getBeamTarget() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setBeamTarget(Location location) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 

@@ -128,6 +128,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     private final BukkitScheduler scheduler = new PoreBukkitScheduler();
     private final BanList profileBans = new PoreUserBanList();
     private final BanList ipBans = new PoreIpBanList();
+    private CachedServerIcon icon = null;
 
     public PoreServer(org.spongepowered.api.Game handle, org.slf4j.Logger logger) {
         super(handle.getServer());
@@ -137,10 +138,19 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         this.pluginManager = new SimplePluginManager(this, commandMap);
         this.servicesManager = new SimpleServicesManager();
         Bukkit.setServer(this);
+        getFavicon();
     }
 
     public Game getGame() {
         return game;
+    }
+
+    private void getFavicon() {
+        try {
+            icon = loadServerIcon(new File("server-icon.png"));
+        } catch (Exception e) {
+            logger.log(Level.CONFIG, "Could not find the server icon!");
+        }
     }
 
     public void loadPlugins() {
@@ -726,7 +736,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public boolean isPrimaryThread() {
-        throw new NotImplementedException("TODO");
+        return false; //TODO actually implement this
     }
 
     @Override
@@ -756,7 +766,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public CachedServerIcon getServerIcon() {
-        throw new NotImplementedException("TODO");
+        return icon;
     }
 
     @Override
@@ -812,7 +822,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException("TODO");
     }
 }

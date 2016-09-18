@@ -83,13 +83,11 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
 
     @Override
     public void setVillagerProfession(Profession profession) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public Profession getVillagerProfession() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

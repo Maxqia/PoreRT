@@ -85,13 +85,11 @@ public class PoreSkull extends PoreBlockState implements org.bukkit.block.Skull 
 
     @Override
     public OfflinePlayer getOwningPlayer() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setOwningPlayer(OfflinePlayer player) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

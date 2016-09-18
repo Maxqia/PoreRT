@@ -60,37 +60,31 @@ public class PoreBeacon extends PoreBlockState implements org.bukkit.block.Beaco
 
     @Override
     public Collection<LivingEntity> getEntitiesInRange() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public int getTier() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public PotionEffect getPrimaryEffect() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setPrimaryEffect(PotionEffectType effect) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public PotionEffect getSecondaryEffect() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setSecondaryEffect(PotionEffectType effect) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

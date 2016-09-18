@@ -456,43 +456,36 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
 
     @Override
     public AttributeInstance getAttribute(Attribute attribute) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isGliding() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setGliding(boolean gliding) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setAI(boolean ai) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean hasAI() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setCollidable(boolean collidable) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isCollidable() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

@@ -74,61 +74,51 @@ public class PoreVillager extends PoreAgeable implements org.bukkit.entity.Villa
 
     @Override
     public List<MerchantRecipe> getRecipes() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setRecipes(List<MerchantRecipe> recipes) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public MerchantRecipe getRecipe(int i) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setRecipe(int i, MerchantRecipe recipe) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public int getRecipeCount() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public Inventory getInventory() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isTrading() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public HumanEntity getTrader() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public int getRiches() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setRiches(int riches) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

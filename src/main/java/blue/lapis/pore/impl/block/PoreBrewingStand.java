@@ -65,13 +65,11 @@ public class PoreBrewingStand extends PoreBlockState implements org.bukkit.block
 
     @Override
     public int getFuelLevel() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setFuelLevel(int level) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

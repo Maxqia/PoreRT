@@ -31,14 +31,27 @@ import blue.lapis.pore.util.PoreWrapper;
 import org.bukkit.util.CachedServerIcon;
 import org.spongepowered.api.network.status.Favicon;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
+
 public class PoreCachedServerIcon extends PoreWrapper<Favicon> implements CachedServerIcon {
+    public final String value;
 
     public static PoreCachedServerIcon of(Favicon handle) {
         return WrapperConverter.of(PoreCachedServerIcon.class, handle);
     }
 
-    protected PoreCachedServerIcon(Favicon handle) {
+    protected PoreCachedServerIcon(Favicon handle) throws IOException {
         super(handle);
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        if (handle.getImage() != null) {
+            ImageIO.write(handle.getImage(), "PNG", buffer);
+        }
+        value = ("data:image/png;base64," + Base64.getEncoder().encode(buffer.toByteArray()));
     }
 
 }

@@ -55,13 +55,11 @@ public class PoreEnderDragon extends PoreComplexLivingEntity implements org.bukk
 
     @Override
     public Phase getPhase() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setPhase(Phase phase) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }

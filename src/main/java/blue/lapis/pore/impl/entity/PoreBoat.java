@@ -94,13 +94,11 @@ public class PoreBoat extends PoreVehicle implements org.bukkit.entity.Boat {
 
     @Override
     public TreeSpecies getWoodType() {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setWoodType(TreeSpecies species) {
-        // TODO Auto-generated method stub
         throw new NotImplementedException("TODO");
     }
 }
