@@ -44,7 +44,7 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
-import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.item.inventory.type.GridInventory;
@@ -440,7 +440,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
         }
         // enchanting
         // brewing
-        if (this.getHandle() instanceof HumanInventory) {
+        if (this.getHandle() instanceof PlayerInventory) {
             return InventoryType.PLAYER;
         }
         // creative

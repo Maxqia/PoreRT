@@ -37,28 +37,27 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 
 import java.util.Optional;
 
-public class PorePlayerInventory extends PoreInventory implements PlayerInventory {
+public class PorePlayerInventory extends PoreInventory implements org.bukkit.inventory.PlayerInventory {
 
-    public static PorePlayerInventory of(HumanInventory handle) {
+    public static PorePlayerInventory of(PlayerInventory handle) {
         return WrapperConverter.of(PorePlayerInventory.class, handle);
     }
 
-    protected PorePlayerInventory(HumanInventory handle) {
+    protected PorePlayerInventory(PlayerInventory handle) {
         super(handle);
     }
 
     @Override
-    public HumanInventory getHandle() {
-        return (HumanInventory) super.getHandle();
+    public PlayerInventory getHandle() {
+        return (PlayerInventory) super.getHandle();
     }
 
     @Override
@@ -185,8 +184,7 @@ public class PorePlayerInventory extends PoreInventory implements PlayerInventor
     public Player getHolder() {
         if (this.getHandle().getCarrier().isPresent()) {
             if (this.getHandle().getCarrier().get() instanceof org.spongepowered.api.entity.living.player.Player) {
-                return PorePlayer.of((org.spongepowered.api.entity.living.player.Player)
-                        this.getHandle().getCarrier().get());
+                return PorePlayer.of(this.getHandle().getCarrier().get());
             }
         }
         return null;
@@ -206,25 +204,25 @@ public class PorePlayerInventory extends PoreInventory implements PlayerInventor
 
     @Override
     public ItemStack getItemInMainHand() {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        Hotbar hotbar = getHandle().getHotbar();
+        Optional<Slot> mainHand = hotbar.getSlot(SlotIndex.of(hotbar.getSelectedSlotIndex()));
+        return ItemStackConverter.of(mainHand.get().peek().get());
     }
 
     @Override
     public void setItemInMainHand(ItemStack item) {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        Hotbar hotbar = getHandle().getHotbar();
+        Optional<Slot> mainHand = hotbar.getSlot(SlotIndex.of(hotbar.getSelectedSlotIndex()));
+        mainHand.get().offer(ItemStackConverter.of(item));
     }
 
     @Override
     public ItemStack getItemInOffHand() {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        return ItemStackConverter.of(getHandle().getOffhand().peek().get());
     }
 
     @Override
     public void setItemInOffHand(ItemStack item) {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        getHandle().getOffhand().set(ItemStackConverter.of(item));
     }
 }

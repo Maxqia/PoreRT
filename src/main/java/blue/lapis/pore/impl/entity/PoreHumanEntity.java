@@ -43,7 +43,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MainHand;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -55,7 +54,7 @@ import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
@@ -83,8 +82,8 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
     }
 
     @Override
-    public PlayerInventory getInventory() {
-        return PorePlayerInventory.of((HumanInventory) this.getHandle().getInventory());
+    public org.bukkit.inventory.PlayerInventory getInventory() {
+        return PorePlayerInventory.of((PlayerInventory) this.getHandle().getInventory());
     }
 
     @Override

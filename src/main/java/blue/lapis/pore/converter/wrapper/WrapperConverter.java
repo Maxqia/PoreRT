@@ -242,7 +242,7 @@ import org.spongepowered.api.entity.weather.Lightning;
 import org.spongepowered.api.entity.weather.WeatherEffect;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.world.Chunk;
@@ -379,7 +379,7 @@ public final class WrapperConverter {
 
             // Inventory classes
             .register(Inventory.class, PoreInventory.class)
-                .register(HumanInventory.class, PorePlayerInventory.class)
+                .register(PlayerInventory.class, PorePlayerInventory.class)
             .register(Carrier.class, PoreInventoryHolder.class)
 
             // Well, more or less...
