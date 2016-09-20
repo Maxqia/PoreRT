@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,31 +22,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.block;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.block.PoreBlock;
 
 import org.bukkit.block.Block;
-import org.spongepowered.api.event.block.BlockBurnEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.util.GuavaCollectors;
 
-public class PoreBlockBurnEvent extends org.bukkit.event.block.BlockBurnEvent {
+public final class PoreLeavesDecayEvent extends LeavesDecayEvent implements PoreEvent<ChangeBlockEvent.Decay> {
 
-    private final BlockBurnEvent handle;
+    private final ChangeBlockEvent.Decay handle;
+    private final Transaction<BlockSnapshot> transaction;
 
-    public PoreBlockBurnEvent(BlockBurnEvent handle) {
+    public PoreLeavesDecayEvent(ChangeBlockEvent.Decay handle, Transaction<BlockSnapshot> transaction) {
         super(null);
         this.handle = checkNotNull(handle, "handle");
+        this.transaction = checkNotNull(transaction, "transaction");
     }
 
-    public BlockBurnEvent getHandle() {
+    public ChangeBlockEvent.Decay getHandle() {
         return handle;
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(getHandle().getLocation());
+        return PoreBlock.of(this.transaction.getOriginal().getLocation().get());
     }
 
     @Override
@@ -59,4 +69,19 @@ public class PoreBlockBurnEvent extends org.bukkit.event.block.BlockBurnEvent {
         getHandle().setCancelled(cancel);
     }
 
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add("transaction", this.transaction)
+                .toString();
+    }
+
+    @RegisterEvent
+    public static void register() {
+        PoreEventRegistry.register(PoreLeavesDecayEvent.class, ChangeBlockEvent.Decay.class, event -> {
+            return event.getTransactions().stream()
+                    .map(transaction -> new PoreLeavesDecayEvent(event, transaction))
+                    .collect(GuavaCollectors.toImmutableList());
+        });
+    }
 }

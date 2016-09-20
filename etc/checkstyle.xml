@@ -29,6 +29,11 @@
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
+    <module name="RegexpSingleline">
+        <metadata name="net.sf.eclipsecs.core.comment" value="MAZ" />
+        <property name="format" value="[^\s]+\s+$" />
+        <property name="message" value="Line has trailing whitespace." />
+    </module>
 
     <module name="TreeWalker">
         <module name="OuterTypeFilename"/>
@@ -212,6 +217,7 @@
             -->
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <property name="severity" value="ignore"/>
         </module>
         <module name="MethodName">
             <!--

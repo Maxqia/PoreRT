@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,28 +22,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
+
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
-import org.spongepowered.api.event.inventory.InventoryClickEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 
-public class PoreFurnaceExtractEvent extends FurnaceExtractEvent {
+public final class PoreFurnaceExtractEvent extends FurnaceExtractEvent
+    implements PoreEvent<ClickInventoryEvent.Primary> {
 
-    private final InventoryClickEvent handle;
+    private final ClickInventoryEvent.Primary handle;
 
-    public PoreFurnaceExtractEvent(InventoryClickEvent handle) {
+    public PoreFurnaceExtractEvent(ClickInventoryEvent.Primary handle) {
         super(null, null, null, -1, -1);
         this.handle = checkNotNull(handle, "handle");
         //TODO: assert handle involves furnace inventory
     }
 
-    public InventoryClickEvent getHandle() {
+    public ClickInventoryEvent.Primary getHandle() {
         return this.handle;
     }
 
@@ -64,7 +71,8 @@ public class PoreFurnaceExtractEvent extends FurnaceExtractEvent {
 
     @Override
     public Player getPlayer() {
-        throw new NotImplementedException("TODO");
+        return PorePlayer.of(getHandle().getCause() //TODO check if this is right
+                .get(SOURCE, org.spongepowered.api.entity.living.player.Player.class).get());
     }
 
     @Override
@@ -76,4 +84,10 @@ public class PoreFurnaceExtractEvent extends FurnaceExtractEvent {
     public int getItemAmount() {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
+    //TODO register event
 }

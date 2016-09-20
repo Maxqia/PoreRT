@@ -139,6 +139,7 @@ public class PoreEventImplTest {
                 checkSpongeEvent(eventImpl, field.getType());
                 return;
             } catch (NoSuchFieldException ignored) {
+                //Exception ignored
             }
 
             superClass = superClass.getSuperclass();

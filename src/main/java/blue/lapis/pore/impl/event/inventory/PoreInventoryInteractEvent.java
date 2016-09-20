@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,43 +22,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.inventory.DragType;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
-import org.spongepowered.api.event.inventory.InventoryEvent;
+import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-public class PoreInventoryDragEvent extends InventoryDragEvent {
+@RegisterEvent
+public final class PoreInventoryInteractEvent extends org.bukkit.event.inventory.InventoryInteractEvent
+    implements PoreEvent<InteractInventoryEvent> {
 
-    private final InventoryEvent handle;
+    private final InteractInventoryEvent handle;
 
-    public PoreInventoryDragEvent(InventoryEvent handle) {
-        super(null, null, new ItemStack(Material.DIRT, 1), false, Maps.<Integer, ItemStack>newHashMap());
+    public PoreInventoryInteractEvent(InteractInventoryEvent handle) {
+        super(null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public InventoryEvent getHandle() {
+    public InteractInventoryEvent getHandle() {
         return this.handle;
     }
 
     @Override
     public Inventory getInventory() {
-        return PoreInventory.of(this.getHandle().getInventory());
+        return PoreInventory.of(this.getHandle().getTargetInventory());
     }
 
     @Override
@@ -77,57 +76,27 @@ public class PoreInventoryDragEvent extends InventoryDragEvent {
     }
 
     @Override
-    public Map<Integer, ItemStack> getNewItems() {
+    public Event.Result getResult() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public Set<Integer> getRawSlots() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public Set<Integer> getInventorySlots() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public ItemStack getCursor() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void setCursor(ItemStack newCursor) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public ItemStack getOldCursor() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public DragType getType() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public Result getResult() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void setResult(Result newResult) {
+    public void setResult(Event.Result newResult) {
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return handle.isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        throw new NotImplementedException("TODO");
+        handle.setCancelled(cancelled);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,41 +22,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.spongepowered.api.event.inventory.InventoryClickEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 
 import java.util.List;
 
-//TODO: this is just a reimplementation of InventoryClickEvent. Should we try to wrap it?
-public class PoreInventoryCreativeEvent extends org.bukkit.event.inventory.InventoryCreativeEvent {
+@RegisterEvent
+public final class PoreInventoryClickEvent extends InventoryClickEvent implements PoreEvent<ClickInventoryEvent> {
 
-    private final InventoryClickEvent handle;
+    private final ClickInventoryEvent handle;
 
-    public PoreInventoryCreativeEvent(InventoryClickEvent handle) {
-        super(null, null, -1, null);
+    public PoreInventoryClickEvent(ClickInventoryEvent handle) {
+        super(null, null, -1, null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public InventoryClickEvent getHandle() {
+    public ClickInventoryEvent getHandle() {
         return this.handle;
     }
 
     @Override
     public Inventory getInventory() {
-        return PoreInventory.of(this.getHandle().getContainer());
+        return PoreInventory.of(this.getHandle().getTargetInventory());
     }
 
     @Override
@@ -75,12 +79,12 @@ public class PoreInventoryCreativeEvent extends org.bukkit.event.inventory.Inven
     }
 
     @Override
-    public Result getResult() {
+    public void setResult(Result newResult) {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public void setResult(Result newResult) {
+    public Result getResult() {
         throw new NotImplementedException("TODO");
     }
 
@@ -99,6 +103,7 @@ public class PoreInventoryCreativeEvent extends org.bukkit.event.inventory.Inven
         this.getView().setCursor(stack);
     }
 
+    //TODO implement this
     @Override
     public ItemStack getCurrentItem() {
         throw new NotImplementedException("TODO");
@@ -151,11 +156,16 @@ public class PoreInventoryCreativeEvent extends org.bukkit.event.inventory.Inven
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return handle.isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        throw new NotImplementedException("TODO");
+        handle.setCancelled(cancelled);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

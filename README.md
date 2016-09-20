@@ -1,20 +1,18 @@
-# Pore [![travis badge](https://travis-ci.org/LapisBlue/Pore.svg)](https://travis-ci.org/LapisBlue/Pore)
+# Pore Returned [![Build Status](https://jenkins.maxqia.com/job/PoreRT/badge/icon)](https://jenkins.maxqia.com/job/PoreRT/)
 
-**2016/04/19:** Pore is officially discontinued. Read more [here](https://blog.caseif.net/post.php?id=41).
-
----
-
-Pore is a plugin for the up-and-coming SpongeAPI built to provide compatibility for Bukkit plugins on the platform.
+Pore was a plugin for the up-and-coming SpongeAPI built to provide compatibility for Bukkit plugins on the platform.
+This is a continuation of Pore to add more features and update it for 1.10 (and beyond hopefully).
 Please note that this project is still under heavy development and **is not yet considered functional**. Currently, no
 Bukkit plugins are verified to be supported.
 
-## Running Pore on Your Sponge Server
+## Running PoreRT on Your Sponge Server
+<sup>**Warning** : The "bukkit-plugins" directory from previous versions of Pore has been moved to the "plugins" directory</sup>
 
 If you like living on the bleeding edge and want to give Pore a try:
 
 1. Back up your existing system.
 2. Install [Sponge](https://www.spongepowered.org/), detailed instructions can be found [here](https://docs.spongepowered.org/en/server/getting-started/) .
-3. Copy the [Pore Snapshot](https://ci.caseif.net/job/Pore/lastSuccessfulBuild/) into your server's `mods` directory.
+3. Copy the [PoreRT Snapshot](https://jenkins.maxqia.com/job/PoreRT/lastSuccessfulBuild/) into your server's `mods` directory.
 4. Make a `plugins` directory in your server's base directory.
 5. Copy any of the plugins you want to try into the `plugins` directory.
 
@@ -30,7 +28,7 @@ These aren't an indication that a feature is broken, but that a feature needed f
 
 Gradle is used to handle dependencies.
 
-- Clone the repo: `git clone https://github.com/LapisBlue/Pore.git`
+- Clone the repo: `git clone https://github.com/Maxqia/PoreRT.git`
 - Navigate to the new directory: `cd Pore`
 - Compile the project using the Gradle wrapper: `./gradlew` (`gradlew` on Windows)
 
@@ -38,11 +36,11 @@ Gradle is used to handle dependencies.
 
 You can run and debug Pore directly in your IDE if you setup your workspace like described in the following steps:
 
-1. Setup the Pore project as described in
+1. Setup the PoreRT project as described in
 [Plugin Debugging and Hotswapping (SpongeDocs)](https://docs.spongepowered.org/en/plugin/debugging.html)
 2. Create a **new** run configuration with the same settings as described in the link above, but add this as a program
 argument: `--tweakClass blue.lapis.pore.tweaker.RemapTweaker`
-3. Run the server as usual. Pore should load and you should be able to debug in your IDE.
+3. Run the server as usual. PoreRT should load and you should be able to debug in your IDE.
 
 ### Configuring the annotation processor
 
@@ -62,13 +60,13 @@ profile.
 
 ## Questions?
 
-Have an issue or a question about Pore? No problem! Feel free to ask in #lapis on EsperNet.
+Have an issue or a question about PoreRT? No problem! Feel free to ask in #lapis on EsperNet.
 
 ## Licensing
 
-Pore's source code is made available under the [MIT license](http://opensource.org/licenses/MIT). You may do as you wish
+PoreRT's source code is made available under the [MIT license](http://opensource.org/licenses/MIT). You may do as you wish
 with the source within its bounds.
 
 `.patch` files for Bukkit are made available under the [GPLv3](http://opensource.org/licenses/gpl-3.0.html).
 
-Pore's distribution is made available under the [GPLv3](http://opensource.org/licenses/gpl-3.0.html).
+PoreRT's distribution is made available under the [GPLv3](http://opensource.org/licenses/gpl-3.0.html).

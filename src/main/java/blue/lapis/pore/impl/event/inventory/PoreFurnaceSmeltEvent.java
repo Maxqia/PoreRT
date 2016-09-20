@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,62 +22,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import blue.lapis.pore.impl.inventory.PoreInventory;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.spongepowered.api.event.inventory.InventoryEvent;
+import org.bukkit.block.Block;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.inventory.ItemStack;
+import org.spongepowered.api.event.block.tileentity.SmeltEvent;
 
-import java.util.List;
+@RegisterEvent // TODO Not implemented in Sponge
+public final class PoreFurnaceSmeltEvent extends FurnaceSmeltEvent implements PoreEvent<SmeltEvent.Finish> {
 
-public class PoreInventoryInteractEvent extends InventoryInteractEvent {
+    private final SmeltEvent.Finish handle;
 
-    private final InventoryEvent handle;
-
-    public PoreInventoryInteractEvent(InventoryEvent handle) {
-        super(null);
+    public PoreFurnaceSmeltEvent(SmeltEvent.Finish handle) {
+        super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public InventoryEvent getHandle() {
+    public SmeltEvent.Finish getHandle() {
         return this.handle;
     }
 
     @Override
-    public Inventory getInventory() {
-        return PoreInventory.of(this.getHandle().getInventory());
-    }
-
-    @Override
-    public List<HumanEntity> getViewers() {
-        return this.getInventory().getViewers();
-    }
-
-    @Override
-    public InventoryView getView() {
+    public Block getBlock() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public HumanEntity getWhoClicked() {
-        return this.getView().getPlayer();
-    }
-
-    @Override
-    public Event.Result getResult() {
+    public ItemStack getSource() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public void setResult(Event.Result newResult) {
+    public ItemStack getResult() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setResult(ItemStack result) {
         throw new NotImplementedException("TODO");
     }
 
@@ -87,7 +76,12 @@ public class PoreInventoryInteractEvent extends InventoryInteractEvent {
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled(boolean cancel) {
         throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

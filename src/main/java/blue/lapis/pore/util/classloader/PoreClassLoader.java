@@ -62,6 +62,7 @@ public class PoreClassLoader extends URLClassLoader implements LocalClassLoader 
                 return super.findClass(name);
             }
         } catch (ClassNotFoundException ignored) {
+            //Exception ignored
         }
 
         return this.parent.loadClass(name);

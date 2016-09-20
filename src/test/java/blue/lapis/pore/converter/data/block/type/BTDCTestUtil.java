@@ -94,7 +94,6 @@ public final class BTDCTestUtil {
         testSingleDeabstraction(blockType, dataClass, rawData, abstractedData, false);
     }
 
-    @SuppressWarnings("unchecked")
     public static void testAbstraction(BlockType blockType, byte rawData,
             Collection<? extends AbstractDataValue<? extends DataManipulator, ?>>
                     abstractedData,
@@ -161,7 +160,6 @@ public final class BTDCTestUtil {
         PERSISTENCE_LIST.remove(loc);
     }
 
-    @SuppressWarnings("unchecked")
     public static void testDeabstraction(BlockType blockType, byte rawData,
             Collection<? extends AbstractDataValue<? extends DataManipulator, ?>>
                     abstractedData)
