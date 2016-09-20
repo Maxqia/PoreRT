@@ -51,6 +51,11 @@ public final class PoreFurnaceSmeltEvent extends FurnaceSmeltEvent implements Po
     }
 
     @Override
+    public Block getFurnace() {
+        return getBlock();
+    }
+
+    @Override
     public Block getBlock() {
         throw new NotImplementedException("TODO");
     }

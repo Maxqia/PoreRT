@@ -51,6 +51,11 @@ public final class PoreFurnaceBurnEvent extends FurnaceBurnEvent implements Pore
     }
 
     @Override
+    public Block getFurnace() {
+        return getBlock();
+    }
+
+    @Override
     public Block getBlock() {
         throw new NotImplementedException("TODO");
     }
