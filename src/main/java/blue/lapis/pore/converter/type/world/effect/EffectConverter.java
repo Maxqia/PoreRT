@@ -53,10 +53,30 @@ public final class EffectConverter {
                 case DOOR_TOGGLE:
                     return Math.random() >= 0.5
                         ? SoundTypes.BLOCK_WOODEN_DOOR_OPEN : SoundTypes.BLOCK_WOODEN_DOOR_CLOSE;
+                case IRON_DOOR_TOGGLE:
+                    return Math.random() >= 0.5
+                    ? SoundTypes.BLOCK_IRON_DOOR_OPEN : SoundTypes.BLOCK_IRON_DOOR_CLOSE;
+                case TRAPDOOR_TOGGLE:
+                    return Math.random() >= 0.5
+                    ? SoundTypes.BLOCK_WOODEN_TRAPDOOR_OPEN : SoundTypes.BLOCK_WOODEN_TRAPDOOR_CLOSE;
+                case IRON_TRAPDOOR_TOGGLE:
+                    return Math.random() >= 0.5
+                    ? SoundTypes.BLOCK_IRON_TRAPDOOR_OPEN : SoundTypes.BLOCK_IRON_TRAPDOOR_CLOSE;
+                case FENCE_GATE_TOGGLE:
+                    return Math.random() >= 0.5
+                    ? SoundTypes.BLOCK_FENCE_GATE_OPEN : SoundTypes.BLOCK_FENCE_GATE_CLOSE;
+                case DOOR_CLOSE:
+                    return SoundTypes.BLOCK_WOODEN_DOOR_CLOSE;
+                case IRON_DOOR_CLOSE:
+                    return SoundTypes.BLOCK_IRON_DOOR_CLOSE;
+                case TRAPDOOR_CLOSE:
+                    return SoundTypes.BLOCK_IRON_TRAPDOOR_CLOSE;
+                case IRON_TRAPDOOR_CLOSE:
+                    return SoundTypes.BLOCK_IRON_TRAPDOOR_CLOSE;
+                case FENCE_GATE_CLOSE:
+                    throw new NotImplementedException("TODO");
                 case EXTINGUISH:
                     return SoundTypes.BLOCK_FIRE_EXTINGUISH;
-                case RECORD_PLAY:
-                    throw new NotImplementedException("TODO");
                 case GHAST_SHRIEK:
                     return SoundTypes.ENTITY_GHAST_SCREAM;
                 case GHAST_SHOOT:
@@ -71,6 +91,38 @@ public final class EffectConverter {
                     return SoundTypes.ENTITY_ZOMBIE_BREAK_DOOR_WOOD;
                 case STEP_SOUND:
                     throw new NotImplementedException("TODO"); //TODO: determine generic type of block
+                case BREWING_STAND_BREW:
+                    return SoundTypes.BLOCK_BREWING_STAND_BREW;
+                case CHORUS_FLOWER_GROW:
+                    return SoundTypes.BLOCK_CHORUS_FLOWER_GROW;
+                case CHORUS_FLOWER_DEATH:
+                    return SoundTypes.BLOCK_CHORUS_FLOWER_DEATH;
+                case PORTAL_TRAVEL:
+                    return SoundTypes.BLOCK_PORTAL_TRAVEL;
+                case ENDEREYE_LAUNCH:
+                    return SoundTypes.ENTITY_ENDEREYE_LAUNCH;
+                case FIREWORK_SHOOT:
+                    return SoundTypes.ENTITY_FIREWORK_SHOOT;
+                case ANVIL_BREAK:
+                    return SoundTypes.BLOCK_ANVIL_BREAK;
+                case ANVIL_USE:
+                    return SoundTypes.BLOCK_ANVIL_USE;
+                case ANVIL_LAND:
+                    return SoundTypes.BLOCK_ANVIL_LAND;
+                case ENDERDRAGON_SHOOT:
+                    return SoundTypes.ENTITY_ENDERDRAGON_SHOOT;
+                case WITHER_BREAK_BLOCK:
+                    return SoundTypes.ENTITY_WITHER_BREAK_BLOCK;
+                case WITHER_SHOOT: //return SoundTypes.;
+                    return SoundTypes.ENTITY_WITHER_SHOOT;
+                case ZOMBIE_INFECT:
+                    return SoundTypes.ENTITY_ZOMBIE_INFECT;
+                case ZOMBIE_CONVERTED_VILLAGER:
+                    return SoundTypes.ENTITY_ZOMBIE_VILLAGER_CONVERTED;
+                case BAT_TAKEOFF:
+                    return SoundTypes.ENTITY_BAT_TAKEOFF;
+                case ENDERDRAGON_GROWL:
+                    throw new NotImplementedException("TODO");
                 default:
                     return null;
             }
@@ -83,6 +135,16 @@ public final class EffectConverter {
             switch (effect) {
                 case SMOKE:
                     return ParticleTypes.SMOKE_NORMAL;
+                case ENDER_SIGNAL:
+                    throw new NotImplementedException("TODO");
+                case MOBSPAWNER_FLAMES: // might be already implmented
+                    throw new NotImplementedException("TODO");
+                case VILLAGER_PLANT_GROW:
+                    throw new NotImplementedException("TODO");
+                case DRAGON_BREATH:
+                    throw new NotImplementedException("TODO");
+                case END_GATEWAY_SPAWN:
+                    throw new NotImplementedException("TODO");
                 default:
                     return null;
             }
