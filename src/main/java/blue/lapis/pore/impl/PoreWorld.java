@@ -510,7 +510,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
                 .radius(power)
                 .build();
 
-        explosion.getWorld().triggerExplosion(explosion);
+        explosion.getWorld().triggerExplosion(explosion, Cause.source(this).build());
         return true; // TODO
     }
 

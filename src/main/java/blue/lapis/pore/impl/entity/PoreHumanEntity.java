@@ -287,4 +287,10 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
     public InventoryView openMerchant(Villager trader, boolean force) {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public boolean isHandRaised() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

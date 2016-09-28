@@ -488,4 +488,10 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
     public boolean isCollidable() {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public PotionEffect getPotionEffect(PotionEffectType type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

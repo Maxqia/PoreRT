@@ -36,6 +36,7 @@ import org.spongepowered.api.data.type.HorseStyles;
 import org.spongepowered.api.data.type.HorseVariant;
 import org.spongepowered.api.data.type.HorseVariants;
 
+@SuppressWarnings("deprecation")
 public final class HorseConverter {
 
     private HorseConverter() {

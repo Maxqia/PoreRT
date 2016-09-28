@@ -34,6 +34,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.HorseInventory;
 import org.spongepowered.api.entity.living.animal.Horse;
 
+@SuppressWarnings("deprecation")
 public class PoreHorse extends PoreTameable implements org.bukkit.entity.Horse {
 
     public static PoreHorse of(Horse handle) {
