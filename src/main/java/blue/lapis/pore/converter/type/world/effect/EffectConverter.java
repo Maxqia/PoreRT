@@ -77,6 +77,8 @@ public final class EffectConverter {
                     throw new NotImplementedException("TODO");
                 case EXTINGUISH:
                     return SoundTypes.BLOCK_FIRE_EXTINGUISH;
+                case RECORD_PLAY:
+                    throw new NotImplementedException("TODO");
                 case GHAST_SHRIEK:
                     return SoundTypes.ENTITY_GHAST_SCREAM;
                 case GHAST_SHOOT:
