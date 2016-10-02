@@ -416,14 +416,12 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     @Override
     public void setGlowing(boolean flag) {
-        // TODO
-        throw new NotImplementedException("TODO");
+        getHandle().offer(Keys.GLOWING, flag);
     }
 
     @Override
     public boolean isGlowing() {
-        // TODO
-        throw new NotImplementedException("TODO");
+        return getHandle().get(Keys.GLOWING).orElse(false);
     }
 
     @Override
@@ -440,26 +438,31 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     @Override
     public boolean isSilent() {
-        // TODO
-        throw new NotImplementedException("TODO");
+        return getHandle().get(Keys.IS_SILENT).orElse(false);
     }
 
     @Override
     public void setSilent(boolean flag) {
-        // TODO
-        throw new NotImplementedException("TODO");
+        getHandle().offer(Keys.IS_SILENT, flag);
     }
 
     @Override
     public boolean hasGravity() {
-        // TODO
-        throw new NotImplementedException("TODO");
+        return getHandle().get(Keys.HAS_GRAVITY).orElse(true);
     }
 
     @Override
     public void setGravity(boolean gravity) {
-        // TODO
-        throw new NotImplementedException("TODO");
+        getHandle().offer(Keys.HAS_GRAVITY, gravity);
     }
 
+    @Override
+    public int getPortalCooldown() { // TODO this might not be the right key
+        return getHandle().get(Keys.COOLDOWN).orElse(0);
+    }
+
+    @Override
+    public void setPortalCooldown(int cooldown) {
+        getHandle().offer(Keys.COOLDOWN, cooldown);
+    }
 }

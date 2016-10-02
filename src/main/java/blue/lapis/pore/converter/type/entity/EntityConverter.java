@@ -39,7 +39,6 @@ public final class EntityConverter {
     private static final Converter<org.bukkit.entity.EntityType, org.spongepowered.api.entity.EntityType> CONVERTER =
             TypeConverter.builder(org.bukkit.entity.EntityType.class, org.spongepowered.api.entity.EntityType.class)
                     .add(EntityType.ARMOR_STAND, EntityTypes.ARMOR_STAND)
-                    //.add(EntityType.ARROW, EntityTypes.ARROW) //TODO find out this value
                     .add(EntityType.BAT, EntityTypes.BAT)
                     .add(EntityType.BLAZE, EntityTypes.BLAZE)
                     .add(EntityType.BOAT, EntityTypes.BOAT)
@@ -96,7 +95,7 @@ public final class EntityConverter {
                     .add(EntityType.SPLASH_POTION, EntityTypes.SPLASH_POTION)
                     .add(EntityType.SQUID, EntityTypes.SQUID)
                     .add(EntityType.THROWN_EXP_BOTTLE, EntityTypes.THROWN_EXP_BOTTLE)
-                    //.add(EntityType.UNKNOWN, EntityTypes.UNKNOWN) //TODO: this is null in Sponge
+                    .add(EntityType.UNKNOWN, EntityTypes.UNKNOWN)
                     .add(EntityType.VILLAGER, EntityTypes.VILLAGER)
                     .add(EntityType.WEATHER, EntityTypes.WEATHER)
                     .add(EntityType.WITCH, EntityTypes.WITCH)
@@ -115,6 +114,7 @@ public final class EntityConverter {
                     .build();
 
     public static org.spongepowered.api.entity.EntityType of(org.bukkit.entity.EntityType entityType) {
+        if (entityType == EntityType.ARROW) return EntityTypes.TIPPED_ARROW; // A tipped arrow with no effects spawns a arrow
         return CONVERTER.convert(entityType);
     }
 
