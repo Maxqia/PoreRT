@@ -31,10 +31,10 @@ import blue.lapis.pore.converter.type.material.ItemStackConverter;
 import blue.lapis.pore.converter.vector.EulerAngleConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.ArmorStand;
 
@@ -168,29 +168,24 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
         getHandle().getBodyPartRotationalData().rightLegDirection().set(EulerAngleConverter.of(pose));
     }
 
-    //TODO fix deprecation
-    @SuppressWarnings("deprecation")
     @Override
     public boolean hasBasePlate() {
-        return getHandle().hasBasePlate();
+        return getHandle().get(Keys.ARMOR_STAND_HAS_BASE_PLATE).orElse(false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setBasePlate(boolean basePlate) {
-        getHandle().setHasBasePlate(basePlate);
+        getHandle().offer(Keys.ARMOR_STAND_HAS_BASE_PLATE, basePlate);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean hasGravity() {
-        return this.getHandle().hasGravity();
+        return getHandle().get(Keys.HAS_GRAVITY).orElse(false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setGravity(boolean gravity) {
-        this.getHandle().setGravity(gravity);
+        getHandle().offer(Keys.HAS_GRAVITY, gravity);
     }
 
     @Override
@@ -203,38 +198,33 @@ public class PoreArmorStand extends PoreLivingEntity implements org.bukkit.entit
         getHandle().getOrCreate(INVISIBILITY_DATA);
     }
 
-    //TODO fix deprecation
-    @SuppressWarnings("deprecation")
     @Override
     public boolean hasArms() {
-        return getHandle().doesShowArms();
+        return getHandle().get(Keys.ARMOR_STAND_HAS_ARMS).orElse(false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setArms(boolean arms) {
-        this.getHandle().setShowArms(arms);
+        getHandle().offer(Keys.ARMOR_STAND_HAS_ARMS, arms);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean isSmall() {
-        return getHandle().isSmall();
+        return getHandle().get(Keys.ARMOR_STAND_IS_SMALL).orElse(false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setSmall(boolean small) {
-        getHandle().setSmall(small);
+        getHandle().offer(Keys.ARMOR_STAND_IS_SMALL, small);
     }
 
     @Override
     public boolean isMarker() {
-        throw new NotImplementedException("TODO");
+        return getHandle().get(Keys.ARMOR_STAND_MARKER).orElse(false);
     }
 
     @Override
     public void setMarker(boolean marker) {
-        throw new NotImplementedException("TODO");
+        getHandle().offer(Keys.ARMOR_STAND_MARKER, marker);
     }
 }

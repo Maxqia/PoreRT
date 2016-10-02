@@ -143,7 +143,7 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
                     hit.getExtent().getBlockType(hit.getBlockX(), hit.getBlockY(), hit.getBlockZ())));
         }
 
-        return BlockRay.from(getHandle()).filter(new IncludeTargetFilter(filter)).blockLimit(maxDistance);
+        return BlockRay.from(getHandle()).skipFilter(new IncludeTargetFilter(filter)).distanceLimit(maxDistance);
     }
 
     @Override

@@ -142,7 +142,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
         int i = 0;
         for (ItemStack stack : items) {
             Inventory query = this.getHandle().query(ItemStackConverter.of(stack));
-            if (query.isEmpty()) {
+            if (query.hasChildren()) {
                 notRemoved.put(i, stack);
                 continue;
             }
