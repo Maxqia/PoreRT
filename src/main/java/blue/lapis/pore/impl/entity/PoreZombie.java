@@ -25,13 +25,13 @@
 
 package blue.lapis.pore.impl.entity;
 
-import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.VILLAGER_ZOMBIE_DATA;
-
+import blue.lapis.pore.converter.type.entity.ProfessionConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
+import org.spongepowered.api.data.type.ZombieTypes;
 import org.spongepowered.api.entity.living.monster.Zombie;
 
 public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie {
@@ -66,28 +66,27 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
 
     @Override
     public boolean isVillager() {
-        return !hasData(VILLAGER_ZOMBIE_DATA) || !getHandle().get(VILLAGER_ZOMBIE_DATA).isPresent();
+        return getHandle().getZombieData().type().equals(ZombieTypes.VILLAGER);
     }
 
     @Override
     public void setVillager(boolean isVillager) {
         if (isVillager != isVillager()) {
             if (isVillager) {
-                getHandle().getOrCreate(VILLAGER_ZOMBIE_DATA);
-                //.get().type().get().getCareers().villagerZombie().set(true);
+                getHandle().getZombieData().type().set(ZombieTypes.VILLAGER);
             } else {
-                getHandle().remove(VILLAGER_ZOMBIE_DATA);
+                getHandle().getZombieData().type().set(ZombieTypes.NORMAL);
             }
         }
     }
 
     @Override
     public void setVillagerProfession(Profession profession) {
-        throw new NotImplementedException("TODO");
+        getHandle().getZombieData().profession().setTo(ProfessionConverter.of(profession));
     }
 
     @Override
     public Profession getVillagerProfession() {
-        throw new NotImplementedException("TODO");
+        return ProfessionConverter.of(getHandle().getZombieData().profession().get().orElse(null));
     }
 }
