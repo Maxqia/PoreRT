@@ -134,10 +134,13 @@ import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PorePlayerInventory;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
+import blue.lapis.pore.impl.scoreboard.PoreScoreboardManager;
+import blue.lapis.pore.impl.scoreboard.PoreTeam;
 import blue.lapis.pore.impl.util.PoreCachedServerIcon;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
+
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Banner;
 import org.spongepowered.api.block.tileentity.CommandBlock;
@@ -245,6 +248,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.network.status.Favicon;
 import org.spongepowered.api.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -375,7 +379,9 @@ public final class WrapperConverter {
                 .register(CommandBlockSource.class, PoreBlockCommandSender.class)
                 .register(ConsoleSource.class, PoreConsoleCommandSender.class)
 
+            .register(Scoreboard.Builder.class, PoreScoreboardManager.class)
             .register(Scoreboard.class, PoreScoreboard.class)
+            .register(Team.class, PoreTeam.class)
 
             // Inventory classes
             .register(Inventory.class, PoreInventory.class)

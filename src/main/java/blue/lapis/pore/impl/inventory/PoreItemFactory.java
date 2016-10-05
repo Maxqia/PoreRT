@@ -53,7 +53,7 @@ public class PoreItemFactory implements ItemFactory {
 
     @Override
     public boolean equals(ItemMeta meta1, ItemMeta meta2) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        return (meta1 == meta2);
     }
 
     @Override
