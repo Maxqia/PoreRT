@@ -25,10 +25,10 @@
 
 package blue.lapis.pore.impl.scoreboard;
 
+import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.util.PoreWrapper;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.spongepowered.api.scoreboard.Scoreboard;
 
@@ -46,7 +46,7 @@ public class PoreScoreboardManager extends PoreWrapper<Scoreboard.Builder>
     @Override
     public org.bukkit.scoreboard.Scoreboard getMainScoreboard() {
         //TODO: scoreboard are per-world
-        throw new NotImplementedException("TODO");
+        return PoreScoreboard.of(Pore.getGame().getServer().getServerScoreboard().get());
     }
 
     @Override

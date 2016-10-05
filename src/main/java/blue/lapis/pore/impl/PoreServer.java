@@ -31,7 +31,9 @@ import blue.lapis.pore.impl.command.PoreCommandMap;
 import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.help.PoreHelpMap;
+import blue.lapis.pore.impl.inventory.PoreItemFactory;
 import blue.lapis.pore.impl.scheduler.PoreBukkitScheduler;
+import blue.lapis.pore.impl.scoreboard.PoreScoreboardManager;
 import blue.lapis.pore.impl.util.PoreCachedServerIcon;
 import blue.lapis.pore.util.PoreCollections;
 import blue.lapis.pore.util.PoreText;
@@ -85,6 +87,7 @@ import org.bukkit.util.StringUtil;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.util.GuavaCollectors;
@@ -123,6 +126,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     private final BukkitScheduler scheduler = new PoreBukkitScheduler();
     private final BanList profileBans = new PoreUserBanList();
     private final BanList ipBans = new PoreIpBanList();
+    private final ItemFactory itemFactory = new PoreItemFactory();
     private CachedServerIcon icon = null;
 
     public PoreServer(org.spongepowered.api.Game handle, org.slf4j.Logger logger) {
@@ -759,12 +763,12 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public ItemFactory getItemFactory() {
-        throw new NotImplementedException("TODO");
+        return itemFactory;
     }
 
     @Override
     public ScoreboardManager getScoreboardManager() {
-        throw new NotImplementedException("TODO");
+        return PoreScoreboardManager.of(Scoreboard.builder());
     }
 
     @Override
