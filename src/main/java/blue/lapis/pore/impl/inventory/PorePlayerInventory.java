@@ -67,22 +67,22 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getHelmet() {
-        return this.getArbitraryStack(EquipmentTypes.HEADWEAR);
+        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getHelmet().orElse(null));
     }
 
     @Override
     public ItemStack getChestplate() {
-        return this.getArbitraryStack(EquipmentTypes.CHESTPLATE);
+        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getChestplate().orElse(null));
     }
 
     @Override
     public ItemStack getLeggings() {
-        return this.getArbitraryStack(EquipmentTypes.LEGGINGS);
+        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getLeggings().orElse(null));
     }
 
     @Override
     public ItemStack getBoots() {
-        return this.getArbitraryStack(EquipmentTypes.BOOTS);
+        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getBoots().orElse(null));
     }
 
     @Override
