@@ -32,12 +32,13 @@ import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.inventory.PoreInventory;
+import blue.lapis.pore.impl.inventory.PoreInventoryView;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 
 import java.util.List;
@@ -69,13 +70,17 @@ public final class PoreInventoryOpenEvent extends InventoryOpenEvent
 
     @Override
     public InventoryView getView() {
-        throw new NotImplementedException("TODO");
+        return PoreInventoryView.builder()
+                .setPlayer(getPlayer())
+                .setTopInventory(getInventory())
+                .setBottomInventory(getPlayer().getInventory())
+                .build();
     }
 
     @Override
     public HumanEntity getPlayer() {
-        return PorePlayer.of(getHandle().getCause() //TODO check if this is right
-                .get(SOURCE, org.spongepowered.api.entity.living.player.Player.class).get());
+        return PorePlayer.of(getHandle().getCause()
+                .get(NamedCause.OWNER, org.spongepowered.api.entity.living.player.Player.class).orElse(null));
     }
 
     @Override

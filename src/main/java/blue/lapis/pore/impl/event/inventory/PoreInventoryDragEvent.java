@@ -26,20 +26,26 @@
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
 
+import blue.lapis.pore.converter.type.attribute.EventResultConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.inventory.PoreInventory;
+import blue.lapis.pore.impl.inventory.PoreInventoryView;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.Event;
 import org.bukkit.event.inventory.DragType;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 
 import java.util.List;
@@ -72,12 +78,17 @@ public final class PoreInventoryDragEvent extends InventoryDragEvent implements 
 
     @Override
     public InventoryView getView() {
-        throw new NotImplementedException("TODO");
+        return PoreInventoryView.builder()
+                .setPlayer(getWhoClicked())
+                .setTopInventory(getInventory())
+                .setBottomInventory(getWhoClicked().getInventory())
+                .build();
     }
 
     @Override
     public HumanEntity getWhoClicked() {
-        return this.getView().getPlayer();
+        return PorePlayer.of(getHandle().getCause()
+                .get(NamedCause.OWNER, org.spongepowered.api.entity.living.player.Player.class).orElse(null));
     }
 
     @Override
@@ -116,13 +127,13 @@ public final class PoreInventoryDragEvent extends InventoryDragEvent implements 
     }
 
     @Override
-    public Result getResult() {
-        throw new NotImplementedException("TODO");
+    public Event.Result getResult() {
+        return EventResultConverter.of(getHandle().isCancelled());
     }
 
     @Override
-    public void setResult(Result newResult) {
-        throw new NotImplementedException("TODO");
+    public void setResult(Event.Result newResult) {
+        getHandle().setCancelled(EventResultConverter.of(newResult));
     }
 
     @Override
