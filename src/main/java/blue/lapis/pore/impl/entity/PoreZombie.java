@@ -28,7 +28,6 @@ package blue.lapis.pore.impl.entity;
 import blue.lapis.pore.converter.type.entity.ProfessionConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
 import org.spongepowered.api.data.type.ZombieTypes;

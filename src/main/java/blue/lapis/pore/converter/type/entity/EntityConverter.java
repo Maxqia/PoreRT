@@ -114,7 +114,9 @@ public final class EntityConverter {
                     .build();
 
     public static org.spongepowered.api.entity.EntityType of(org.bukkit.entity.EntityType entityType) {
-        if (entityType == EntityType.ARROW) return EntityTypes.TIPPED_ARROW; // A tipped arrow with no effects spawns a arrow
+        if (entityType == EntityType.ARROW) {
+            return EntityTypes.TIPPED_ARROW; // A tipped arrow with no effects spawns a arrow
+        }
         return CONVERTER.convert(entityType);
     }
 
