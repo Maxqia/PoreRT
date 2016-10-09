@@ -26,7 +26,6 @@
 package blue.lapis.pore.impl.event.inventory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
 
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
@@ -37,6 +36,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 
 public final class PoreFurnaceExtractEvent extends FurnaceExtractEvent
@@ -71,8 +71,8 @@ public final class PoreFurnaceExtractEvent extends FurnaceExtractEvent
 
     @Override
     public Player getPlayer() {
-        return PorePlayer.of(getHandle().getCause() //TODO check if this is right
-                .get(SOURCE, org.spongepowered.api.entity.living.player.Player.class).get());
+        return PorePlayer.of(getHandle().getCause()
+                .get(NamedCause.OWNER, org.spongepowered.api.entity.living.player.Player.class).orElse(null));
     }
 
     @Override
