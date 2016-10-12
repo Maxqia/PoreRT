@@ -2,8 +2,7 @@
 
 Pore was a plugin for the up-and-coming SpongeAPI built to provide compatibility for Bukkit plugins on the platform.
 This is a continuation of Pore to add more features and update it for 1.10 (and beyond hopefully).
-Please note that this project is still under heavy development and **is not yet considered functional**. Currently, no
-Bukkit plugins are verified to be supported.
+Please note that this project is still under heavy development and **is not yet considered functional**.  The [statuses of plugins](https://github.com/Maxqia/PoreRT/wiki/Statuses-of-Plugins) wiki page has the statuses of some of the plugins I've tested. If you have a plugin that you would like to be supported and currently doesn't work correctly, please file an issue [here](https://github.com/Maxqia/PoreRT/issues).
 
 ## Running PoreRT on Your Sponge Server
 <sup>**Warning** : The "bukkit-plugins" directory from previous versions of Pore has been moved to the "plugins" directory</sup>
