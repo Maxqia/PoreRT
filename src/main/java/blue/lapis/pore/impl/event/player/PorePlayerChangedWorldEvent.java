@@ -26,34 +26,44 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.apache.commons.lang3.NotImplementedException;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.PoreWorld;
+import blue.lapis.pore.impl.entity.PorePlayer;
+
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.spongepowered.api.event.entity.player.PlayerChangeWorldEvent;
+import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 
-public class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent {
+@RegisterEvent
+public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
+    implements PoreEvent<DisplaceEntityEvent.Teleport> {
 
-    // TODO: This is before, but Bukkit's event is after the change
-    private final PlayerChangeWorldEvent handle;
+    private final DisplaceEntityEvent.Teleport handle;
 
-    public PorePlayerChangedWorldEvent(PlayerChangeWorldEvent handle) {
+    public PorePlayerChangedWorldEvent(DisplaceEntityEvent.Teleport handle) {
         super(null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public PlayerChangeWorldEvent getHandle() {
+    public DisplaceEntityEvent.Teleport getHandle() {
         return handle;
     }
 
     @Override
     public Player getPlayer() {
-        throw new NotImplementedException("TODO"); // TODO
+        return PorePlayer.of((org.spongepowered.api.entity.living.player.Player) getHandle().getTargetEntity());
     }
 
     @Override
     public World getFrom() {
-        throw new NotImplementedException("TODO"); // TODO
+        return PoreWorld.of(getHandle().getFromTransform().getExtent());
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 
 }

@@ -26,42 +26,53 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.apache.commons.lang3.NotImplementedException;
+import blue.lapis.pore.converter.vector.LocationConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 
-public class PorePlayerRespawnEvent extends org.bukkit.event.player.PlayerRespawnEvent {
+@RegisterEvent
+public final class PorePlayerRespawnEvent extends PlayerRespawnEvent implements PoreEvent<RespawnPlayerEvent> {
 
-    private final PlayerRespawnEvent handle;
+    private final RespawnPlayerEvent handle;
 
-    public PorePlayerRespawnEvent(PlayerRespawnEvent handle) {
+    public PorePlayerRespawnEvent(RespawnPlayerEvent handle) {
         super(null, null, false);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public PlayerRespawnEvent getHandle() {
+    public RespawnPlayerEvent getHandle() {
         return handle;
     }
 
     @Override
     public Player getPlayer() {
-        throw new NotImplementedException("TODO");
+        return PorePlayer.of(getHandle().getTargetEntity());
     }
 
     @Override
     public Location getRespawnLocation() {
-        throw new NotImplementedException("TODO");
+        return LocationConverter.of(getHandle().getToTransform().getLocation());
     }
 
     @Override
     public void setRespawnLocation(Location respawnLocation) {
-        throw new NotImplementedException("TODO");
+        getHandle().getToTransform().setLocation(LocationConverter.of(respawnLocation));
     }
 
     @Override
     public boolean isBedSpawn() {
-        throw new NotImplementedException("TODO");
+        return getHandle().isBedSpawn();
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 
 }
