@@ -26,42 +26,44 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.Location;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.PoreWorld;
+import blue.lapis.pore.impl.entity.PorePlayer;
+
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.spongepowered.api.event.entity.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-public class PorePlayerRespawnEvent extends org.bukkit.event.player.PlayerRespawnEvent {
+@RegisterEvent
+public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
+    implements PoreEvent<MoveEntityEvent.Teleport> {
 
-    private final PlayerRespawnEvent handle;
+    private final MoveEntityEvent.Teleport handle;
 
-    public PorePlayerRespawnEvent(PlayerRespawnEvent handle) {
-        super(null, null, false);
+    public PorePlayerChangedWorldEvent(MoveEntityEvent.Teleport handle) {
+        super(null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public PlayerRespawnEvent getHandle() {
+    public MoveEntityEvent.Teleport getHandle() {
         return handle;
     }
 
     @Override
     public Player getPlayer() {
-        throw new NotImplementedException("TODO");
+        return PorePlayer.of((org.spongepowered.api.entity.living.player.Player) getHandle().getTargetEntity());
     }
 
     @Override
-    public Location getRespawnLocation() {
-        throw new NotImplementedException("TODO");
+    public World getFrom() {
+        return PoreWorld.of(getHandle().getFromTransform().getExtent());
     }
 
     @Override
-    public void setRespawnLocation(Location respawnLocation) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public boolean isBedSpawn() {
-        throw new NotImplementedException("TODO");
+    public String toString() {
+        return toStringHelper().toString();
     }
 
 }

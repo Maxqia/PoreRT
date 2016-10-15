@@ -26,34 +26,53 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.World;
+import blue.lapis.pore.converter.vector.LocationConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.spongepowered.api.event.entity.player.PlayerChangeWorldEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 
-public class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent {
+@RegisterEvent
+public final class PorePlayerRespawnEvent extends PlayerRespawnEvent implements PoreEvent<RespawnPlayerEvent> {
 
-    // TODO: This is before, but Bukkit's event is after the change
-    private final PlayerChangeWorldEvent handle;
+    private final RespawnPlayerEvent handle;
 
-    public PorePlayerChangedWorldEvent(PlayerChangeWorldEvent handle) {
-        super(null, null);
+    public PorePlayerRespawnEvent(RespawnPlayerEvent handle) {
+        super(null, null, false);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public PlayerChangeWorldEvent getHandle() {
+    public RespawnPlayerEvent getHandle() {
         return handle;
     }
 
     @Override
     public Player getPlayer() {
-        throw new NotImplementedException("TODO"); // TODO
+        return PorePlayer.of(getHandle().getTargetEntity());
     }
 
     @Override
-    public World getFrom() {
-        throw new NotImplementedException("TODO"); // TODO
+    public Location getRespawnLocation() {
+        return LocationConverter.of(getHandle().getToTransform().getLocation());
+    }
+
+    @Override
+    public void setRespawnLocation(Location respawnLocation) {
+        getHandle().getToTransform().setLocation(LocationConverter.of(respawnLocation));
+    }
+
+    @Override
+    public boolean isBedSpawn() {
+        return getHandle().isBedSpawn();
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 
 }
