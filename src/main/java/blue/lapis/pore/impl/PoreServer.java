@@ -90,7 +90,10 @@ import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.StringUtil;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.channel.MessageChannel;
@@ -103,6 +106,7 @@ import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -605,12 +609,24 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public OfflinePlayer getOfflinePlayer(String name) {
-        throw new NotImplementedException("TODO");
+        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
+        User user = null;
+        if (service.isPresent()) {
+            UserStorageService usa = service.get();
+            user = usa.get(name).orElse(null);
+        }
+        return PoreOfflinePlayer.of(user);
     }
 
     @Override
     public OfflinePlayer getOfflinePlayer(UUID id) {
-        throw new NotImplementedException("TODO");
+        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
+        User user = null;
+        if (service.isPresent()) {
+            UserStorageService usa = service.get();
+            user = usa.get(id).orElse(null);
+        }
+        return PoreOfflinePlayer.of(user);
     }
 
     @Override
@@ -684,7 +700,18 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public PoreOfflinePlayer[] getOfflinePlayers() {
-        throw new NotImplementedException("TODO");
+        ArrayList<PoreOfflinePlayer> array = new ArrayList<PoreOfflinePlayer>();
+        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
+        if (service.isPresent()) {
+            UserStorageService usa = service.get();
+            for (GameProfile profile : usa.getAll()) {
+                Optional<User> user = usa.get(profile);
+                if (user.isPresent()) {
+                    array.add(PoreOfflinePlayer.of(user.get()));
+                }
+            }
+        }
+        return array.toArray(new PoreOfflinePlayer[array.size()]);
     }
 
     @Override

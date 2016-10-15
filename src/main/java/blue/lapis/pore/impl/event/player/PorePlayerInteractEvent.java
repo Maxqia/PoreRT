@@ -27,6 +27,8 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Optional;
+
 import blue.lapis.pore.converter.type.world.DirectionConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
@@ -44,7 +46,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.property.entity.DominantHandProperty;
-import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -101,7 +102,7 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public Block getClickedBlock() {
-        return PoreBlock.of(handle.getTargetBlock().getLocation().get());
+        return PoreBlock.of(handle.getTargetBlock().getLocation().orElse(null));
     }
 
     @Override
@@ -146,8 +147,9 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public EquipmentSlot getHand() {
-        HandType hand = player.getProperty(DominantHandProperty.class).get().getValue();
-        return hand == HandTypes.MAIN_HAND ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+        Optional<DominantHandProperty> hand = player.getProperty(DominantHandProperty.class);
+        return !hand.isPresent() || hand.get().getValue() == HandTypes.MAIN_HAND
+                ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
     }
 
     @RegisterEvent

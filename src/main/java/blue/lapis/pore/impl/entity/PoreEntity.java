@@ -232,7 +232,12 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     @Override
     public org.bukkit.entity.Entity getPassenger() {
-        return PoreEntity.of(getHandle().get(Keys.PASSENGERS).get().get(0)); // TODO : better sorting?
+        Entity passenger = null;
+        Optional<List<EntitySnapshot>> passengers = getHandle().get(Keys.PASSENGERS);
+        if (passengers.isPresent()) {
+            passengers.get().get(0);
+        }
+        return PoreEntity.of(passenger); // TODO : better sorting?
     }
 
     @Override

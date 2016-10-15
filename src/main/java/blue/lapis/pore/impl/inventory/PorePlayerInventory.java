@@ -204,9 +204,16 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getItemInMainHand() {
+        org.spongepowered.api.item.inventory.ItemStack item = null;
         Hotbar hotbar = getHandle().getHotbar();
         Optional<Slot> mainHand = hotbar.getSlot(SlotIndex.of(hotbar.getSelectedSlotIndex()));
-        return ItemStackConverter.of(mainHand.get().peek().get());
+        if (mainHand.isPresent()) {
+            Optional<org.spongepowered.api.item.inventory.ItemStack> optitem = mainHand.get().peek();
+            if (optitem.isPresent()) {
+                item = optitem.get();
+            }
+        }
+        return ItemStackConverter.of(item);
     }
 
     @Override
