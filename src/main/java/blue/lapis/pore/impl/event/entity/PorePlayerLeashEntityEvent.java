@@ -26,57 +26,47 @@ package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import blue.lapis.pore.converter.data.block.BlockDataConverter;
-import blue.lapis.pore.converter.type.entity.EntityConverter;
-import blue.lapis.pore.converter.type.material.MaterialConverter;
+import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.impl.block.PoreBlock;
+import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PoreEntity;
+import blue.lapis.pore.impl.entity.PorePlayer;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.entity.LeashEntityEvent;
 
 @RegisterEvent
-public class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent {
+public final class PorePlayerLeashEntityEvent extends PlayerLeashEntityEvent implements PoreEvent<LeashEntityEvent> {
 
-    private final org.spongepowered.api.event.entity.EntityChangeBlockEvent handle;
+    private final LeashEntityEvent handle;
+    private final Player player;
 
-    public PoreEntityChangeBlockEvent(org.spongepowered.api.event.entity.EntityChangeBlockEvent handle) {
+    //TODO Double check that it is the source
+    public PorePlayerLeashEntityEvent(LeashEntityEvent handle, @Source Player player) {
         super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
+        this.player = checkNotNull(player, "player");
     }
 
-    public org.spongepowered.api.event.entity.EntityChangeBlockEvent getHandle() {
+    public LeashEntityEvent getHandle() {
         return this.handle;
     }
 
     @Override
     public Entity getEntity() {
-        return PoreEntity.of(this.getHandle().getEntity());
+        return PoreEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
-    public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+    public Entity getLeashHolder() {
+        return PoreEntity.of(getHandle().getTargetEntity());
     }
 
     @Override
-    public Block getBlock() {
-        return PoreBlock.of(this.getHandle().getLocation());
-    }
-
-    @Override
-    public Material getTo() {
-        return MaterialConverter.of(this.getHandle().getReplacementBlock().getState().getType());
-    }
-
-    @Override
-    @SuppressWarnings("deprecation") // no sense in throwing warnings for something we can't fix
-    public byte getData() {
-        return BlockDataConverter.INSTANCE.getDataValue(getHandle().getReplacementBlock().getState());
+    public org.bukkit.entity.Player getPlayer() {
+        return PorePlayer.of(player);
     }
 
     @Override
@@ -89,4 +79,8 @@ public class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent {
         this.getHandle().setCancelled(cancel);
     }
 
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
 }

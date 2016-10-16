@@ -25,48 +25,52 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PoreThrownPotion;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.spongepowered.api.event.entity.EntityEvent;
+import org.spongepowered.api.entity.projectile.ThrownPotion;
+import org.spongepowered.api.event.entity.CollideEntityEvent;
 
 import java.util.Collection;
 
-public class PorePotionSplashEvent extends PotionSplashEvent {
+@RegisterEvent //TODO better event?
+public final class PorePotionSplashEvent extends PotionSplashEvent implements PoreEvent<CollideEntityEvent.Impact> {
 
-    private final EntityEvent handle;
+    private final CollideEntityEvent.Impact handle;
+    private final ThrownPotion potion;
 
-    public PorePotionSplashEvent(EntityEvent handle) {
+    //TODO Double check that the ThrownPotion is the source
+    public PorePotionSplashEvent(CollideEntityEvent.Impact handle, @Source ThrownPotion potion) {
         super(null, null);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getEntity() instanceof org.spongepowered.api.entity.projectile.ThrownPotion,
-                "Bad entity type");
+        this.potion = checkNotNull(potion, "potion");
     }
 
-    public EntityEvent getHandle() {
+    public CollideEntityEvent.Impact getHandle() {
         return this.handle;
     }
 
     @Override
-    public ThrownPotion getEntity() {
-        return (ThrownPotion) PoreThrownPotion.of(this.getHandle().getEntity());
+    public org.bukkit.entity.ThrownPotion getEntity() {
+        return PoreThrownPotion.of(this.potion);
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.potion.getType());
     }
 
     @Override
-    public ThrownPotion getPotion() {
-        throw new NotImplementedException("TODO");
+    public org.bukkit.entity.ThrownPotion getPotion() {
+        return this.getEntity();
     }
 
     @Override
@@ -86,11 +90,16 @@ public class PorePotionSplashEvent extends PotionSplashEvent {
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return this.getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        throw new NotImplementedException("TODO");
+        getHandle().setCancelled(cancel);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

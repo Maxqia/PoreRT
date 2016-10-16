@@ -25,55 +25,62 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PoreLivingEntity;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.event.entity.HarvestEntityEvent;
 
 import java.util.List;
 
-public class PoreEntityDeathEvent extends org.bukkit.event.entity.EntityDeathEvent {
+@RegisterEvent
+public final class PoreEntityDeathEvent extends EntityDeathEvent implements PoreEvent<HarvestEntityEvent.TargetLiving> {
 
-    private final org.spongepowered.api.event.entity.EntityDeathEvent handle;
+    private final HarvestEntityEvent.TargetLiving handle;
 
-    public PoreEntityDeathEvent(org.spongepowered.api.event.entity.EntityDeathEvent handle) {
+    public PoreEntityDeathEvent(HarvestEntityEvent.TargetLiving handle) {
         super(null, null);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getEntity() instanceof Living, "Bad entity type");
     }
 
-    public org.spongepowered.api.event.entity.EntityDeathEvent getHandle() {
+    public HarvestEntityEvent.TargetLiving getHandle() {
         return this.handle;
     }
 
     @Override
     public LivingEntity getEntity() {
-        return (LivingEntity) PoreLivingEntity.of(this.getHandle().getEntity());
+        return (LivingEntity) PoreLivingEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
     }
 
     @Override
     public int getDroppedExp() {
-        return this.getHandle().getExp();
+        throw new NotImplementedException("TODO");
     }
 
     @Override
     public void setDroppedExp(int exp) {
-        this.getHandle().setExp(exp);
+        throw new NotImplementedException("TODO");
     }
 
     @Override
     public List<ItemStack> getDrops() {
         throw new NotImplementedException("TODO"); // TODO: drops are separated from EntityDeathEvent
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

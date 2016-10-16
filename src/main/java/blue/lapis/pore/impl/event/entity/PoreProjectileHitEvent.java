@@ -25,45 +25,46 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PoreProjectile;
 
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.spongepowered.api.event.entity.EntityCollisionEvent;
+import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.event.action.CollideEvent;
 
 @RegisterEvent
-public class PoreProjectileHitEvent extends ProjectileHitEvent {
+public final class PoreProjectileHitEvent extends ProjectileHitEvent implements PoreEvent<CollideEvent.Impact> {
 
-    private final EntityCollisionEvent handle;
+    private final CollideEvent.Impact handle;
+    private final Projectile projectile;
 
-    public PoreProjectileHitEvent(EntityCollisionEvent handle) {
+    public PoreProjectileHitEvent(CollideEvent.Impact handle, @Source Projectile projectile) {
         super(null);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getEntity() instanceof org.spongepowered.api.entity.projectile.Projectile, "Bad entity type");
+        this.projectile = projectile;
     }
 
-    public EntityCollisionEvent getHandle() {
+    public CollideEvent.Impact getHandle() {
         return this.handle;
     }
 
     @Override
-    public Projectile getEntity() {
-        return (Projectile) PoreProjectile.of(this.getHandle().getEntity());
+    public org.bukkit.entity.Projectile getEntity() {
+        return PoreProjectile.of(projectile);
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(projectile.getType());
     }
 
     @Override
-    public boolean isValid() {
-        return handle.getEntity() instanceof org.spongepowered.api.entity.projectile.Projectile;
+    public String toString() {
+        return toStringHelper().toString();
     }
-
 }

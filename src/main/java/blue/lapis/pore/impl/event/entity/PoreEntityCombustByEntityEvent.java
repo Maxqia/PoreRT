@@ -27,63 +27,71 @@ package blue.lapis.pore.impl.event.entity;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PoreEntity;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.event.entity.IgniteEntityEvent;
 
-public class PoreExplosionPrimeEvent extends ExplosionPrimeEvent {
+@RegisterEvent
+public final class PoreEntityCombustByEntityEvent extends EntityCombustByEntityEvent
+    implements PoreEvent<IgniteEntityEvent> {
 
-    private final org.spongepowered.api.event.entity.EntityEvent handle;
+    private final IgniteEntityEvent handle;
+    private final Entity entity;
 
-    public PoreExplosionPrimeEvent(org.spongepowered.api.event.entity.EntityEvent handle) {
-        super(null, -1f, false);
+    //TODO Double check that it is the source
+    public PoreEntityCombustByEntityEvent(IgniteEntityEvent handle, @Source Entity entity) {
+        super(null, null, -1);
         this.handle = checkNotNull(handle, "handle");
+        this.entity = checkNotNull(entity, "entity");
     }
 
-    public org.spongepowered.api.event.entity.EntityEvent getHandle() {
+    public IgniteEntityEvent getHandle() {
         return this.handle;
     }
 
     @Override
-    public Entity getEntity() {
-        return PoreEntity.of(this.getHandle().getEntity());
+    public org.bukkit.entity.Entity getEntity() {
+        return PoreEntity.of(getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
     }
 
     @Override
-    public float getRadius() {
-        throw new NotImplementedException("TODO");
+    public org.bukkit.entity.Entity getCombuster() {
+        return PoreEntity.of(entity);
     }
 
     @Override
-    public void setRadius(float radius) {
-        throw new NotImplementedException("TODO");
+    public int getDuration() {
+        return getHandle().getFireTicks();
     }
 
     @Override
-    public boolean getFire() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void setFire(boolean fire) {
-        throw new NotImplementedException("TODO");
+    public void setDuration(int duration) {
+        getHandle().setFireTicks(duration);
     }
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return this.getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        throw new NotImplementedException("TODO");
+        this.getHandle().setCancelled(cancel);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

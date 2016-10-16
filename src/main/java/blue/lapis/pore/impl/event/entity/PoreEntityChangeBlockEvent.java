@@ -1,6 +1,6 @@
 /*
  * Pore
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
  *
  * The MIT License
  *
@@ -22,89 +22,92 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import blue.lapis.pore.converter.vector.LocationConverter;
+import blue.lapis.pore.converter.data.block.BlockDataConverter;
+import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.event.Source;
+import blue.lapis.pore.impl.block.PoreBlock;
 import blue.lapis.pore.impl.entity.PoreEntity;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.world.ExplosionEvent;
-import org.spongepowered.api.world.explosion.Explosion;
-
-import java.util.List;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 
 @RegisterEvent
-public final class PoreEntityExplodeEvent extends EntityExplodeEvent implements PoreEvent<ExplosionEvent.Pre> {
+public final class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent implements PoreEvent<ChangeBlockEvent> {
 
-    private final ExplosionEvent.Pre handle;
-    private final Entity exploder;
+    private final ChangeBlockEvent handle;
+    private final Entity entity;
 
-    //TODO Double check that it is the source
-    public PoreEntityExplodeEvent(ExplosionEvent.Pre handle, @Source Entity exploder) {
-        super(null, null, null, -1);
+    @SuppressWarnings("deprecation")
+    //TODO Double check that the it is the source
+    public PoreEntityChangeBlockEvent(ChangeBlockEvent handle, @Source Entity entity) {
+        super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
-        this.exploder = checkNotNull(exploder, "exploder");
+        this.entity = checkNotNull(entity, "entity");
     }
 
-    @Override
-    public ExplosionEvent.Pre getHandle() {
+    public ChangeBlockEvent getHandle() {
         return this.handle;
     }
 
     @Override
     public org.bukkit.entity.Entity getEntity() {
-        return PoreEntity.of(this.exploder);
+        return PoreEntity.of(this.entity);
     }
 
     @Override
     public EntityType getEntityType() {
-        return getEntity().getType();
+        return EntityConverter.of(this.entity.getType());
     }
 
     @Override
-    public List<Block> blockList() {
-        throw new NotImplementedException("TODO");
+    public Block getBlock() {
+        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
+            return PoreBlock.of(trans.getOriginal().getLocation().orElse(null));
+        }
+        return PoreBlock.of(null);
     }
 
     @Override
-    public Location getLocation() {
-        return LocationConverter.of(getHandle().getExplosion().getLocation());
+    public Material getTo() {
+        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
+            return MaterialConverter.of(trans.getFinal().getState().getType());
+        }
+        throw new RuntimeException("No final block?");
     }
 
     @Override
-    public float getYield() {
-        return this.getHandle().getExplosion().getRadius();
-    }
-
-    @Override
-    public void setYield(float yield) {
-        getHandle().setExplosion(Explosion.builder().from(getHandle().getExplosion()).radius(yield).build());
+    public byte getData() {
+        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
+            return BlockDataConverter.INSTANCE.getDataValue(trans.getFinal().getState());
+        }
+        throw new RuntimeException("No block data?");
     }
 
     @Override
     public boolean isCancelled() {
-        return getHandle().isCancelled();
+        return this.getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        getHandle().setCancelled(cancel);
+        this.getHandle().setCancelled(cancel);
     }
 
     @Override
     public String toString() {
         return toStringHelper().toString();
     }
-
 }

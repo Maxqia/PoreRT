@@ -25,40 +25,51 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PoreEntity;
+import blue.lapis.pore.impl.entity.PorePlayer;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.spongepowered.api.event.entity.living.LivingChangeHealthEvent;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 
-public class PoreEntityDamageByEntityEvent extends EntityDamageByEntityEvent {
+@RegisterEvent
+public final class PoreEntityDamageByEntityEvent extends EntityDamageByEntityEvent
+    implements PoreEvent<DamageEntityEvent> {
 
-    private final LivingChangeHealthEvent handle;
+    private final DamageEntityEvent handle;
+    private final Entity cause;
 
-    public PoreEntityDamageByEntityEvent(LivingChangeHealthEvent handle) {
+    @SuppressWarnings("deprecation")
+    public PoreEntityDamageByEntityEvent(DamageEntityEvent handle, @Source Entity entity) {
         super(null, null, null, -1.0);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getCause().isPresent(), "Bad cause");
-        checkState(handle.getCause().get().getCause() instanceof org.spongepowered.api.entity.Entity, "Bad cause");
+        this.cause = checkNotNull(entity, "entity");
     }
 
-    public LivingChangeHealthEvent getHandle() {
+    public DamageEntityEvent getHandle() {
         return this.handle;
     }
 
     @Override
-    public Entity getEntity() {
-        return PoreEntity.of(this.getHandle().getEntity());
+    public org.bukkit.entity.Entity getEntity() {
+        return PoreEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getDamager() {
+        return PorePlayer.of(cause);
     }
 
     @Override
@@ -83,27 +94,22 @@ public class PoreEntityDamageByEntityEvent extends EntityDamageByEntityEvent {
 
     @Override
     public double getDamage() {
-        throw new NotImplementedException("TODO");
+        return getHandle().getBaseDamage();
     }
 
     @Override
     public double getFinalDamage() {
-        return getHandle().getOldData().health().get() - getHandle().getNewData().health().get();
+        return getHandle().getFinalDamage();
     }
 
     @Override
     public void setDamage(double damage) {
-        throw new NotImplementedException("TODO");
+        getHandle().setBaseDamage(damage);
     }
 
     @Override
     public DamageCause getCause() {
         throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public Entity getDamager() {
-        return PoreEntity.of((org.spongepowered.api.entity.Entity) this.getHandle().getCause().get().getCause());
     }
 
     @Override
@@ -117,9 +123,7 @@ public class PoreEntityDamageByEntityEvent extends EntityDamageByEntityEvent {
     }
 
     @Override
-    public boolean isValid() {
-        return handle.getCause().isPresent()
-                && handle.getCause().get().getCause() instanceof org.spongepowered.api.entity.Entity;
+    public String toString() {
+        return toStringHelper().toString();
     }
-
 }

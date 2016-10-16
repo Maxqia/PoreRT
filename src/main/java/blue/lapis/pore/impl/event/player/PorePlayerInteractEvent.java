@@ -27,8 +27,6 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Optional;
-
 import blue.lapis.pore.converter.type.world.DirectionConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
@@ -49,6 +47,8 @@ import org.spongepowered.api.data.property.entity.DominantHandProperty;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+
+import java.util.Optional;
 
 public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> extends PlayerInteractEvent
         implements PoreEvent<T> {

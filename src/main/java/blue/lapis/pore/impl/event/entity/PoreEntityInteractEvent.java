@@ -25,45 +25,51 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
+import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.impl.entity.PoreEntity;
-import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.event.Source;
+import blue.lapis.pore.impl.block.PoreBlock;
+import blue.lapis.pore.impl.entity.PoreLivingEntity;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerLeashEntityEvent;
-import org.spongepowered.api.event.entity.EntityLeashEvent;
+import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.spongepowered.api.entity.living.Living;
+import org.spongepowered.api.event.block.InteractBlockEvent;
 
-@RegisterEvent
-public class PorePlayerLeashEntityEvent extends PlayerLeashEntityEvent {
+@RegisterEvent //TODO Double check that this is the correct Event
+public final class PoreEntityInteractEvent extends EntityInteractEvent implements PoreEvent<InteractBlockEvent> {
 
-    private final EntityLeashEvent handle;
+    private final InteractBlockEvent handle;
+    private final Living cause;
 
-    public PorePlayerLeashEntityEvent(EntityLeashEvent handle) {
-        super(null, null, null);
+    //TODO Double check that it is the source
+    public PoreEntityInteractEvent(InteractBlockEvent handle, @Source Living living) {
+        super(null, null);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getLeashHolder() instanceof Player, "Bad leash holder entity type");
+        this.cause = checkNotNull(living, "living");
     }
 
-    public EntityLeashEvent getHandle() {
+    public InteractBlockEvent getHandle() {
         return this.handle;
     }
 
     @Override
-    public Entity getEntity() {
-        return PoreEntity.of(this.getHandle().getEntity());
+    public LivingEntity getEntity() {
+        return PoreLivingEntity.of(cause);
     }
 
     @Override
-    public Entity getLeashHolder() {
-        return PoreEntity.of(this.getHandle().getLeashHolder());
+    public EntityType getEntityType() {
+        return EntityConverter.of(cause.getType());
     }
 
     @Override
-    public Player getPlayer() {
-        return (Player) PorePlayer.of(this.getHandle().getLeashHolder()); //TODO: not sure if this is right
+    public Block getBlock() {
+        return PoreBlock.of(this.getHandle().getTargetBlock().getLocation().orElse(null));
     }
 
     @Override
@@ -77,8 +83,7 @@ public class PorePlayerLeashEntityEvent extends PlayerLeashEntityEvent {
     }
 
     @Override
-    public boolean isValid() {
-        return getHandle().getLeashHolder() instanceof Player;
+    public String toString() {
+        return toStringHelper().toString();
     }
-
 }

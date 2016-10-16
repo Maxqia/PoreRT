@@ -26,40 +26,49 @@ package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.converter.type.cause.DamageCauseConverter;
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PoreEntity;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.spongepowered.api.event.entity.living.LivingChangeHealthEvent;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
+
+import java.util.Optional;
 
 //TODO: Note: do not implement this or its children yet if you do not want a headache
-public class PoreEntityDamageEvent extends EntityDamageEvent {
+@RegisterEvent
+public final class PoreEntityDamageEvent extends EntityDamageEvent implements PoreEvent<DamageEntityEvent> {
 
-    private final LivingChangeHealthEvent handle;
+    private final DamageEntityEvent handle;
 
-    public PoreEntityDamageEvent(LivingChangeHealthEvent handle) {
+    @SuppressWarnings("deprecation")
+    public PoreEntityDamageEvent(DamageEntityEvent handle) {
         super(null, null, -1.0);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public LivingChangeHealthEvent getHandle() {
+    public DamageEntityEvent getHandle() {
         return this.handle;
     }
 
     @Override
     public Entity getEntity() {
-        return PoreEntity.of(this.getHandle().getEntity());
+        return PoreEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
     }
 
-    @Override
+    @Override //TODO DamageModifer Conversion
     public double getOriginalDamage(DamageModifier type) throws IllegalArgumentException {
         throw new NotImplementedException("TODO");
     }
@@ -81,22 +90,27 @@ public class PoreEntityDamageEvent extends EntityDamageEvent {
 
     @Override
     public double getDamage() {
-        throw new NotImplementedException("TODO");
+        return getHandle().getBaseDamage();
     }
 
     @Override
     public double getFinalDamage() {
-        return getHandle().getOldData().health().get() - getHandle().getNewData().health().get();
+        return getHandle().getFinalDamage();
     }
 
     @Override
     public void setDamage(double damage) {
-        throw new NotImplementedException("TODO");
+        getHandle().setBaseDamage(damage);
     }
 
     @Override
     public DamageCause getCause() {
-        throw new NotImplementedException("TODO");
+        DamageSource cause = null;
+        Optional<DamageSource> source = getHandle().getCause().get(NamedCause.SOURCE, DamageSource.class);
+        if (source.isPresent()) {
+            cause = source.get();
+        }
+        return DamageCauseConverter.of(cause);
     }
 
     @Override
@@ -107,5 +121,10 @@ public class PoreEntityDamageEvent extends EntityDamageEvent {
     @Override
     public void setCancelled(boolean cancel) {
         this.getHandle().setCancelled(cancel);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

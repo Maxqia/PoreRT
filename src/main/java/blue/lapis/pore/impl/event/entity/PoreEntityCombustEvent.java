@@ -25,43 +25,49 @@
 package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
-import blue.lapis.pore.converter.vector.LocationConverter;
-import blue.lapis.pore.impl.entity.PoreLivingEntity;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PoreEntity;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.Location;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.spongepowered.api.event.entity.IgniteEntityEvent;
 
-public class PoreCreatureSpawnEvent extends CreatureSpawnEvent {
+@RegisterEvent
+public final class PoreEntityCombustEvent extends EntityCombustEvent implements PoreEvent<IgniteEntityEvent> {
 
-    private final EntitySpawnEvent handle;
+    private final IgniteEntityEvent handle;
 
-    public PoreCreatureSpawnEvent(EntitySpawnEvent handle) {
-        super(null, null);
+    public PoreEntityCombustEvent(IgniteEntityEvent handle) {
+        super(null, -1);
         this.handle = checkNotNull(handle, "handle");
-        checkState(handle.getEntity() instanceof Living, "Bad entity type");
     }
 
-    public EntitySpawnEvent getHandle() {
-        return handle;
+    public IgniteEntityEvent getHandle() {
+        return this.handle;
     }
 
     @Override
-    public LivingEntity getEntity() {
-        return (LivingEntity) PoreLivingEntity.of(this.getHandle().getEntity());
+    public Entity getEntity() {
+        return PoreEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
+    }
+
+    @Override
+    public int getDuration() {
+        return this.getHandle().getFireTicks();
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.getHandle().setFireTicks(duration);
     }
 
     @Override
@@ -75,18 +81,7 @@ public class PoreCreatureSpawnEvent extends CreatureSpawnEvent {
     }
 
     @Override
-    public Location getLocation() {
-        return LocationConverter.of(this.getHandle().getLocation());
-    }
-
-    @Override
-    public CreatureType getCreatureType() {
-        return CreatureType.fromEntityType(this.getEntityType());
-    }
-
-    @Override
-    public SpawnReason getSpawnReason() {
-        //TODO: request that Sponge add a getCause() method
-        throw new NotImplementedException("TODO");
+    public String toString() {
+        return toStringHelper().toString();
     }
 }

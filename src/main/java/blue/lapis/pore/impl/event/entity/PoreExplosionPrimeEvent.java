@@ -27,60 +27,72 @@ package blue.lapis.pore.impl.event.entity;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.converter.type.entity.EntityConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.entity.PoreEntity;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.spongepowered.api.event.entity.EntityIgniteEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.spongepowered.api.event.entity.explosive.PrimeExplosiveEvent;
 
-public class PoreEntityCombustByEntityEvent extends EntityCombustByEntityEvent {
+@RegisterEvent
+public final class PoreExplosionPrimeEvent extends ExplosionPrimeEvent implements PoreEvent<PrimeExplosiveEvent.Pre> {
 
-    private final EntityIgniteEvent handle;
+    private final PrimeExplosiveEvent.Pre handle;
 
-    public PoreEntityCombustByEntityEvent(EntityIgniteEvent handle) {
-        super(null, null, -1);
+    public PoreExplosionPrimeEvent(PrimeExplosiveEvent.Pre handle) {
+        super(null, -1f, false);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public EntityIgniteEvent getHandle() {
+    public PrimeExplosiveEvent.Pre getHandle() {
         return this.handle;
     }
 
     @Override
     public Entity getEntity() {
-        return PoreEntity.of(getHandle().getEntity());
+        return PoreEntity.of(this.getHandle().getTargetEntity());
     }
 
     @Override
     public EntityType getEntityType() {
-        return EntityConverter.of(this.getHandle().getEntity().getType());
+        return EntityConverter.of(this.getHandle().getTargetEntity().getType());
     }
 
     @Override
-    public Entity getCombuster() {
-        //TODO: Sponge issue
+    public float getRadius() {
+        return this.getHandle().getTargetEntity().explosionRadius().or(null).get();
+    }
+
+    @Override
+    public void setRadius(float radius) {
+        this.getHandle().getTargetEntity().explosionRadius().setTo((int) radius);
+    }
+
+    @Override
+    public boolean getFire() {
         throw new NotImplementedException("TODO");
     }
 
     @Override
-    public int getDuration() {
-        return getHandle().getFireTicks();
-    }
-
-    @Override
-    public void setDuration(int duration) {
-        getHandle().setFireTicks(duration);
+    public void setFire(boolean fire) {
+        throw new NotImplementedException("TODO");
     }
 
     @Override
     public boolean isCancelled() {
-        return this.getHandle().isCancelled();
+        return getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.getHandle().setCancelled(cancel);
+        getHandle().setCancelled(cancel);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
     }
 }
