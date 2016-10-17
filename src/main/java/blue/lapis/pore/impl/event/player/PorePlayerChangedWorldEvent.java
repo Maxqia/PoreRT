@@ -27,13 +27,15 @@ package blue.lapis.pore.impl.event.player;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.PoreWorld;
 import blue.lapis.pore.impl.entity.PorePlayer;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
 @RegisterEvent
@@ -52,8 +54,8 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
     }
 
     @Override
-    public Player getPlayer() {
-        return PorePlayer.of((org.spongepowered.api.entity.living.player.Player) getHandle().getTargetEntity());
+    public org.bukkit.entity.Player getPlayer() {
+        return PorePlayer.of((Player) getHandle().getTargetEntity());
     }
 
     @Override
@@ -64,6 +66,16 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
     @Override
     public String toString() {
         return toStringHelper().toString();
+    }
+
+    @RegisterEvent
+    public static void register() {
+        PoreEventRegistry.register(PorePlayerChangedWorldEvent.class, MoveEntityEvent.Teleport.class, event -> {
+            if (event.getTargetEntity() instanceof Player) {
+                return ImmutableList.of(new PorePlayerChangedWorldEvent(event));
+            }
+            return ImmutableList.of();
+        });
     }
 
 }
