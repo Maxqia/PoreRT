@@ -35,6 +35,7 @@ import blue.lapis.pore.impl.entity.PorePlayer;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.World;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
@@ -71,7 +72,8 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
     @RegisterEvent
     public static void register() {
         PoreEventRegistry.register(PorePlayerChangedWorldEvent.class, MoveEntityEvent.Teleport.class, event -> {
-            if (event.getTargetEntity() instanceof Player) {
+            Entity entity = event.getTargetEntity();
+            if (entity instanceof Player) {
                 return ImmutableList.of(new PorePlayerChangedWorldEvent(event));
             }
             return ImmutableList.of();
