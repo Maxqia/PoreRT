@@ -26,15 +26,18 @@ package blue.lapis.pore.impl.event.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import static org.spongepowered.api.event.cause.NamedCause.SOURCE;
+
 import blue.lapis.pore.converter.data.block.BlockDataConverter;
 import blue.lapis.pore.converter.type.entity.EntityConverter;
 import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.block.PoreBlock;
 import blue.lapis.pore.impl.entity.PoreEntity;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -42,20 +45,23 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.util.GuavaCollectors;
 
 @RegisterEvent
 public final class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent implements PoreEvent<ChangeBlockEvent> {
 
     private final ChangeBlockEvent handle;
     private final Entity entity;
+    private final Transaction<BlockSnapshot> transaction;
 
     @SuppressWarnings("deprecation")
-    //TODO Double check that the it is the source
-    public PoreEntityChangeBlockEvent(ChangeBlockEvent handle, @Source Entity entity) {
+    public PoreEntityChangeBlockEvent(ChangeBlockEvent handle, Entity entity, Transaction<BlockSnapshot> transaction) {
         super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
         this.entity = checkNotNull(entity, "entity");
+        this.transaction = checkNotNull(transaction, "transaction");
     }
 
     public ChangeBlockEvent getHandle() {
@@ -74,40 +80,47 @@ public final class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent imp
 
     @Override
     public Block getBlock() {
-        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
-            return PoreBlock.of(trans.getOriginal().getLocation().orElse(null));
-        }
-        return PoreBlock.of(null);
+       return PoreBlock.of(transaction.getOriginal().getLocation().orElse(null));
     }
 
     @Override
     public Material getTo() {
-        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
-            return MaterialConverter.of(trans.getFinal().getState().getType());
-        }
-        throw new RuntimeException("No final block?");
+        return MaterialConverter.of(transaction.getFinal().getState().getType());
     }
 
     @Override
     public byte getData() {
-        for (Transaction<BlockSnapshot> trans : this.getHandle().getTransactions()) {
-            return BlockDataConverter.INSTANCE.getDataValue(trans.getFinal().getState());
-        }
-        throw new RuntimeException("No block data?");
+        return BlockDataConverter.INSTANCE.getDataValue(transaction.getFinal().getState());
     }
 
     @Override
     public boolean isCancelled() {
-        return this.getHandle().isCancelled();
+        return transaction.isValid();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.getHandle().setCancelled(cancel);
+        transaction.setValid(cancel);
     }
 
     @Override
     public String toString() {
         return toStringHelper().toString();
     }
+
+    @RegisterEvent
+    public static void register() {
+        PoreEventRegistry.register(PoreEntityChangeBlockEvent.class, ChangeBlockEvent.class, event -> {
+            if (!(event instanceof ChangeBlockEvent.Post)) { // post creates duplicate events
+                Entity entity = event.getCause().get(SOURCE, Entity.class).orElse(null);
+                if (entity != null && !(entity instanceof Player)) {
+                    return event.getTransactions().stream()
+                            .map(transaction -> new PoreEntityChangeBlockEvent(event, entity, transaction))
+                            .collect(GuavaCollectors.toImmutableList());
+                }
+            }
+            return ImmutableList.of();
+        });
+    }
+
 }

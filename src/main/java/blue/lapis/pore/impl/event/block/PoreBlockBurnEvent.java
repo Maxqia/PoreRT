@@ -65,12 +65,12 @@ public final class PoreBlockBurnEvent extends BlockBurnEvent implements PoreEven
 
     @Override
     public boolean isCancelled() {
-        return getHandle().isCancelled();
+        return transaction.isValid();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        getHandle().setCancelled(cancel);
+        transaction.setValid(cancel);;
     }
 
     @Override
