@@ -80,7 +80,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.Cause;
@@ -108,7 +107,9 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     private static final long TICKS_PER_DAY = 24000L;
 
-    private static final int DEFAULT_EFFECT_RADIUS = 64;
+    public static final int DEFAULT_EFFECT_RADIUS = 64;
+    private static final boolean DEFAULT_SET_FIRE = false;
+    private static final boolean DEFAULT_BREAK_BLOCKS = true;
 
     public static PoreWorld of(Extent handle) {
         if (handle instanceof World) {
@@ -488,36 +489,41 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
+    public boolean createExplosion(Location loc, float power) {
+        return this.createExplosion(loc, power, DEFAULT_SET_FIRE);
+    }
+
+
+    @Override
+    public boolean createExplosion(Location loc, float power, boolean setFire) {
+        return this.createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, setFire);
+    }
+
+    @Override
     public boolean createExplosion(double x, double y, double z, float power) {
-        throw new NotImplementedException("TODO");
+        return this.createExplosion(x, y, z, power, DEFAULT_SET_FIRE);
     }
 
     @Override
     public boolean createExplosion(double x, double y, double z, float power, boolean setFire) {
-        throw new NotImplementedException("TODO");
+        return this.createExplosion(x, y, z, power, setFire, DEFAULT_BREAK_BLOCKS);
     }
 
     @Override
     public boolean createExplosion(double x, double y, double z, float power, boolean setFire,
             boolean breakBlocks) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public boolean createExplosion(Location loc, float power) {
         Explosion explosion = Explosion.builder()
-                .location(LocationConverter.of(loc))
+                .location(getHandle().getLocation(x, y, z))
                 .radius(power)
+                .canCauseFire(setFire)
+                .shouldBreakBlocks(breakBlocks)
                 .build();
 
         explosion.getWorld().triggerExplosion(explosion, Cause.source(this).build());
         return true; // TODO
     }
 
-    @Override
-    public boolean createExplosion(Location loc, float power, boolean setFire) {
-        throw new NotImplementedException("TODO");
-    }
+
 
     @Override
     public Environment getEnvironment() {
@@ -593,17 +599,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public void playEffect(Location location, Effect effect, int data, int radius) {
-        if (effect.getType() == Effect.Type.SOUND) {
-            //noinspection ConstantConditions
-            getHandle().playSound(EffectConverter.toSound(effect, data), VectorConverter.create3d(location), radius);
-        } else {
-            //noinspection ConstantConditions
-            //TODO: define a quantity
-            getHandle().spawnParticles(
-                    ParticleEffect.builder().type(EffectConverter.toParticle(effect)).build(),
-                    VectorConverter.create3d(location),
-                    radius);
-        }
+        EffectConverter.playEffect(getHandle(), location, effect, data, radius);
     }
 
     @Override
@@ -613,12 +609,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public <T> void playEffect(Location location, Effect effect, T data, int radius) {
-        if ((data != null && data.getClass().equals(effect.getData()))
-                || (data == null && effect.getData() == null)) {
-            this.playEffect(location, effect, data == null ? 0 : EffectConverter.getDataValue(effect, data), radius);
-        } else {
-            throw new IllegalArgumentException("Invalid data type for effect!");
-        }
+        EffectConverter.playEffect(getHandle(), location, effect, data, radius);
     }
 
     @Override
@@ -644,22 +635,22 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public Biome getBiome(int x, int z) {
-        return BiomeConverter.of(getHandle().getBiome(x, z));
+        return BiomeConverter.of(getHandle().getBiome(x, 0, z));
     }
 
     @Override
     public void setBiome(int x, int z, Biome bio) {
-        getHandle().setBiome(x, z, BiomeConverter.of(bio));
+        getHandle().setBiome(x, 0, z, BiomeConverter.of(bio));
     }
 
     @Override
     public double getTemperature(int x, int z) {
-        return getHandle().getBiome(x, z).getTemperature();
+        return getHandle().getBiome(x, 0, z).getTemperature();
     }
 
     @Override
     public double getHumidity(int x, int z) {
-        return getHandle().getBiome(x, z).getHumidity();
+        return getHandle().getBiome(x, 0, z).getHumidity();
     }
 
     @Override
@@ -778,6 +769,11 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        this.playSound(location, Sound.valueOf(sound), volume, pitch);
+    }
+
+    @Override
     public void playSound(Location location, Sound sound, float volume, float pitch) {
         getHandle().playSound(SoundConverter.of(sound), VectorConverter.create3d(location), (double) volume,
                 (double) pitch);
@@ -846,11 +842,6 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     @Override
     public <T extends Arrow> T spawnArrow(Location location, Vector direction, float speed, float spread,
             Class<T> clazz) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void playSound(Location location, String sound, float volume, float pitch) {
         throw new NotImplementedException("TODO");
     }
 

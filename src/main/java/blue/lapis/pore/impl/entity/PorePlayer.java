@@ -36,10 +36,12 @@ import blue.lapis.pore.converter.type.entity.EntityConverter;
 import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.converter.type.statistic.AchievementConverter;
 import blue.lapis.pore.converter.type.statistic.StatisticConverter;
+import blue.lapis.pore.converter.type.world.effect.EffectConverter;
 import blue.lapis.pore.converter.type.world.effect.SoundConverter;
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
+import blue.lapis.pore.impl.PoreWorld;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
@@ -68,8 +70,11 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.effect.sound.SoundType;
+import org.spongepowered.api.data.manipulator.mutable.TargetedLocationData;
+import org.spongepowered.api.data.type.HandPreference;
+import org.spongepowered.api.data.type.HandPreferences;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.tab.TabListEntry;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.resourcepack.ResourcePacks;
 import org.spongepowered.api.service.ban.BanService;
@@ -123,28 +128,33 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public String getPlayerListName() {
-        throw new NotImplementedException("TODO");
-        /*Optional<PlayerTabInfo> info = this.getHandle().getTabList().getPlayer(this.getUniqueId());
-        return info.isPresent() ? PoreText.convert(info.get().getDisplayName()) : this.getDisplayName();*/
+        Optional<TabListEntry> info = this.getHandle().getTabList().getEntry(this.getUniqueId());
+        return info.isPresent() ? PoreText.convert(info.get().getDisplayName().orElse(null)) : this.getDisplayName();
     }
 
     @Override
     public void setPlayerListName(String name) {
-        throw new NotImplementedException("TODO");
-        /*Optional<PlayerTabInfo> info = this.getHandle().getTabList().getPlayer(this.getUniqueId());
+        Optional<TabListEntry> info = this.getHandle().getTabList().getEntry(this.getUniqueId());
         if (info.isPresent()) {
             info.get().setDisplayName(PoreText.convert(name));
-        }*/
+        }
     }
 
     @Override
     public Location getCompassTarget() {
-        throw new NotImplementedException("TODO");
+        Optional<TargetedLocationData> data = getHandle().get(TargetedLocationData.class);
+        if (data.isPresent()) {
+            return LocationConverter.fromVector3d(getHandle().getWorld(), data.get().target().get());
+        }
+        return null;
     }
 
     @Override
     public void setCompassTarget(Location loc) {
-        // TODO
+        Optional<TargetedLocationData> data = getHandle().getOrCreate(TargetedLocationData.class);
+        if (data.isPresent()) {
+           data.get().target().set(LocationConverter.of(loc).getPosition());
+        }
     }
 
     @Override
@@ -254,28 +264,23 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        this.playSound(location, Sound.valueOf(sound), volume, pitch);
+    }
+
+    @Override
     public void playSound(Location location, Sound sound, float volume, float pitch) {
         getHandle().playSound(SoundConverter.of(sound), VectorConverter.create3d(location), volume, pitch);
     }
 
     @Override
-    public void playSound(Location location, String sound, float volume, float pitch) {
-        // TODO: Isn't the String sound the ID and not the name?
-        //TODO: no idea whether this is right
-        Optional<SoundType> spongeSound = Pore.getGame().getRegistry().getType(SoundType.class, sound);
-        if (spongeSound.isPresent()) {
-            getHandle().playSound(spongeSound.get(), VectorConverter.create3d(location), volume, pitch);
-        }
+    public void playEffect(Location location, Effect effect, int data) {
+        EffectConverter.playEffect(getHandle(), location, effect, data, PoreWorld.DEFAULT_EFFECT_RADIUS);
     }
 
     @Override
-    public void playEffect(Location loc, Effect effect, int data) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public <T> void playEffect(Location loc, Effect effect, T data) {
-        // TODO
+    public <T> void playEffect(Location location, Effect effect, T data) {
+        EffectConverter.playEffect(getHandle(), location, effect, data, PoreWorld.DEFAULT_EFFECT_RADIUS);
     }
 
     @Override
@@ -851,7 +856,8 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public MainHand getMainHand() {
-        throw new NotImplementedException("CANTDO"); // Sponge API doesn't have this
+        HandPreference handedness = getHandle().get(Keys.DOMINANT_HAND).orElse(HandPreferences.RIGHT);
+        return handedness == HandPreferences.LEFT ? MainHand.LEFT : MainHand.RIGHT;
     }
 
     @Override

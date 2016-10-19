@@ -25,11 +25,16 @@
 
 package blue.lapis.pore.converter.type.world.effect;
 
+import blue.lapis.pore.converter.vector.VectorConverter;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.potion.Potion;
+import org.spongepowered.api.effect.Viewer;
+import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleType;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.effect.sound.SoundType;
@@ -39,6 +44,30 @@ import org.spongepowered.api.effect.sound.SoundTypes;
 public final class EffectConverter {
 
     private EffectConverter() {
+    }
+
+    public static <T> void playEffect(Viewer viewer, Location location, Effect effect, T data, int radius) {
+        if ((data != null && data.getClass().equals(effect.getData()))
+                || (data == null && effect.getData() == null)) {
+            EffectConverter.playEffect(viewer, location, effect,
+                    data == null ? 0 : EffectConverter.getDataValue(effect, data), radius);
+        } else {
+            throw new IllegalArgumentException("Invalid data type for effect!");
+        }
+    }
+
+    public static void playEffect(Viewer viewer, Location location, Effect effect, int data, int radius) {
+        if (effect.getType() == Effect.Type.SOUND && effect != Effect.STEP_SOUND) {
+            //noinspection ConstantConditions
+            viewer.playSound(EffectConverter.toSound(effect, data), VectorConverter.create3d(location), radius);
+        } else {
+            //noinspection ConstantConditions
+            //TODO: define a quantity
+            viewer.spawnParticles(
+                    ParticleEffect.builder().type(EffectConverter.toParticle(effect)).build(),
+                    VectorConverter.create3d(location),
+                    radius);
+        }
     }
 
     public static SoundType toSound(Effect effect, int data) {
@@ -91,8 +120,6 @@ public final class EffectConverter {
                     return SoundTypes.ENTITY_ZOMBIE_ATTACK_IRON_DOOR;
                 case ZOMBIE_DESTROY_DOOR:
                     return SoundTypes.ENTITY_ZOMBIE_BREAK_DOOR_WOOD;
-                case STEP_SOUND:
-                    throw new NotImplementedException("TODO"); //TODO: determine generic type of block
                 case BREWING_STAND_BREW:
                     return SoundTypes.BLOCK_BREWING_STAND_BREW;
                 case CHORUS_FLOWER_GROW:
@@ -115,7 +142,7 @@ public final class EffectConverter {
                     return SoundTypes.ENTITY_ENDERDRAGON_SHOOT;
                 case WITHER_BREAK_BLOCK:
                     return SoundTypes.ENTITY_WITHER_BREAK_BLOCK;
-                case WITHER_SHOOT: //return SoundTypes.;
+                case WITHER_SHOOT:
                     return SoundTypes.ENTITY_WITHER_SHOOT;
                 case ZOMBIE_INFECT:
                     return SoundTypes.ENTITY_ZOMBIE_INFECT;
@@ -124,7 +151,7 @@ public final class EffectConverter {
                 case BAT_TAKEOFF:
                     return SoundTypes.ENTITY_BAT_TAKEOFF;
                 case ENDERDRAGON_GROWL:
-                    throw new NotImplementedException("TODO");
+                    return SoundTypes.ENTITY_ENDERDRAGON_GROWL;
                 default:
                     return null;
             }
@@ -136,17 +163,19 @@ public final class EffectConverter {
         if (effect.getType() == Effect.Type.VISUAL) {
             switch (effect) {
                 case SMOKE:
-                    return ParticleTypes.SMOKE_NORMAL;
+                    return ParticleTypes.SMOKE;
                 case ENDER_SIGNAL:
+                    return ParticleTypes.ENDER_TELEPORT;
+                case MOBSPAWNER_FLAMES:
+                    return ParticleTypes.MOBSPAWNER_FLAMES;
+                case VILLAGER_PLANT_GROW: //TODO check
+                    return ParticleTypes.FERTILIZER;
+                case DRAGON_BREATH: //TODO check
+                    return ParticleTypes.DRAGON_BREATH_ATTACK;
+                case END_GATEWAY_SPAWN: //TODO actually do
                     throw new NotImplementedException("TODO");
-                case MOBSPAWNER_FLAMES: // might be already implmented
-                    throw new NotImplementedException("TODO");
-                case VILLAGER_PLANT_GROW:
-                    throw new NotImplementedException("TODO");
-                case DRAGON_BREATH:
-                    throw new NotImplementedException("TODO");
-                case END_GATEWAY_SPAWN:
-                    throw new NotImplementedException("TODO");
+                case STEP_SOUND:
+                    return ParticleTypes.BREAK_BLOCK;
                 default:
                     return null;
             }
