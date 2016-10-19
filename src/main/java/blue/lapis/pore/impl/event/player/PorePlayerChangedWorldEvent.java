@@ -44,10 +44,12 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
     implements PoreEvent<MoveEntityEvent.Teleport> {
 
     private final MoveEntityEvent.Teleport handle;
+    private final Player player;
 
-    public PorePlayerChangedWorldEvent(MoveEntityEvent.Teleport handle) {
+    public PorePlayerChangedWorldEvent(MoveEntityEvent.Teleport handle, Player player) {
         super(null, null);
         this.handle = checkNotNull(handle, "handle");
+        this.player = checkNotNull(player, "player");
     }
 
     public MoveEntityEvent.Teleport getHandle() {
@@ -56,7 +58,7 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
 
     @Override
     public org.bukkit.entity.Player getPlayer() {
-        return PorePlayer.of((Player) getHandle().getTargetEntity());
+        return PorePlayer.of(player);
     }
 
     @Override
@@ -74,7 +76,7 @@ public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
         PoreEventRegistry.register(PorePlayerChangedWorldEvent.class, MoveEntityEvent.Teleport.class, event -> {
             Entity entity = event.getTargetEntity();
             if (entity instanceof Player) {
-                return ImmutableList.of(new PorePlayerChangedWorldEvent(event));
+                return ImmutableList.of(new PorePlayerChangedWorldEvent(event, (Player) entity));
             }
             return ImmutableList.of();
         });
