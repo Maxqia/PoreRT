@@ -29,7 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.event.Source;
+import blue.lapis.pore.impl.entity.PoreHumanEntity;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryView;
 
@@ -37,7 +38,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 
 import java.util.List;
@@ -47,10 +48,12 @@ public final class PoreInventoryOpenEvent extends InventoryOpenEvent
     implements PoreEvent<InteractInventoryEvent.Open> {
 
     private final InteractInventoryEvent.Open handle;
+    private final Humanoid humanoid;
 
-    public PoreInventoryOpenEvent(InteractInventoryEvent.Open handle) {
+    public PoreInventoryOpenEvent(InteractInventoryEvent.Open handle, @Source Humanoid humanoid) {
         super(null);
         this.handle = checkNotNull(handle, "handle");
+        this.humanoid = checkNotNull(humanoid, "humanoid");
     }
 
     public InteractInventoryEvent.Open getHandle() {
@@ -78,8 +81,7 @@ public final class PoreInventoryOpenEvent extends InventoryOpenEvent
 
     @Override
     public HumanEntity getPlayer() {
-        return PorePlayer.of(getHandle().getCause()
-                .get(NamedCause.OWNER, org.spongepowered.api.entity.living.player.Player.class).orElse(null));
+        return PoreHumanEntity.of(humanoid);
     }
 
     @Override
