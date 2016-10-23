@@ -39,7 +39,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 
-@RegisterEvent
 public final class PorePlayerChangedWorldEvent extends PlayerChangedWorldEvent
     implements PoreEvent<MoveEntityEvent.Teleport> {
 

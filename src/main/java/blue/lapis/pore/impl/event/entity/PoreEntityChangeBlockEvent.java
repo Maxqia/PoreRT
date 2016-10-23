@@ -49,7 +49,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.util.GuavaCollectors;
 
-@RegisterEvent
 public final class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent implements PoreEvent<ChangeBlockEvent> {
 
     private final ChangeBlockEvent handle;
