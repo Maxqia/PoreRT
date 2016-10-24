@@ -32,6 +32,8 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.entity.PorePlayer;
 
 import com.google.common.collect.Iterables;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
@@ -42,6 +44,7 @@ import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.Optional;
 
@@ -67,23 +70,27 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getHelmet() {
-        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getHelmet().orElse(null));
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)this.getHandle()
+                .getCarrier().orElse(null)).getItemStackFromSlot(EntityEquipmentSlot.HEAD)));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public ItemStack getChestplate() {
-        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getChestplate().orElse(null));
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)this.getHandle()
+                .getCarrier().orElse(null)).getItemStackFromSlot(EntityEquipmentSlot.CHEST)));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public ItemStack getLeggings() {
-        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getLeggings().orElse(null));
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)this.getHandle()
+                .getCarrier().orElse(null)).getItemStackFromSlot(EntityEquipmentSlot.LEGS)));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public ItemStack getBoots() {
-        return ItemStackConverter.of(getHandle().getCarrier().orElse(null).getBoots().orElse(null));
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)this.getHandle()
+                .getCarrier().orElse(null)).getItemStackFromSlot(EntityEquipmentSlot.FEET)));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public void setArmorContents(ItemStack[] items) {
@@ -129,24 +136,12 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getItemInHand() {
-        Hotbar hotbar = this.getHandle().getHotbar();
-        Optional<Slot> slot = hotbar.getSlot(new SlotIndex(hotbar.getSelectedSlotIndex()));
-        if (slot.isPresent()) {
-            Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.get().peek();
-            if (stack.isPresent()) {
-                return ItemStackConverter.of(stack.get());
-            }
-        }
-        return null;
+        return this.getItemInMainHand();
     }
 
     @Override
     public void setItemInHand(ItemStack stack) {
-        Hotbar hotbar = this.getHandle().getHotbar();
-        Optional<Slot> slot = hotbar.getSlot(new SlotIndex(hotbar.getSelectedSlotIndex()));
-        if (slot.isPresent()) {
-            slot.get().set(ItemStackConverter.of(stack));
-        }
+        this.setItemInMainHand(stack);
     }
 
     @Override
@@ -169,7 +164,7 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
             if (stackOptional.isPresent()) {
                 org.spongepowered.api.item.inventory.ItemStack stack = stackOptional.get();
                 if (id == -1 || stack.getItem() == MaterialConverter.asItem(Material.getMaterial(id))) {
-                    int damage = DurabilityConverter.getDamageValue(stack.getContainers());
+                    int damage = DurabilityConverter.getDamageValue(stack);
                     if (data == -1 || damage == data) {
                         removed += stack.getQuantity();
                         slot.clear();
@@ -204,17 +199,9 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getItemInMainHand() {
-        org.spongepowered.api.item.inventory.ItemStack item = null;
-        Hotbar hotbar = getHandle().getHotbar();
-        Optional<Slot> mainHand = hotbar.getSlot(SlotIndex.of(hotbar.getSelectedSlotIndex()));
-        if (mainHand.isPresent()) {
-            Optional<org.spongepowered.api.item.inventory.ItemStack> optitem = mainHand.get().peek();
-            if (optitem.isPresent()) {
-                item = optitem.get();
-            }
-        }
-        return ItemStackConverter.of(item);
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)
+                this.getHandle().getCarrier().orElse(null)).getHeldItemMainhand()));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public void setItemInMainHand(ItemStack item) {
@@ -225,8 +212,9 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
 
     @Override
     public ItemStack getItemInOffHand() {
-        return ItemStackConverter.of(getHandle().getOffhand().peek().get());
-    }
+        return ItemStackConverter.of(ItemStackUtil.fromNative(((EntityPlayerMP)
+                this.getHandle().getCarrier().orElse(null)).getHeldItemOffhand()));
+    } // .getItemInHand() and .peek() returns a copy instead of the original itemstack
 
     @Override
     public void setItemInOffHand(ItemStack item) {

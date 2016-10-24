@@ -55,7 +55,6 @@ import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -169,16 +168,8 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     @Override
     public int getEntityId() { // note to self - this is the ID of the entity in the world, and unrelated to
         // its UUID
-        try {
-            Class<?> entity = Class.forName("net.minecraft.entity.Entity");
-            return (Integer) entity.getMethod("func_145782_y").invoke(getHandle());
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException | ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new NotImplementedException("TODO");
-        }
-    }
+        return ((net.minecraft.entity.Entity) getHandle()).getEntityId();
+    } // No function in Sponge
 
     @Override
     public int getFireTicks() {

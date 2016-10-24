@@ -46,6 +46,7 @@ import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
 import com.google.common.collect.Maps;
+import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
@@ -310,8 +311,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public void updateInventory() {
-        throw new NotImplementedException("TODO");
-    }
+        EntityPlayerMP player = ((EntityPlayerMP) getHandle());
+        player.sendContainerToPlayer(player.inventoryContainer);
+    } // No function to do this natively in Sponge
 
     @Override
     public void awardAchievement(Achievement achievement) {

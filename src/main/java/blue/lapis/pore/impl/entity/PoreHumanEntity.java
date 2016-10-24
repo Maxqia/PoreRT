@@ -28,7 +28,6 @@ package blue.lapis.pore.impl.entity;
 import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.EXPERIENCE_HOLDER_DATA;
 
 import blue.lapis.pore.converter.type.entity.player.GameModeConverter;
-import blue.lapis.pore.converter.type.material.ItemStackConverter;
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.inventory.PoreInventory;
@@ -49,7 +48,6 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
@@ -62,6 +60,8 @@ import org.spongepowered.api.world.Location;
 import java.util.Set;
 
 public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
+
+    protected PorePlayerInventory inventory;
 
     public static PoreHumanEntity of(Humanoid handle) {
         return WrapperConverter.of(PoreHumanEntity.class, handle);
@@ -158,13 +158,15 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack getItemInHand() {
-        return ItemStackConverter.of(this.getHandle().getItemInHand(HandTypes.MAIN_HAND).orElse(null));
+        return getInventory().getItemInHand();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setItemInHand(ItemStack item) {
-        this.getHandle().setItemInHand(HandTypes.MAIN_HAND, ItemStackConverter.of(item));
+        getInventory().setItemInHand(item);
     }
 
     @Override

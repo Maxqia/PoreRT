@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableBiMap;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.DyeableData;
 import org.spongepowered.api.data.manipulator.mutable.VariantData;
@@ -57,7 +58,6 @@ import org.spongepowered.api.data.type.Fishes;
 import org.spongepowered.api.data.type.GoldenApple;
 import org.spongepowered.api.data.type.GoldenApples;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @SuppressWarnings("deprecation")
@@ -126,14 +126,14 @@ public final class DurabilityConverter {
      * {@code 0} if one cannot be obtained.
      */
 
-    public static int getDamageValue(Collection<? extends DataManipulator<?, ?>> data) {
-        for (DataManipulator<?, ?> itemData : data) {
+    public static int getDamageValue(org.spongepowered.api.item.inventory.ItemStack stack) {
+        for (DataManipulator<?, ?> itemData : stack.getContainers()) {
             int damage = getDamageValue(itemData);
             if (damage != 0) {
                 return damage;
             }
         }
-        return 0;
+        return stack.get(Keys.ITEM_DURABILITY).orElse(0);
     }
 
     /**

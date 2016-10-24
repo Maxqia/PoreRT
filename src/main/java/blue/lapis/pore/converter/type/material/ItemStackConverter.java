@@ -25,7 +25,10 @@
 
 package blue.lapis.pore.converter.type.material;
 
+import blue.lapis.pore.impl.inventory.PoreItemStack;
+
 import org.bukkit.Material;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -38,15 +41,14 @@ public final class ItemStackConverter {
         if (stack == null) {
             return new org.bukkit.inventory.ItemStack(Material.AIR);
         }
-
-        return new org.bukkit.inventory.ItemStack(
-                MaterialConverter.of(stack.getItem()),
-                stack.getQuantity(),
-                (short) DurabilityConverter.getDamageValue(stack.getContainers())
-        );
+        return new PoreItemStack(stack);
     }
 
     public static org.spongepowered.api.item.inventory.ItemStack of(org.bukkit.inventory.ItemStack stack) {
+        if (stack instanceof PoreItemStack) {
+            return ((PoreItemStack) stack).getHandle();
+        }
+
         ItemType type = MaterialConverter.asItem(stack.getType());
         if (type == null) {
             throw new UnsupportedOperationException();
@@ -58,6 +60,7 @@ public final class ItemStackConverter {
                 .quantity(stack.getAmount())
                 .itemData(DurabilityConverter.getItemData(stack))
                 //.maxQuantity(stack.getType().getMaxStackSize()) //TODO
+                .add(Keys.ITEM_DURABILITY, (int) stack.getDurability())
                 .build();
     }
 
