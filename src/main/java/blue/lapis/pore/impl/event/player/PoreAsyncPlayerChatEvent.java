@@ -78,11 +78,12 @@ public final class PoreAsyncPlayerChatEvent extends AsyncPlayerChatEvent
 
     @Override
     public String getFormat() {
-        return PoreText.convert(getHandle().getMessage());
+        return super.getFormat();
     }
 
     @Override
     public void setFormat(String format) throws IllegalFormatException, NullPointerException {
+        super.setFormat(format);
         getHandle().setMessage(PoreText.convert(String.format(format, getPlayer().getDisplayName(), getMessage())));
     }
 

@@ -3,7 +3,6 @@ package blue.lapis.pore.impl.inventory;
 import blue.lapis.pore.converter.type.material.MaterialConverter;
 
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.item.DurabilityData;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.inventory.ItemStack;
 

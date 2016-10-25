@@ -99,6 +99,8 @@ import java.util.UUID;
 
 public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Player {
 
+    private String displayName = this.getName();
+
     public static PorePlayer of(Player handle) {
         return WrapperConverter.of(PorePlayer.class, handle);
     }
@@ -119,12 +121,12 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public String getDisplayName() {
-        return super.getCustomName();
+        return displayName;
     }
 
     @Override
     public void setDisplayName(String name) {
-        super.setCustomName(name);
+        displayName = (name == null ? getName() : name);
     }
 
     @Override

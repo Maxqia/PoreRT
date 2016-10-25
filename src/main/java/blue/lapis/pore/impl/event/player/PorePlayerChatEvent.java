@@ -33,10 +33,13 @@ import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.util.PoreText;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.text.channel.MessageChannel;
+import org.spongepowered.api.util.GuavaCollectors;
 
 import java.util.Set;
 
@@ -80,17 +83,26 @@ public final class PorePlayerChatEvent extends PlayerChatEvent implements PoreEv
 
     @Override
     public String getFormat() {
-        throw new NotImplementedException("TODO"); // TODO
+        return super.getFormat();
     }
 
     @Override
     public void setFormat(String format) {
-        throw new NotImplementedException("TODO"); // TODO
+        super.setFormat(format);
+        getHandle().setMessage(PoreText.convert(String.format(format, getPlayer().getDisplayName(), getMessage())));
     }
 
     @Override
     public Set<org.bukkit.entity.Player> getRecipients() {
-        throw new NotImplementedException("TODO"); // TODO
+        MessageChannel channel = getHandle().getChannel().orElse(null);
+        if (channel != null) {
+            return channel.getMembers().stream()
+                    .filter(receiver -> receiver instanceof Player)
+                    .map(receiver -> PorePlayer.of((Player) receiver))
+                    .collect(GuavaCollectors.toImmutableSet());
+        } else {
+            return ImmutableSet.of();
+        }
     }
 
     @Override
