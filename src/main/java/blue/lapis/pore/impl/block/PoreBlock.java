@@ -241,7 +241,8 @@ public class PoreBlock extends PoreWrapper<Location<org.spongepowered.api.world.
 
     @Override
     public BlockState getState() {
-        return PoreBlockState.of(getHandle().createSnapshot());
+        return getHandle().hasTileEntity() ? PoreBlockState.of(getHandle().getTileEntity().get())
+                : PoreBlockState.of(getHandle().createSnapshot());
     }
 
     @Override

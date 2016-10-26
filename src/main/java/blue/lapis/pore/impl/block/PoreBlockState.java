@@ -52,7 +52,11 @@ public class PoreBlockState extends PoreWrapper<BlockSnapshot> implements org.bu
     private final TileEntity tileEntity;
 
     public static PoreBlockState of(BlockSnapshot handle) {
-        return WrapperConverter.of(PoreBlockState.class, handle);
+        return WrapperConverter.of(handle);
+    }
+
+    public static PoreBlockState of(TileEntity handle) {
+        return WrapperConverter.of(handle);
     }
 
     protected PoreBlockState(BlockSnapshot handle) {

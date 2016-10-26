@@ -354,7 +354,6 @@ public final class WrapperConverter {
                 .register(Boat.class, PoreBoat.class)
 
             //.register(TileEntity.class, PoreTileEntity.class)
-            .register(BlockSnapshot.class, PoreBlockState.class)
                 .register(Banner.class, PoreBanner.class)
                 .register(Beacon.class, PoreBeacon.class)
                 .register(BrewingStand.class, PoreBrewingStand.class)
@@ -369,6 +368,7 @@ public final class WrapperConverter {
                 .register(Note.class, PoreNoteBlock.class)
                 .register(Sign.class, PoreSign.class)
                 .register(Skull.class, PoreSkull.class)
+                .register(BlockSnapshot.class, PoreBlockState.class)
 
             .register(Chunk.class, PoreChunk.class)
             .register(User.class, PoreOfflinePlayer.class)
