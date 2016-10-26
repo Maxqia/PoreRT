@@ -616,22 +616,28 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public OfflinePlayer getOfflinePlayer(String name) {
-        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
         User user = null;
-        if (service.isPresent()) {
-            UserStorageService usa = service.get();
-            user = usa.get(name).orElse(null);
+        Optional<GameProfile> profile = Sponge.getServer().getGameProfileManager().getCache().getByName(name);
+        if (profile.isPresent()) {
+            Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
+            if (service.isPresent()) {
+                UserStorageService usa = service.get();
+                user = usa.get(profile.get()).orElse(null);
+            }
         }
         return PoreOfflinePlayer.of(user);
     }
 
     @Override
     public OfflinePlayer getOfflinePlayer(UUID id) {
-        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
         User user = null;
-        if (service.isPresent()) {
-            UserStorageService usa = service.get();
-            user = usa.get(id).orElse(null);
+        Optional<GameProfile> profile = Sponge.getServer().getGameProfileManager().getCache().getById(id);
+        if (profile.isPresent()) {
+            Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
+            if (service.isPresent()) {
+                UserStorageService usa = service.get();
+                user = usa.get(profile.get()).orElse(null);
+            }
         }
         return PoreOfflinePlayer.of(user);
     }
