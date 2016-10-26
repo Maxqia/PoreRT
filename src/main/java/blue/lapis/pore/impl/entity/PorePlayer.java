@@ -42,6 +42,8 @@ import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.PoreWorld;
+import blue.lapis.pore.impl.inventory.PoreInventory;
+import blue.lapis.pore.impl.inventory.PoreInventoryView;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
@@ -63,6 +65,7 @@ import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.MainHand;
 import org.bukkit.map.MapView;
@@ -76,6 +79,7 @@ import org.spongepowered.api.data.type.HandPreference;
 import org.spongepowered.api.data.type.HandPreferences;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.tab.TabListEntry;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.resourcepack.ResourcePacks;
 import org.spongepowered.api.service.ban.BanService;
@@ -316,6 +320,18 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         EntityPlayerMP player = ((EntityPlayerMP) getHandle());
         player.sendContainerToPlayer(player.inventoryContainer);
     } // No function to do this natively in Sponge
+
+    @Override
+    public InventoryView openInventory(Inventory inventory) {
+        getHandle().openInventory(((PoreInventory)inventory).getHandle(), Cause.source(this).build());
+        return PoreInventoryView.builder().setPlayer(getHandle())
+                .setBottomInventory(this.getInventory()).setTopInventory(inventory).build();
+    }
+
+    @Override
+    public void openInventory(InventoryView inventory) {
+        this.openInventory(inventory.getTopInventory());
+    }
 
     @Override
     public void awardAchievement(Achievement achievement) {

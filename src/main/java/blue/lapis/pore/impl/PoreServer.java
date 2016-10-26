@@ -25,12 +25,16 @@
 
 package blue.lapis.pore.impl;
 
+import blue.lapis.pore.Pore;
 import blue.lapis.pore.PoreVersion;
+import blue.lapis.pore.converter.type.attribute.InventoryTypeConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.command.PoreCommandMap;
 import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.help.PoreHelpMap;
+import blue.lapis.pore.impl.inventory.PoreInventory;
+import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PoreItemFactory;
 import blue.lapis.pore.impl.scheduler.PoreBukkitScheduler;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboardManager;
@@ -67,7 +71,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
@@ -93,9 +96,13 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.util.GuavaCollectors;
 import org.spongepowered.api.util.ban.Ban;
@@ -724,25 +731,53 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return helpMap;
     }
 
-    @Override
-    public Inventory createInventory(InventoryHolder owner, InventoryType type) {
-        throw new NotImplementedException("TODO");
+    private Inventory.Builder formInventory(InventoryHolder owner, InventoryType type) throws IllegalArgumentException {
+        Inventory.Builder inventory = Inventory.builder().of(InventoryTypeConverter.of(type));
+
+        if (owner != null) {
+            inventory.withCarrier(((PoreInventoryHolder) owner).getHandle());
+        }
+
+        return inventory;
+    }
+
+    private Inventory.Builder formInventory(InventoryHolder owner, int size) throws IllegalArgumentException {
+        if (size % 9 != 0) {
+            throw new IllegalArgumentException("Size not divisable by 9!");
+        }
+
+        Inventory.Builder inventory = Inventory.builder().property(
+                InventoryDimension.PROPERTY_NAM, new InventoryDimension(9, size / 9));
+
+        if (owner != null) {
+            inventory.withCarrier(((PoreInventoryHolder) owner).getHandle());
+        }
+
+        return inventory;
     }
 
     @Override
-    public Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
-        throw new NotImplementedException("TODO");
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type) {
+        return PoreInventory.of(formInventory(owner,type).build(Pore.getPlugin()));
     }
 
     @Override
-    public Inventory createInventory(InventoryHolder owner, int size) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
+        return PoreInventory.of(formInventory(owner,type).property(InventoryTitle.PROPERTY_NAME,
+                new InventoryTitle(Text.of(title))).build(Pore.getPlugin()));
     }
 
     @Override
-    public Inventory createInventory(InventoryHolder owner, int size, String title)
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size)
             throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        return PoreInventory.of(formInventory(owner,size).build(Pore.getPlugin()));
+    }
+
+    @Override
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size, String title)
+            throws IllegalArgumentException {
+        return PoreInventory.of(formInventory(owner,size).property(InventoryTitle.PROPERTY_NAME,
+                new InventoryTitle(Text.of(title))).build(Pore.getPlugin()));
     }
 
     @Override
