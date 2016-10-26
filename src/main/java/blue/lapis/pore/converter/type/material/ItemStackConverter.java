@@ -49,6 +49,9 @@ public final class ItemStackConverter {
             return ((PoreItemStack) stack).getHandle();
         }
 
+        if (stack == null) {
+            return null;
+        }
         ItemType type = MaterialConverter.asItem(stack.getType());
         if (type == null) {
             throw new UnsupportedOperationException();

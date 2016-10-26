@@ -26,9 +26,12 @@
 package blue.lapis.pore.impl.block;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
+import blue.lapis.pore.util.PoreText;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.text.Text;
+
+import java.util.ArrayList;
 
 public class PoreSign extends PoreBlockState implements org.bukkit.block.Sign {
 
@@ -47,16 +50,20 @@ public class PoreSign extends PoreBlockState implements org.bukkit.block.Sign {
 
     @Override
     public String[] getLines() {
-        throw new NotImplementedException("TODO");
+        ArrayList<String> array = new ArrayList<String>();
+        for (Text text : getTileEntity().lines()) {
+            array.add(PoreText.convert(text));
+        }
+        return array.toArray(new String[array.size()]);
     }
 
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
-        throw new NotImplementedException("TODO");
+        return PoreText.convert(getTileEntity().lines().get(index));
     }
 
     @Override
     public void setLine(int index, String line) throws IndexOutOfBoundsException {
-        throw new NotImplementedException("TODO");
+        getTileEntity().lines().set(index, PoreText.convert(line));
     }
 }
