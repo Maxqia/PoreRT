@@ -96,7 +96,7 @@ public class PoreChunk extends PoreWrapper<Chunk> implements org.bukkit.Chunk {
     public BlockState[] getTileEntities() {
         Collection<TileEntity> entities = getHandle().getTileEntities();
         BlockState[] blockStates = new BlockState[entities.size()];
-        Collections2.transform(entities, input -> PoreBlockState.of(input.getLocation().createSnapshot()))
+        Collections2.transform(entities, input -> PoreBlockState.of(input))
                 .toArray(blockStates);
         return blockStates;
     }
