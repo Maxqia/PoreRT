@@ -1,27 +1,24 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Spigot/Craftbukkit Project <https://hub.spigotmc.org/stash/projects/SPIGOT> LGPLv3
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.entity;
@@ -49,7 +46,11 @@ import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
 import com.google.common.collect.Maps;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
@@ -72,7 +73,6 @@ import org.bukkit.inventory.MainHand;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.TargetedLocationData;
@@ -90,8 +90,8 @@ import org.spongepowered.api.statistic.EntityStatistic;
 import org.spongepowered.api.statistic.StatisticGroup;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.title.Title;
-import org.spongepowered.api.util.RespawnLocation;
 import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.world.World;
 
 import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
@@ -689,17 +689,20 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
+    // Taken from Craftbukkit
     public Location getBedSpawnLocation() {
-        Location bed = null;
-        if (getHandle().get(Keys.RESPAWN_LOCATIONS).isPresent()) {
-            RespawnLocation spongeLoc =
-                    getHandle().get(Keys.RESPAWN_LOCATIONS).get().get(getHandle().getWorld().getUniqueId());
-            if (spongeLoc.asLocation().get().getBlockType() == BlockTypes.BED) {
-                bed = LocationConverter.of(spongeLoc.asLocation().get());
+        EntityPlayerMP player = (EntityPlayerMP) getHandle();
+        World world = (World) player.getEntityWorld();
+        BlockPos bed = player.getBedLocation();
+
+        if (world != null && bed != null) {
+            bed = EntityPlayer.getBedSpawnLocation((net.minecraft.world.World) world, bed, player.isSpawnForced());
+            if (bed != null) {
+                return new Location(PoreWorld.of(world), bed.getX(), bed.getY(), bed.getZ());
             }
         }
-        return bed;
-    }
+        return null;
+    } // Keys.RESPAWN_LOCATIONS doesn't work
 
     @Override
     public void setBedSpawnLocation(Location location) {
@@ -707,15 +710,15 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    public void setBedSpawnLocation(Location location, boolean force) {
-        org.spongepowered.api.world.Location<?> spongeLoc = LocationConverter.of(location);
-        //noinspection ConstantConditions
-        if (force || spongeLoc.getBlockType() == BlockTypes.BED) {
-            UUID worldId = location.getWorld().getUID();
-            getHandle().get(Keys.RESPAWN_LOCATIONS).get().put(location.getWorld().getUID(),
-                    RespawnLocation.builder().position(VectorConverter.create3d(location)).world(worldId).build());
+    // Taken from Craftbukkit
+    public void setBedSpawnLocation(Location location, boolean override) {
+        EntityPlayerMP player = (EntityPlayerMP) getHandle();
+        if (location == null) {
+            player.setSpawnPoint(null, override);
+        } else {
+            player.setSpawnPoint(new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ()), override);
         }
-    }
+    } // Keys.RESPAWN_LOCATIONS doesn't work
 
     @Override
     public void hidePlayer(org.bukkit.entity.Player player) {
