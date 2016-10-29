@@ -1,27 +1,22 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.event.block;
@@ -33,11 +28,15 @@ import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.block.PoreSign;
 import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.util.PoreText;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.block.SignChangeEvent;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.text.Text;
+
+import java.util.ArrayList;
 
 @RegisterEvent
 public final class PoreSignChangeEvent extends SignChangeEvent implements PoreEvent<ChangeSignEvent> {
@@ -67,17 +66,21 @@ public final class PoreSignChangeEvent extends SignChangeEvent implements PoreEv
 
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
-        return getTileEntity().getLine(index);
+        return PoreText.convert(getHandle().getText().lines().get(index));
     }
 
     @Override
     public void setLine(int index, String line) throws IndexOutOfBoundsException {
-        getTileEntity().setLine(index, line);;
+        getHandle().getText().setElement(index, PoreText.convert(line));
     }
 
     @Override
     public String[] getLines() {
-        return getTileEntity().getLines();
+        ArrayList<String> array = new ArrayList<String>();
+        for (Text text : getHandle().getText().lines()) {
+            array.add(PoreText.convert(text));
+        }
+        return array.toArray(new String[array.size()]);
     }
 
     @Override
