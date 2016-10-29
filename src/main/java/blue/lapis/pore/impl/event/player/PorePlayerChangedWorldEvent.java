@@ -1,6 +1,7 @@
 /*
- * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * Pore(RT)
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Contributors
  *
  * The MIT License
  *
@@ -22,6 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -1,6 +1,7 @@
 /*
- * Pore
+ * Pore(RT)
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
+ * Copyright (c) 2014-2016, Contributors
  *
  * The MIT License
  *
