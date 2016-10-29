@@ -1,23 +1,34 @@
-Pore(RT)
-Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
-Copyright (c) 2014-2016, Contributors
+PoreRT is distributed under the terms of the AGPLv3 License. See LICENSE-AGPL
+for the full license. You can see the previous MIT license at LICENSE-MIT.
 
-The MIT License
+    PoreRT uses code from the Spigot/Craftbukkit (https://hub.spigotmc.org/stash/projects/SPIGOT)
+project, licensed under the LGPLv3 license, and includes a derivative of Bukkit
+(https://github.com/Bukkit/Bukkit), licensed under the GPLv3 license. The patches for
+Bukkit (in the patches directory) are licensed under Bukkit's license.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+--- Copyright notice displayed for files modified after the license change
+PoreRT - A Bukkit to Sponge Bridge
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+Copyright (c) Spigot/Craftbukkit Project <https://hub.spigotmc.org/stash/projects/SPIGOT> LGPLv3
+Copyright (c) Contributors
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+---
+Only the appropriate copyright holders will be listed in the notice
+
+I chose the AGPLv3 License due to it's compatibility with the GPLv3 and LGPLv3 Licenses
+for Bukkit and Craftbukkit respectively. If you feel the AGPLv3 license prohibits your
+use of this project, feel free to contact me.

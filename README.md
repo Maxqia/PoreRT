@@ -63,9 +63,9 @@ Have an issue or a question about PoreRT? No problem! Feel free to ask in #lapis
 
 ## Licensing
 
-PoreRT's source code is made available under the [MIT license](http://opensource.org/licenses/MIT). You may do as you wish
-with the source within its bounds.
+PoreRT's source code is made available under the [MIT](http://opensource.org/licenses/MIT) and [AGPLv3](https://opensource.org/licenses/AGPL-3.0) licenses.
+You may do as you wish with the source within its bounds.
 
 `.patch` files for Bukkit are made available under the [GPLv3](http://opensource.org/licenses/gpl-3.0.html).
 
-PoreRT's distribution is made available under the [GPLv3](http://opensource.org/licenses/gpl-3.0.html).
+PoreRT's distribution is made available under the [AGPLv3](https://opensource.org/licenses/AGPL-3.0).
