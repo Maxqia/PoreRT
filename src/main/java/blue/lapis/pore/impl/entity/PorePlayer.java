@@ -716,7 +716,8 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         if (location == null) {
             player.setSpawnPoint(null, override);
         } else {
-            player.setSpawnPoint(new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ()), override);
+            player.setSpawnPoint(new BlockPos(location.getBlockX(),
+                    location.getBlockY(), location.getBlockZ()), override);
         }
     } // Keys.RESPAWN_LOCATIONS doesn't work
 
