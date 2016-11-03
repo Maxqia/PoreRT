@@ -35,7 +35,6 @@ import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.help.PoreHelpMap;
 import blue.lapis.pore.impl.inventory.PoreInventory;
-import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PoreItemFactory;
 import blue.lapis.pore.impl.scheduler.PoreBukkitScheduler;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboardManager;
@@ -97,13 +96,13 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.service.user.UserStorageService;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.util.GuavaCollectors;
 import org.spongepowered.api.util.ban.Ban;
@@ -111,6 +110,7 @@ import org.spongepowered.api.util.ban.Ban;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -738,17 +738,43 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         return helpMap;
     }
 
-    private Inventory.Builder formInventory(InventoryHolder owner, InventoryType type) throws IllegalArgumentException {
-        Inventory.Builder inventory = Inventory.builder().of(InventoryTypeConverter.of(type));
-
-        if (owner != null) {
-            inventory.withCarrier(((PoreInventoryHolder) owner).getHandle());
-        }
-
-        return inventory;
+    @Override
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type) {
+        return createInventory(owner, type, null);
     }
 
-    private Inventory.Builder formInventory(InventoryHolder owner, int size) throws IllegalArgumentException {
+    @Override
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size)
+            throws IllegalArgumentException {
+        return createInventory(owner, size, null);
+    }
+
+    private PoreInventory finalizeInventory(Inventory.Builder inventory, InventoryHolder owner, String title) {
+        if (owner != null) {
+            try {
+                inventory = inventory.withCarrier((Carrier) owner.getClass().getMethod("getHandle").invoke(owner));
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                // I guess it's not a carrier
+                e.printStackTrace();
+            }
+        }
+
+        if (title != null) {
+            inventory = inventory.property(InventoryTitle.PROPERTY_NAME, new InventoryTitle(PoreText.convert(title)));
+        }
+
+        return PoreInventory.of(inventory.build(Pore.getPlugin()));
+    }
+
+    @Override
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
+        Inventory.Builder inventory = Inventory.builder().of(InventoryTypeConverter.of(type));
+        return finalizeInventory(inventory, owner, title);
+    }
+
+    @Override
+    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size, String title)
+            throws IllegalArgumentException {
         if (size % 9 != 0) {
             throw new IllegalArgumentException("Size not divisable by 9!");
         }
@@ -756,35 +782,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         Inventory.Builder inventory = Inventory.builder().property(
                 InventoryDimension.PROPERTY_NAM, new InventoryDimension(9, size / 9));
 
-        if (owner != null) {
-            inventory.withCarrier(((PoreInventoryHolder) owner).getHandle());
-        }
-
-        return inventory;
-    }
-
-    @Override
-    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type) {
-        return PoreInventory.of(formInventory(owner,type).build(Pore.getPlugin()));
-    }
-
-    @Override
-    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
-        return PoreInventory.of(formInventory(owner,type).property(InventoryTitle.PROPERTY_NAME,
-                new InventoryTitle(Text.of(title))).build(Pore.getPlugin()));
-    }
-
-    @Override
-    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size)
-            throws IllegalArgumentException {
-        return PoreInventory.of(formInventory(owner,size).build(Pore.getPlugin()));
-    }
-
-    @Override
-    public org.bukkit.inventory.Inventory createInventory(InventoryHolder owner, int size, String title)
-            throws IllegalArgumentException {
-        return PoreInventory.of(formInventory(owner,size).property(InventoryTitle.PROPERTY_NAME,
-                new InventoryTitle(Text.of(title))).build(Pore.getPlugin()));
+        return finalizeInventory(inventory, owner, title);
     }
 
     @Override
