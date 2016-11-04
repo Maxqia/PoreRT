@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore;
@@ -33,19 +29,27 @@ import blue.lapis.pore.impl.PoreServer;
 import blue.lapis.pore.launch.PoreEventManager;
 import blue.lapis.pore.lib.org.slf4j.bridge.SLF4JBridgeHandler;
 import blue.lapis.pore.plugin.PorePluginContainer;
+import blue.lapis.pore.util.PoreText;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLoadOrder;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.plugin.PluginContainer;
+
+import java.util.Optional;
 
 /**
  * An implementation of the Bukkit API built on Sponge.
@@ -134,4 +138,21 @@ public final class Pore implements PoreEventManager {
         return testLogger;
     }
 
+    @Override // This is horrible but it's needed for setDisplayName ...
+    @SuppressWarnings("deprecation")
+    public void onChatEvent(MessageChannelEvent.Chat event) {
+        Optional<Player> optPlayer = event.getCause().get(NamedCause.SOURCE, Player.class);
+        if (optPlayer.isPresent()) {
+            blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent asyncBukkitEvent =
+                    new blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent(event, optPlayer.get());
+            Bukkit.getServer().getPluginManager().callEvent(asyncBukkitEvent);
+
+            blue.lapis.pore.impl.event.player.PorePlayerChatEvent bukkitEvent =
+                    new blue.lapis.pore.impl.event.player.PorePlayerChatEvent(asyncBukkitEvent);
+            Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+
+            event.setMessage(PoreText.convert(String.format(bukkitEvent.getFormat(),
+                    bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage())));
+        }
+    }
 }

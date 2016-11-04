@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.event.player;
@@ -29,32 +25,20 @@ package blue.lapis.pore.impl.event.player;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.event.PoreEvent;
-import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.event.Source;
-import blue.lapis.pore.impl.entity.PorePlayer;
-import blue.lapis.pore.util.PoreText;
 
-import com.google.common.collect.ImmutableSet;
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.message.MessageChannelEvent;
-import org.spongepowered.api.text.channel.MessageChannel;
-import org.spongepowered.api.util.GuavaCollectors;
 
 import java.util.Set;
 
 @Deprecated
-@RegisterEvent
 public final class PorePlayerChatEvent extends PlayerChatEvent implements PoreEvent<MessageChannelEvent.Chat> {
 
     private final MessageChannelEvent.Chat handle;
-    private final Player player;
 
-    public PorePlayerChatEvent(MessageChannelEvent.Chat handle, @Source Player player) {
-        super(null, null, null, null);
-        this.handle = checkNotNull(handle, "handle");
-        this.player = player;
+    public PorePlayerChatEvent(PoreAsyncPlayerChatEvent event) {
+        super(event.getPlayer(), event.getMessage(), event.getFormat(), event.getRecipients());
+        this.handle = checkNotNull(event.getHandle(), "handle");
     }
 
     @Override
@@ -64,22 +48,22 @@ public final class PorePlayerChatEvent extends PlayerChatEvent implements PoreEv
 
     @Override
     public org.bukkit.entity.Player getPlayer() {
-        return PorePlayer.of(player);
+        return super.getPlayer();
     }
 
     @Override
     public void setPlayer(org.bukkit.entity.Player player) {
-        throw new NotImplementedException("TODO"); // TODO
+        super.setPlayer(player);
     }
 
     @Override
     public String getMessage() {
-        return PoreText.convert(getHandle().getRawMessage());
+        return super.getMessage();
     }
 
     @Override
     public void setMessage(String message) {
-        throw new NotImplementedException("TODO"); // TODO
+        super.setMessage(message);
     }
 
     @Override
@@ -90,20 +74,11 @@ public final class PorePlayerChatEvent extends PlayerChatEvent implements PoreEv
     @Override
     public void setFormat(String format) {
         super.setFormat(format);
-        getHandle().setMessage(PoreText.convert(String.format(format, getPlayer().getDisplayName(), getMessage())));
     }
 
     @Override
     public Set<org.bukkit.entity.Player> getRecipients() {
-        MessageChannel channel = getHandle().getChannel().orElse(null);
-        if (channel != null) {
-            return channel.getMembers().stream()
-                    .filter(receiver -> receiver instanceof Player)
-                    .map(receiver -> PorePlayer.of((Player) receiver))
-                    .collect(GuavaCollectors.toImmutableSet());
-        } else {
-            return ImmutableSet.of();
-        }
+        return super.getRecipients();
     }
 
     @Override
