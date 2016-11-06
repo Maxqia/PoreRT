@@ -1,32 +1,32 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
+
 
 package blue.lapis.pore.converter.type.attribute;
 
-import org.apache.commons.lang3.NotImplementedException;
+import blue.lapis.pore.converter.type.TypeConverter;
+
+import com.google.common.base.Converter;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.event.inventory.InventoryType;
 import org.spongepowered.api.item.inventory.InventoryArchetype;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -35,38 +35,40 @@ public class InventoryTypeConverter {
     private InventoryTypeConverter() {
     }
 
+    private static final Converter<InventoryType, InventoryArchetype> CONVERTER =
+            TypeConverter.builder(InventoryType.class, InventoryArchetype.class)
+                    .add(InventoryType.CHEST, InventoryArchetypes.CHEST)
+                    //.add(InventoryType.ENDER_CHEST, InventoryArchetypes.CHEST)
+                    .add(InventoryType.DISPENSER, InventoryArchetypes.DISPENSER)
+                    //.add(InventoryType.DROPPER, InventoryArchetypes.DISPENSER)
+                    .add(InventoryType.FURNACE, InventoryArchetypes.FURNACE)
+                    .add(InventoryType.WORKBENCH, InventoryArchetypes.WORKBENCH)
+                    .add(InventoryType.CRAFTING, InventoryArchetypes.CRAFTING)
+                    .add(InventoryType.ENCHANTING, InventoryArchetypes.ENCHANTING_TABLE)
+                    .add(InventoryType.BREWING, InventoryArchetypes.BREWING_STAND)
+                    .add(InventoryType.PLAYER, InventoryArchetypes.PLAYER)
+                    //.add(InventoryType.CREATIVE, InventoryArchetypes.)
+                    .add(InventoryType.MERCHANT, InventoryArchetypes.VILLAGER)
+                    .add(InventoryType.ANVIL, InventoryArchetypes.ANVIL)
+                    .add(InventoryType.BEACON, InventoryArchetypes.BEACON)
+                    .add(InventoryType.HOPPER, InventoryArchetypes.HOPPER)
+                    //.add(InventoryType, InventoryArchetypes)
+                    .build();
+
     public static InventoryArchetype of(InventoryType type) {
         switch (type) {
-            case CHEST:
             case ENDER_CHEST:
                 return InventoryArchetypes.CHEST;
-            case DISPENSER:
             case DROPPER:
                 return InventoryArchetypes.DISPENSER;
-            case FURNACE:
-                return InventoryArchetypes.FURNACE;
-            case WORKBENCH:
-                return InventoryArchetypes.WORKBENCH;
-            case CRAFTING:
-                return InventoryArchetypes.CRAFTING;
-            case ENCHANTING:
-                return InventoryArchetypes.ENCHANTING_TABLE;
-            case BREWING:
-                return InventoryArchetypes.BREWING_STAND;
-            case PLAYER:
-                return InventoryArchetypes.PLAYER;
             case CREATIVE:
                 throw new NotImplementedException("Creative inventory not available!");
-            case MERCHANT:
-                return InventoryArchetypes.VILLAGER;
-            case ANVIL:
-                return InventoryArchetypes.ANVIL;
-            case BEACON:
-                return InventoryArchetypes.BEACON;
-            case HOPPER:
-                return InventoryArchetypes.HOPPER;
             default:
-                throw new NotImplementedException(type.name());
+                return CONVERTER.convert(type);
         }
+    }
+
+    public static InventoryType of(InventoryArchetype type) {
+        return CONVERTER.reverse().convert(type);
     }
 }

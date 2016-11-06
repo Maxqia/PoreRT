@@ -22,6 +22,7 @@
 
 package blue.lapis.pore.impl.inventory;
 
+import blue.lapis.pore.converter.type.attribute.InventoryTypeConverter;
 import blue.lapis.pore.converter.type.material.ItemStackConverter;
 import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
@@ -39,11 +40,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
-import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 
 import java.util.HashMap;
@@ -419,32 +417,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
 
     @Override
     public InventoryType getType() {
-        //TODO: partial implementation, needs work
-        // I don't think we can just check the carrier because inventories can be virtual regardless of type
-
-        // for chest
-        // dispenser
-        // dropper
-        // furnace
-        if (this.getHandle() instanceof CraftingInventory) {
-            GridInventory craftingGrid = ((CraftingInventory) this.getHandle()).getCraftingGrid();
-            if (craftingGrid.getRows() == 2) {
-                return InventoryType.CRAFTING;
-            } else {
-                return InventoryType.WORKBENCH;
-            }
-        }
-        // enchanting
-        // brewing
-        if (this.getHandle() instanceof PlayerInventory) {
-            return InventoryType.PLAYER;
-        }
-        // creative
-        // villager
-        // ender chest
-        // anvil
-        // beacon
-        return null;
+        return InventoryTypeConverter.of(getHandle().getArchetype());
     }
 
     @Override
