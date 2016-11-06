@@ -28,12 +28,18 @@ package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.meta.BookMeta;
+import org.spongepowered.api.data.DataHolder;
 
 import java.util.List;
 
 // TODO: bridge
 
 public class PoreBookMeta extends PoreItemMeta implements BookMeta {
+
+    public PoreBookMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public boolean hasTitle() {

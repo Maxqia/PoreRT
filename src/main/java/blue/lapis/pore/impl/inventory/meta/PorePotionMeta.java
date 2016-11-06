@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spongepowered.api.data.DataHolder;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ import java.util.List;
 // TODO: bridge
 
 public class PorePotionMeta extends PoreItemMeta implements PotionMeta {
+
+    public PorePotionMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public boolean hasCustomEffects() {

@@ -29,6 +29,7 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.spongepowered.api.data.DataHolder;
 
 import java.util.List;
 
@@ -37,6 +38,11 @@ import java.util.List;
 // TODO: bridge
 
 public class PoreFireworkMeta extends PoreItemMeta implements FireworkMeta {
+
+    public PoreFireworkMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public void addEffect(FireworkEffect effect) throws IllegalArgumentException {

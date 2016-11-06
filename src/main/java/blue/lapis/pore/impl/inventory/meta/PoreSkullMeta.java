@@ -28,12 +28,18 @@ package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.spongepowered.api.data.DataHolder;
 
 // TODO: bridge
 
 // TODO: bridge
 
 public class PoreSkullMeta extends PoreItemMeta implements SkullMeta {
+
+    public PoreSkullMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public String getOwner() {

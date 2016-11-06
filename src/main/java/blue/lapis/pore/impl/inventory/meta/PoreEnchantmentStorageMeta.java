@@ -31,10 +31,16 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.spongepowered.api.data.DataHolder;
 
 import java.util.Map;
 
 public class PoreEnchantmentStorageMeta extends PoreItemMeta implements EnchantmentStorageMeta {
+
+    public PoreEnchantmentStorageMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public boolean hasStoredEnchants() {

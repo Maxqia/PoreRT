@@ -28,12 +28,18 @@ package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.meta.MapMeta;
+import org.spongepowered.api.data.DataHolder;
 
 // TODO: bridge
 
 // TODO: bridge
 
 public class PoreMapMeta extends PoreItemMeta implements MapMeta {
+
+    public PoreMapMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public boolean isScaling() {

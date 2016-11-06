@@ -23,20 +23,30 @@
 package blue.lapis.pore.impl.inventory;
 
 import blue.lapis.pore.converter.type.material.MaterialConverter;
+import blue.lapis.pore.impl.inventory.meta.PoreItemMeta;
+
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 public class PoreItemStack extends org.bukkit.inventory.ItemStack {
 
-    ItemStack handle;
+    private ItemStack handle;
 
     public PoreItemStack(ItemStack handle) {
-        super(MaterialConverter.of(handle.getItem()), handle.getQuantity());
+        super(MaterialConverter.of(handle.getItem()));
         this.handle = handle;
+        try {
+            Field field = this.getClass().getSuperclass().getDeclaredField("meta");
+            field.setAccessible(true);
+            field.set(this, new PoreItemMeta(handle));
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            this.setItemMeta(new PoreItemMeta(handle)); //wat
+        }
     }
 
     public ItemStack getHandle() {
@@ -58,5 +68,15 @@ public class PoreItemStack extends org.bukkit.inventory.ItemStack {
         int maxdur = getHandle().getProperty(UseLimitProperty.class).get().getValue();
         getHandle().offer(Keys.ITEM_DURABILITY, maxdur - durability);
         return;
+    }
+
+    @Override
+    public int getAmount() {
+        return getHandle().getQuantity();
+    }
+
+    @Override
+    public void setAmount(int amount) {
+        getHandle().setQuantity(amount);
     }
 }

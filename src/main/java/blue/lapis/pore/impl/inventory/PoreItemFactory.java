@@ -1,74 +1,86 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Spigot/Craftbukkit Project <https://hub.spigotmc.org/stash/projects/SPIGOT> LGPLv3
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.inventory;
 
-import org.apache.commons.lang3.NotImplementedException;
+import blue.lapis.pore.converter.type.material.MaterialConverter;
+import blue.lapis.pore.impl.inventory.meta.PoreItemMeta;
+
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-// TODO: bridge
+import org.spongepowered.api.item.inventory.ItemStack;
 
 public class PoreItemFactory implements ItemFactory {
 
     @Override
     public ItemMeta getItemMeta(Material material) {
-        throw new NotImplementedException("TODO");
+        return new PoreItemMeta(ItemStack.of(MaterialConverter.asItem(material), 1));
     }
 
     @Override
-    public boolean isApplicable(ItemMeta meta, ItemStack stack) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+    public boolean isApplicable(ItemMeta meta, org.bukkit.inventory.ItemStack stack) throws IllegalArgumentException {
+        return isApplicable(meta, stack.getType());
     }
 
     @Override
     public boolean isApplicable(ItemMeta meta, Material material) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        /*if (meta instanceof PoreItemMeta) {
+            PoreItemMeta internalMeta = (PoreItemMeta) meta;
+            DataTransactionResult result = ItemStack.of(MaterialConverter.asItem(material), 1)
+                    .copyFrom(internalMeta.getHandle().copy());
+            return result.isSuccessful();
+        }
+        throw new IllegalArgumentException("ItemMeta not from this ItemFactory!");*/
+        return true; //TODO
     }
 
     @Override
     public boolean equals(ItemMeta meta1, ItemMeta meta2) throws IllegalArgumentException {
-        return (meta1 == meta2);
+        //return (meta1 == meta2);
+        return true; //TODO
     }
 
     @Override
-    public ItemMeta asMetaFor(ItemMeta meta, ItemStack stack) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+    public ItemMeta asMetaFor(ItemMeta meta, org.bukkit.inventory.ItemStack stack) throws IllegalArgumentException {
+        return asMetaFor(meta, stack.getType());
     }
 
     @Override
     public ItemMeta asMetaFor(ItemMeta meta, Material material) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        /*if (meta instanceof PoreItemMeta) {
+            PoreItemMeta internalMeta = (PoreItemMeta) meta;
+            ItemStack holder = ItemStack.of(MaterialConverter.asItem(material), 1);
+            holder.copyFrom(internalMeta.getHandle().copy());
+            return new PoreItemMeta(holder);
+        }
+        throw new IllegalArgumentException("ItemMeta not from this ItemFactory!");*/
+        return meta; //TODO
     }
 
-    @Override
+    @Override // Taken from CB
     public Color getDefaultLeatherColor() {
-        throw new NotImplementedException("TODO");
+        return Color.fromRGB(0xA06540);
     }
 }

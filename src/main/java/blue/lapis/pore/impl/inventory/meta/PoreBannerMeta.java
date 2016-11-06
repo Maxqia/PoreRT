@@ -29,12 +29,17 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
+import org.spongepowered.api.data.DataHolder;
 
 import java.util.List;
 
 public class PoreBannerMeta extends PoreItemMeta implements org.bukkit.inventory.meta.BannerMeta {
 
     //TODO: bridge
+
+    public PoreBannerMeta(DataHolder holder) {
+        super(holder);
+    }
 
     @Override
     public DyeColor getBaseColor() {

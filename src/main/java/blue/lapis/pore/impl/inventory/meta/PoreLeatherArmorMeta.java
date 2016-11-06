@@ -29,12 +29,18 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.spongepowered.api.data.DataHolder;
 
 // TODO: bridge
 
 // TODO: bridge
 
 public class PoreLeatherArmorMeta extends PoreItemMeta implements LeatherArmorMeta {
+
+    public PoreLeatherArmorMeta(DataHolder holder) {
+        super(holder);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
     public Color getColor() {
