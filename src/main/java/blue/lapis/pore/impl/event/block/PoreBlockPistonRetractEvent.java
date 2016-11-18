@@ -113,7 +113,7 @@ public final class PoreBlockPistonRetractEvent extends BlockPistonRetractEvent
         return toStringHelper().toString();
     }
 
-    @RegisterEvent
+    //@RegisterEvent
     public static void register() {
         PoreEventRegistry.register(PoreBlockPistonRetractEvent.class, ChangeBlockEvent.Post.class, event -> {
             for (Transaction<BlockSnapshot> trans : event.getTransactions()) {
