@@ -1,87 +1,127 @@
 /*
- * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
+
 package blue.lapis.pore.impl.event.block;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.converter.type.world.DirectionConverter;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
+import blue.lapis.pore.event.RegisterEvent;
 import blue.lapis.pore.impl.block.PoreBlock;
 
-import org.apache.commons.lang3.NotImplementedException;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.spongepowered.api.event.block.BlockEvent;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.PistonTypes;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.NamedCause;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent {
+public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
+    implements PoreEvent<ChangeBlockEvent.Post> {
 
-    private final BlockEvent handle;
+    private final ChangeBlockEvent.Post handle;
 
-    public PoreBlockPistonExtendEvent(BlockEvent handle) {
-        super(null, -1, null);
+    public PoreBlockPistonExtendEvent(ChangeBlockEvent.Post handle) {
+        super(null, null, null);
         this.handle = checkNotNull(handle, "handle");
     }
 
-    public BlockEvent getHandle() {
+    public ChangeBlockEvent.Post getHandle() {
         return handle;
+    }
+
+    public BlockSnapshot getSnapshot() {
+        return getHandle().getCause().get(NamedCause.SOURCE, BlockSnapshot.class).get();
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(getHandle().getLocation());
-    }
+        return PoreBlock.of(getSnapshot().getLocation().get());
+    } //TODO check which block this is, the piston or the block moved
 
     @Override
     public boolean isSticky() {
-        throw new NotImplementedException("TODO"); // TODO
-    }
-
-    @Override
-    public List<Block> getBlocks() {
-        throw new NotImplementedException("TODO"); // TODO
+        return getSnapshot().getExtendedState().get(Keys.PISTON_TYPE).get().equals(PistonTypes.STICKY);
     }
 
     @Override
     public BlockFace getDirection() {
-        throw new NotImplementedException("TODO"); // TODO
+        return DirectionConverter.of(getSnapshot().get(Keys.DIRECTION).get());
     }
 
     @Override
     public int getLength() {
-        throw new NotImplementedException("TODO"); // TODO
+        return getBlocks().size();
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        ArrayList<Block> blocks = new ArrayList<Block>();
+        for (Transaction<BlockSnapshot> trans : getHandle().getTransactions()) {
+            if (trans.getOriginal().getExtendedState().getType()
+                    .toString().toLowerCase().contains("piston")) {
+                continue;
+            }
+            blocks.add(PoreBlock.of(trans.getOriginal().getLocation().get()));
+        }
+        return ImmutableList.copyOf(blocks);
     }
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO"); // TODO
+        return getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        throw new NotImplementedException("TODO"); // TODO
+        getHandle().setCancelled(cancelled);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper().toString();
+    }
+
+    @RegisterEvent
+    public static void register() {
+        PoreEventRegistry.register(PoreBlockPistonExtendEvent.class, ChangeBlockEvent.Post.class, event -> {
+            for (Transaction<BlockSnapshot> trans : event.getTransactions()) {
+                if (!trans.getOriginal().getExtendedState().getType().equals(BlockTypes.PISTON_HEAD)
+                        && trans.getFinal().getExtendedState().getType().equals(BlockTypes.PISTON_HEAD)) {
+                    return ImmutableList.of(new PoreBlockPistonExtendEvent(event));
+                }
+            }
+            return ImmutableList.of();
+        });
     }
 
 }
