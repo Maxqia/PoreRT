@@ -36,6 +36,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.Piston;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.PistonTypes;
@@ -51,7 +52,7 @@ public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
     private final ChangeBlockEvent.Post handle;
 
     public PoreBlockPistonExtendEvent(ChangeBlockEvent.Post handle) {
-        super(null, null, null);
+        super(null, new ArrayList<Block>(), null);
         this.handle = checkNotNull(handle, "handle");
     }
 
@@ -59,23 +60,23 @@ public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
         return handle;
     }
 
-    public BlockSnapshot getSnapshot() {
-        return getHandle().getCause().get(NamedCause.SOURCE, BlockSnapshot.class).get();
+    public Piston getPiston() {
+        return getHandle().getCause().get(NamedCause.SOURCE, Piston.class).get();
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(getSnapshot().getLocation().get());
+        return PoreBlock.of(getPiston().getLocation());
     } //TODO check which block this is, the piston or the block moved
 
     @Override
     public boolean isSticky() {
-        return getSnapshot().getExtendedState().get(Keys.PISTON_TYPE).get().equals(PistonTypes.STICKY);
+        return getPiston().get(Keys.PISTON_TYPE).get().equals(PistonTypes.STICKY);
     }
 
     @Override
     public BlockFace getDirection() {
-        return DirectionConverter.of(getSnapshot().get(Keys.DIRECTION).get());
+        return DirectionConverter.of(getPiston().getBlock().get(Keys.DIRECTION).get());
     }
 
     @Override
