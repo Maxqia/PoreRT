@@ -43,6 +43,8 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 
+import java.util.ArrayList;
+
 public final class PoreBlockBurnEvent extends BlockBurnEvent implements PoreEvent<ChangeBlockEvent> {
 
     private final ChangeBlockEvent handle;
@@ -84,17 +86,18 @@ public final class PoreBlockBurnEvent extends BlockBurnEvent implements PoreEven
     @RegisterEvent
     public static void register() {
         PoreEventRegistry.register(PoreBlockBurnEvent.class, ChangeBlockEvent.class, event -> {
+            ArrayList<PoreBlockBurnEvent> events = new ArrayList<PoreBlockBurnEvent>();
             BlockSnapshot fire = event.getCause().get(SOURCE, BlockSnapshot.class).orElse(null);
             if (fire != null && fire.getState().getType() == BlockTypes.FIRE) {
                 for (Transaction<BlockSnapshot> trans : event.getTransactions()) {
                     BlockType from = trans.getOriginal().getState().getType();
                     BlockType to = trans.getFinal().getState().getType();
                     if (from != to) {
-                        return ImmutableList.of(new PoreBlockBurnEvent(event, trans));
+                        events.add(new PoreBlockBurnEvent(event, trans));
                     }
                 }
             }
-            return ImmutableList.of();
+            return ImmutableList.copyOf(events);
         });
     }
 
