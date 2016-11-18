@@ -44,7 +44,9 @@ import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -121,9 +123,14 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
-        assert sender instanceof PoreCommandSender;
-        CommandResult result = handle.process(((PoreCommandSender) sender).getHandle(), commandLine);
-        return result.getSuccessCount().isPresent() && result.getSuccessCount().get() > 0;
+        try {
+            CommandResult result = handle.process((CommandSource) sender.getClass()
+                    .getMethod("getHandle").invoke(sender), commandLine);
+            return result.getSuccessCount().isPresent() && result.getSuccessCount().get() > 0;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                | SecurityException e) {
+            throw new CommandException(e.getMessage());
+        }
     }
 
     @Override
