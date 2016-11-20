@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Spigot/Craftbukkit Project <https://hub.spigotmc.org/stash/projects/SPIGOT> LGPLv3
  * Copyright (c) Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +25,14 @@ package blue.lapis.pore.impl.inventory;
 
 import blue.lapis.pore.converter.type.attribute.InventoryTypeConverter;
 import blue.lapis.pore.converter.type.material.ItemStackConverter;
-import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import net.minecraft.inventory.IInventory;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,18 +41,16 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.item.inventory.type.OrderedInventory;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.inventory.Inventory {
 
@@ -62,9 +62,48 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
         super(handle);
     }
 
+    protected IInventory getInventory() {
+        System.out.println(getHandle().getClass().getName());
+        if (getHandle().getClass().isAssignableFrom(IInventory.class)) {
+            return (IInventory) getHandle();
+        } else {
+            try {
+                CustomInventory handle = ((CustomInventory) getHandle());
+                Field field = handle.getClass().getDeclaredField("inv");
+                field.setAccessible(true);
+                return (IInventory) field.get(handle);
+            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+    }
+
+    protected net.minecraft.item.ItemStack[] getInternalContents() {
+        try {
+            System.out.println(getHandle().getClass());
+            Field field = getInventory().getClass().getDeclaredField("field_70482_c");
+            field.setAccessible(true);
+            return (net.minecraft.item.ItemStack[]) field.get(getInventory());
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public ItemStack[] getStorageContents() {
+        return getContents();
+    }
+
+    @Override
+    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
+        setContents(items);
+    }
+
     @Override
     public int getSize() {
-        return this.getHandle().size();
+        return getInventory().getSizeInventory();
     }
 
     @Override
@@ -84,32 +123,14 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
 
     @Override
     public ItemStack getItem(int index) {
-        if (this.getHandle() instanceof OrderedInventory) {
-            Optional<org.spongepowered.api.item.inventory.ItemStack> stack =
-                    ((OrderedInventory) this.getHandle()).peek(new SlotIndex(index));
-            if (stack.isPresent()) {
-                return ItemStackConverter.of(stack.get());
-            } else {
-                return null;
-            }
-        } else {
-            throw new UnsupportedOperationException("Not an OrderedInventory");
-        }
+        return ItemStackConverter.of(ItemStackUtil.fromNative((((IInventory) this.getHandle()).getStackInSlot(index))));
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setItem(int index, ItemStack item) {
-        if (this.getHandle() instanceof OrderedInventory) {
-            Optional<Slot> slot =
-                    ((OrderedInventory) this.getHandle()).getSlot(new SlotIndex(index));
-            if (slot.isPresent()) {
-                slot.get().set(ItemStackConverter.of(item));
-            } else {
-                throw new IllegalArgumentException("Invalid slot index");
-            }
-        } else {
-            throw new UnsupportedOperationException("Not an OrderedInventory");
-        }
+        getInventory().setInventorySlotContents(index, ((item == null || item.getTypeId() == 0)
+                ? null : ItemStackUtil.toNative(ItemStackConverter.of(item)).copy()));
     }
 
     @Override
@@ -146,83 +167,29 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
         return notRemoved;
     }
 
-    /**
-     * Returns a HashMap mapping slot IDs to their respective {@link ItemStack}s
-     * in this inventory.
-     *
-     * @return a HashMap mapping slot IDs to their respective {@link ItemStack}s
-     *         in this inventory.
-     */
-    private HashMap<Integer, ItemStack> getOrderedContents() {
-        HashMap<Integer, ItemStack> matches = Maps.newHashMap();
-        if (this.getHandle() instanceof OrderedInventory) {
-            OrderedInventory ordered = (OrderedInventory) this.getHandle();
-            for (int i = 0; i < ordered.size(); i++) {
-                Optional<Slot> slot = ordered.getSlot(new SlotIndex(i));
-                if (slot.isPresent()) {
-                    Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.get().peek();
-                    if (stack.isPresent()) {
-                        matches.put(i, ItemStackConverter.of(stack.get()));
-                    }
-                }
-            }
-        } else {
-            int i = 0;
-            for (Slot slot : this.getHandle().<Slot>slots()) {
-                if (slot.peek().isPresent()) {
-                    matches.put(i, ItemStackConverter.of(slot.peek().get()));
-                }
-                ++i;
-            }
-        }
-        return matches;
-    }
-
     @Override
     public ItemStack[] getContents() {
-        ItemStack[] contents = new ItemStack[this.getHandle().size()];
-        if (this.getHandle() instanceof OrderedInventory) {
-            OrderedInventory ordered = (OrderedInventory) this.getHandle();
-            for (int i = 0; i < this.getHandle().capacity(); i++) {
-                Optional<Slot> slot = ordered.getSlot(new SlotIndex(i));
-                if (slot.isPresent()) {
-                    Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.get().peek();
-                    contents[i] = stack.isPresent() ? ItemStackConverter.of(stack.get()) : null;
-                } else {
-                    contents[i] = null;
-                }
-            }
-        } else {
-            int i = 0;
-            for (Slot slot : this.getHandle().<Slot>slots()) {
-                Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.peek();
-                contents[i] = stack.isPresent() ? ItemStackConverter.of(stack.get()) : null;
-                ++i;
-            }
+        ItemStack[] items = new ItemStack[getSize()];
+        net.minecraft.item.ItemStack[] mcItems = this.getInternalContents();
+
+        int size = Math.min(items.length, mcItems.length);
+        for (int i = 0; i < size; i++) {
+            items[i] = mcItems[i] == null ? null : ItemStackConverter.of(ItemStackUtil.fromNative(mcItems[i]));
         }
-        return contents;
+        return items;
     }
 
     @Override
     public void setContents(ItemStack[] items) throws IllegalArgumentException {
-        if (items.length > this.getSize()) {
-            throw new IllegalArgumentException("Contents array is greater than inventory capacity");
+        if (getSize() < items.length) {
+            throw new IllegalArgumentException("Invalid inventory size; expected " + getSize() + " or less");
         }
-        if (this.getHandle() instanceof OrderedInventory) {
-            OrderedInventory ordered = (OrderedInventory) this.getHandle();
-            int i = 0;
-            for (ItemStack stack : items) {
-                Optional<Slot> slot = ordered.getSlot(new SlotIndex(i));
-                if (slot.isPresent()) {
-                    slot.get().set(ItemStackConverter.of(stack));
-                }
-                ++i;
-            }
-        } else {
-            int i = 0;
-            for (Slot slot : this.getHandle().<Slot>slots()) {
-                slot.set(ItemStackConverter.of(items[i]));
-                ++i;
+
+        for (int i = 0; i < getSize(); i++) {
+            if (i >= items.length) {
+                setItem(i, null);
+            } else {
+                setItem(i, items[i]);
             }
         }
     }
@@ -230,114 +197,162 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
     @Override
     @SuppressWarnings("deprecation")
     public boolean contains(int materialId) {
-        return this.contains(Material.getMaterial(materialId));
+        for (ItemStack item : getStorageContents()) {
+            if (item != null && item.getTypeId() == materialId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean contains(Material material) throws IllegalArgumentException {
-        return this.getHandle().contains(MaterialConverter.asItem(material));
+    @SuppressWarnings("deprecation")
+    public boolean contains(Material material) {
+        Validate.notNull(material, "Material cannot be null");
+        return contains(material.getId());
     }
 
     @Override
     public boolean contains(ItemStack item) {
-        return this.contains(item.getType());
+        if (item == null) {
+            return false;
+        }
+        for (ItemStack i : getStorageContents()) {
+            if (item.equals(i)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public boolean contains(int materialId, int amount) {
-        return this.contains(Material.getMaterial(materialId), amount);
-    }
-
-    @Override
-    public boolean contains(Material material, int amount) throws IllegalArgumentException {
-        int count = 0;
-        for (Slot slot : this.getHandle().<Slot>slots()) {
-            if (slot.peek().isPresent() && slot.peek().get().getItem() == MaterialConverter.asItem(material)) {
-                count += slot.peek().get().getQuantity();
-                if (count > amount) {
+        if (amount <= 0) {
+            return true;
+        }
+        for (ItemStack item : getStorageContents()) {
+            if (item != null && item.getTypeId() == materialId) {
+                if ((amount -= item.getAmount()) <= 0) {
                     return true;
                 }
             }
         }
-        return count > amount;
-    }
-
-    @Override
-    public boolean contains(ItemStack item, int amount) {
-        int matches = 0;
-        for (Slot slot : this.getHandle().<Slot>slots()) {
-            if (slot.peek().isPresent() && slot.peek().get().equals(ItemStackConverter.of(item))) {
-                ++matches;
-                if (matches > amount) {
-                    return true;
-                }
-            }
-        }
-        return matches > amount;
-    }
-
-    @Override
-    public boolean containsAtLeast(ItemStack item, int amount) {
-        int count = 0;
-        for (Slot slot : this.getHandle().<Slot>slots()) {
-            if (slot.peek().isPresent() && slot.peek().get().equals(ItemStackConverter.of(item))) {
-                count += item.getAmount();
-                if (count > amount) {
-                    return true;
-                }
-            }
-        }
-        return count > amount;
+        return false;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public HashMap<Integer, ? extends ItemStack> all(int materialId) {
-        return this.all(Material.getMaterial(materialId));
+    public boolean contains(Material material, int amount) {
+        Validate.notNull(material, "Material cannot be null");
+        return contains(material.getId(), amount);
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(Material material) throws IllegalArgumentException {
-        HashMap<Integer, ItemStack> matches = Maps.newHashMap();
-        this.getOrderedContents().entrySet().stream().filter(e -> e.getValue().getType() == material).forEach(e -> {
-            matches.put(e.getKey(), e.getValue());
-        });
-        return matches;
+    public boolean contains(ItemStack item, int amount) {
+        if (item == null) {
+            return false;
+        }
+        if (amount <= 0) {
+            return true;
+        }
+        for (ItemStack i : getStorageContents()) {
+            if (item.equals(i) && --amount <= 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(ItemStack item) {
-        HashMap<Integer, ItemStack> matches = Maps.newHashMap();
-        this.getOrderedContents().entrySet().stream().filter(e -> e.getValue().equals(item)).forEach(e -> {
-            matches.put(e.getKey(), e.getValue());
-        });
-        return matches;
+    public boolean containsAtLeast(ItemStack item, int amount) {
+        if (item == null) {
+            return false;
+        }
+        if (amount <= 0) {
+            return true;
+        }
+        for (ItemStack i : getStorageContents()) {
+            if (item.isSimilar(i) && (amount -= i.getAmount()) <= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public HashMap<Integer, ItemStack> all(int materialId) {
+        HashMap<Integer, ItemStack> slots = new HashMap<Integer, ItemStack>();
+
+        ItemStack[] inventory = getStorageContents();
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack item = inventory[i];
+            if (item != null && item.getTypeId() == materialId) {
+                slots.put(i, item);
+            }
+        }
+        return slots;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public HashMap<Integer, ItemStack> all(Material material) {
+        Validate.notNull(material, "Material cannot be null");
+        return all(material.getId());
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> all(ItemStack item) {
+        HashMap<Integer, ItemStack> slots = new HashMap<Integer, ItemStack>();
+        if (item != null) {
+            ItemStack[] inventory = getStorageContents();
+            for (int i = 0; i < inventory.length; i++) {
+                if (item.equals(inventory[i])) {
+                    slots.put(i, inventory[i]);
+                }
+            }
+        }
+        return slots;
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public int first(int materialId) {
-        return this.first(Material.getMaterial(materialId));
-    }
-
-    @Override
-    public int first(Material material) throws IllegalArgumentException {
-        Set<Map.Entry<Integer, ItemStack>> entries = this.getOrderedContents().entrySet();
-        for (Map.Entry<Integer, ItemStack> e : entries) {
-            if (e.getValue().getType() == material) {
-                return e.getKey();
+        ItemStack[] inventory = getStorageContents();
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack item = inventory[i];
+            if (item != null && item.getTypeId() == materialId) {
+                return i;
             }
         }
         return -1;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
+    public int first(Material material) {
+        Validate.notNull(material, "Material cannot be null");
+        return first(material.getId());
+    }
+
+    @Override
     public int first(ItemStack item) {
-        Set<Map.Entry<Integer, ItemStack>> entries = this.getOrderedContents().entrySet();
-        for (Map.Entry<Integer, ItemStack> e : entries) {
-            if (e.getValue().getType() == item.getType() && e.getValue().getAmount() == item.getAmount()) {
-                return e.getKey();
+        return first(item, true);
+    }
+
+    private int first(ItemStack item, boolean withAmount) {
+        if (item == null) {
+            return -1;
+        }
+        ItemStack[] inventory = getStorageContents();
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == null) {
+                continue;
+            }
+
+            if (withAmount ? item.equals(inventory[i]) : item.isSimilar(inventory[i])) {
+                return i;
             }
         }
         return -1;
@@ -345,58 +360,47 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
 
     @Override
     public int firstEmpty() {
-        Set<Map.Entry<Integer, ItemStack>> entries = this.getOrderedContents().entrySet();
-        for (Map.Entry<Integer, ItemStack> e : entries) {
-            if (e.getValue() == null) {
-                return e.getKey();
+        ItemStack[] inventory = getStorageContents();
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == null) {
+                return i;
             }
         }
         return -1;
     }
 
+
     @Override
     @SuppressWarnings("deprecation")
-    public void remove(int materialId) {
-        this.remove(Material.getMaterial(materialId));
+    public void remove(Material material) throws IllegalArgumentException {
+        Validate.notNull(material, "Material cannot be null");
+        remove(material.getId());
     }
 
     @Override
-    public void remove(Material material) throws IllegalArgumentException {
-        for (Slot slot : this.getHandle().<Slot>slots()) {
-            Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.peek();
-            if (stack.isPresent()) {
-                if (stack.get().getItem() == MaterialConverter.asItem(material)) {
-                    slot.clear();
-                    return;
-                }
+    @SuppressWarnings("deprecation")
+    public void remove(int materialId) {
+        ItemStack[] items = getStorageContents();
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null && items[i].getTypeId() == materialId) {
+                clear(i);
             }
         }
     }
 
     @Override
     public void remove(ItemStack item) {
-        for (Slot slot : this.getHandle().<Slot>slots()) {
-            Optional<org.spongepowered.api.item.inventory.ItemStack> stack = slot.peek();
-            if (stack.isPresent()) {
-                if (stack.get().getItem() == MaterialConverter.asItem(item.getType())
-                        && stack.get().getQuantity() == item.getAmount()) {
-                    slot.clear();
-                    return;
-                }
+        ItemStack[] items = getStorageContents();
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null && items[i].equals(item)) {
+                clear(i);
             }
         }
     }
 
     @Override
     public void clear(int index) {
-        if (this.getHandle() instanceof OrderedInventory) {
-            Optional<Slot> slot = ((OrderedInventory) this.getHandle()).getSlot(new SlotIndex(index));
-            if (slot.isPresent()) {
-                slot.get().clear();
-            }
-        } else {
-            throw new UnsupportedOperationException("Not an OrderedInventory");
-        }
+        setItem(index, null);
     }
 
     @Override
@@ -461,18 +465,6 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
             }
         }
         return null;
-    }
-
-    @Override
-    public ItemStack[] getStorageContents() {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
     }
 
     @Override
