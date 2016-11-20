@@ -31,7 +31,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import blue.lapis.pore.converter.type.attribute.EventResultConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
-import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.event.Source;
+import blue.lapis.pore.impl.entity.PoreHumanEntity;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryView;
 
@@ -45,8 +46,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 
 import java.util.List;
 
@@ -54,10 +56,12 @@ import java.util.List;
 public final class PoreInventoryClickEvent extends InventoryClickEvent implements PoreEvent<ClickInventoryEvent> {
 
     private final ClickInventoryEvent handle;
+    private final Humanoid player;
 
-    public PoreInventoryClickEvent(ClickInventoryEvent handle) {
+    public PoreInventoryClickEvent(ClickInventoryEvent handle, @Source Humanoid player) {
         super(null, null, -1, null, null);
         this.handle = checkNotNull(handle, "handle");
+        this.player = checkNotNull(player, "player");
     }
 
     public ClickInventoryEvent getHandle() {
@@ -85,8 +89,7 @@ public final class PoreInventoryClickEvent extends InventoryClickEvent implement
 
     @Override
     public HumanEntity getWhoClicked() {
-        return PorePlayer.of(getHandle().getCause()
-                .get(NamedCause.OWNER, org.spongepowered.api.entity.living.player.Player.class).orElse(null));
+        return PoreHumanEntity.of(player);
     }
 
     @Override
@@ -106,63 +109,115 @@ public final class PoreInventoryClickEvent extends InventoryClickEvent implement
 
     @Override
     public ItemStack getCursor() {
-        throw new NotImplementedException("TODO");
+        return super.getCursor();
     }
+
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setCursor(ItemStack stack) {
-        this.getView().setCursor(stack);
+        super.setCursor(stack);
     }
 
-    //TODO implement this
     @Override
     public ItemStack getCurrentItem() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public boolean isRightClick() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public boolean isLeftClick() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public boolean isShiftClick() {
-        throw new NotImplementedException("TODO");
+        return super.getCurrentItem();
     }
 
     @Override
     public void setCurrentItem(ItemStack stack) {
-        throw new NotImplementedException("TODO");
+        super.setCurrentItem(stack);
+    }
+
+    @Override
+    public boolean isRightClick() {
+        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Secondary.class);
+    }
+
+    @Override
+    public boolean isLeftClick() {
+        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Primary.class);
+    }
+
+    @Override
+    public boolean isShiftClick() {
+        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.class);
     }
 
     @Override
     public int getSlot() {
-        throw new NotImplementedException("TODO");
+        return getRawSlot();
     }
 
     @Override
     public int getRawSlot() {
-        throw new NotImplementedException("TODO");
+        return ((SlotAdapter) getHandle().getTransactions().get(0).getSlot()).slotNumber;
     }
 
     @Override
     public int getHotbarButton() {
-        throw new NotImplementedException("TODO");
-    }
+        return ((ClickInventoryEvent.NumberPress) getHandle()).getNumber();
+    } //TODO is this correct?
 
     @Override
     public InventoryAction getAction() {
-        throw new NotImplementedException("TODO");
-    }
+        if (this.isShiftClick()) {
+            return InventoryAction.MOVE_TO_OTHER_INVENTORY;
+        }
+        return InventoryAction.UNKNOWN;
+    } //TODO implement
 
     @Override
     public ClickType getClick() {
-        throw new NotImplementedException("TODO");
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.Primary.class)) {
+            return ClickType.SHIFT_LEFT;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.Secondary.class)) {
+            return ClickType.SHIFT_RIGHT;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Primary.class)) {
+            return ClickType.LEFT;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Middle.class)) {
+            return ClickType.MIDDLE;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Secondary.class)) {
+            return ClickType.RIGHT;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Creative.class)) {
+            return ClickType.CREATIVE;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.NumberPress.class)) {
+            return ClickType.NUMBER_KEY;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Drop.Full.class)) {
+            return ClickType.CONTROL_DROP;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Drop.class)) {
+            return ClickType.DROP;
+        }
+
+        /*if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+            return ClickType.WINDOW_BORDER_LEFT; //TODO not available in Sponge
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+            return ClickType.WINDOW_BORDER_RIGHT;
+        }
+
+        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+            return ClickType.DOUBLE_CLICK;
+        }*/
+
+        return ClickType.UNKNOWN;
     }
 
     @Override
