@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.entity;
@@ -31,10 +27,10 @@ import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.PoreWorld;
+import blue.lapis.pore.impl.metadata.PoreMetadataStore;
 import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.NotImplementedException;
@@ -45,6 +41,7 @@ import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.metadata.MetadataStore;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -63,6 +60,9 @@ import java.util.UUID;
 
 //TODO: Determine if metadata methods should be implemented manually
 public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity.Entity {
+
+    private static final MetadataStore<org.bukkit.entity.Entity> entityMeta =
+            new PoreMetadataStore<org.bukkit.entity.Entity>();
 
     public static PoreEntity of(Entity handle) {
         return WrapperConverter.of(PoreEntity.class, handle);
@@ -329,23 +329,23 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     }
 
     @Override
-    public void setMetadata(String s, MetadataValue metadataValue) {
-        // TODO
+    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
+        entityMeta.setMetadata(this, metadataKey, newMetadataValue);
     }
 
     @Override
-    public List<MetadataValue> getMetadata(String s) {
-        return ImmutableList.of(); // TODO
+    public List<MetadataValue> getMetadata(String metadataKey) {
+        return entityMeta.getMetadata(this, metadataKey);
     }
 
     @Override
-    public boolean hasMetadata(String s) {
-        return false; // TODO
+    public boolean hasMetadata(String metadataKey) {
+        return entityMeta.hasMetadata(this, metadataKey);
     }
 
     @Override
-    public void removeMetadata(String s, Plugin plugin) {
-        // TODO
+    public void removeMetadata(String metadataKey, Plugin owningPlugin) {
+        entityMeta.removeMetadata(this, metadataKey, owningPlugin);
     }
 
     @Override

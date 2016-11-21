@@ -39,6 +39,7 @@ import blue.lapis.pore.impl.entity.PoreEntity;
 import blue.lapis.pore.impl.entity.PoreFallingSand;
 import blue.lapis.pore.impl.entity.PoreLivingEntity;
 import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.impl.metadata.PoreMetadataStore;
 import blue.lapis.pore.util.PoreCollections;
 import blue.lapis.pore.util.PoreWrapper;
 
@@ -73,6 +74,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataStore;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -107,6 +109,9 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     public static final int DEFAULT_EFFECT_RADIUS = 64;
     private static final boolean DEFAULT_SET_FIRE = false;
     private static final boolean DEFAULT_BREAK_BLOCKS = true;
+
+    private static final MetadataStore<org.bukkit.World> worldMeta =
+            new PoreMetadataStore<org.bukkit.World>();
 
     public static PoreWorld of(Extent handle) {
         if (handle instanceof World) {
@@ -808,22 +813,22 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
-        throw new NotImplementedException("TODO");
+        worldMeta.setMetadata(this, metadataKey, newMetadataValue);
     }
 
     @Override
     public List<MetadataValue> getMetadata(String metadataKey) {
-        throw new NotImplementedException("TODO");
+        return worldMeta.getMetadata(this, metadataKey);
     }
 
     @Override
     public boolean hasMetadata(String metadataKey) {
-        throw new NotImplementedException("TODO");
+        return worldMeta.hasMetadata(this, metadataKey);
     }
 
     @Override
     public void removeMetadata(String metadataKey, Plugin owningPlugin) {
-        throw new NotImplementedException("TODO");
+        worldMeta.removeMetadata(this, metadataKey, owningPlugin);
     }
 
     @Override

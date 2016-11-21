@@ -42,6 +42,7 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.PoreWorld;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryView;
+import blue.lapis.pore.impl.metadata.PoreMetadataStore;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.util.PoreText;
 
@@ -71,6 +72,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.MainHand;
 import org.bukkit.map.MapView;
+import org.bukkit.metadata.MetadataStore;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.spongepowered.api.command.CommandResult;
@@ -97,6 +100,7 @@ import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -104,6 +108,8 @@ import java.util.UUID;
 
 public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Player {
 
+    private static final MetadataStore<org.bukkit.entity.Player> playerMeta =
+            new PoreMetadataStore<org.bukkit.entity.Player>();
     private String displayName = this.getName();
 
     public static PorePlayer of(Player handle) {
@@ -122,6 +128,26 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public EntityType getType() {
         return EntityType.PLAYER;
+    }
+
+    @Override
+    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
+        playerMeta.setMetadata(this, metadataKey, newMetadataValue);
+    }
+
+    @Override
+    public List<MetadataValue> getMetadata(String metadataKey) {
+        return playerMeta.getMetadata(this, metadataKey);
+    }
+
+    @Override
+    public boolean hasMetadata(String metadataKey) {
+        return playerMeta.hasMetadata(this, metadataKey);
+    }
+
+    @Override
+    public void removeMetadata(String metadataKey, Plugin owningPlugin) {
+        playerMeta.removeMetadata(this, metadataKey, owningPlugin);
     }
 
     @Override
