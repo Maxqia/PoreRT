@@ -892,7 +892,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public void sendPluginMessage(Plugin source, String channel, byte[] message) {
-        throw new NotImplementedException("TODO");
+        Pore.getGame().getChannelRegistrar().getOrCreateRaw(Pore.getPlugin(), channel).sendTo(getHandle(), buf -> {
+            buf.writeBytes(message);
+        }); // contained classloaders are fun ...
     }
 
     @Override
