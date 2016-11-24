@@ -26,6 +26,7 @@
 
 package blue.lapis.pore.impl.block;
 
+import blue.lapis.pore.converter.type.material.PotionEffectTypeConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 
@@ -39,7 +40,7 @@ import org.spongepowered.api.block.tileentity.carrier.Beacon;
 
 import java.util.Collection;
 
-public class PoreBeacon extends PoreBlockState implements org.bukkit.block.Beacon {
+public class PoreBeacon extends PoreContainer implements org.bukkit.block.Beacon {
 
     public static PoreBeacon of(BlockState handle) {
         return WrapperConverter.of(PoreBeacon.class, handle);
@@ -66,26 +67,27 @@ public class PoreBeacon extends PoreBlockState implements org.bukkit.block.Beaco
 
     @Override
     public int getTier() {
-        throw new NotImplementedException("TODO");
+        return getTileEntity().getCompletedLevels();
     }
 
     @Override
     public PotionEffect getPrimaryEffect() {
-        throw new NotImplementedException("TODO");
-    }
+        return new PotionEffect(PotionEffectTypeConverter.of(getTileEntity().primaryEffect().get().get()), 0,0);
+    } //TODO sponge api PotionEffectType -> PotionEffect?
 
     @Override
     public void setPrimaryEffect(PotionEffectType effect) {
-        throw new NotImplementedException("TODO");
+        getTileEntity().primaryEffect().setTo(PotionEffectTypeConverter.of(effect));
     }
 
     @Override
     public PotionEffect getSecondaryEffect() {
-        throw new NotImplementedException("TODO");
+        return new PotionEffect(PotionEffectTypeConverter.of(getTileEntity().secondaryEffect().get().get()), 0,0);
     }
 
     @Override
     public void setSecondaryEffect(PotionEffectType effect) {
-        throw new NotImplementedException("TODO");
+        getTileEntity().secondaryEffect().setTo(PotionEffectTypeConverter.of(effect));
     }
+
 }

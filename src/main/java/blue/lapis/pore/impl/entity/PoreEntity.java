@@ -462,4 +462,19 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     public void setPortalCooldown(int cooldown) {
         getHandle().offer(Keys.COOLDOWN, cooldown);
     }
+
+    @Override
+    public Set<String> getScoreboardTags() {
+        throw new NotImplementedException("Sponge API needs Merge");
+    }
+
+    @Override
+    public boolean addScoreboardTag(String tag) {
+        throw new NotImplementedException("Sponge API needs Merge");
+    }
+
+    @Override
+    public boolean removeScoreboardTag(String tag) {
+        throw new NotImplementedException("Sponge API needs Merge");
+    }
 }

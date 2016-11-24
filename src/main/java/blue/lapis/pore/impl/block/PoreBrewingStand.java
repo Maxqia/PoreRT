@@ -32,8 +32,9 @@ import blue.lapis.pore.impl.inventory.PoreBrewerInventory;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.BrewerInventory;
 import org.spongepowered.api.block.tileentity.carrier.BrewingStand;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.BrewingStandData;
 
-public class PoreBrewingStand extends PoreBlockState implements org.bukkit.block.BrewingStand {
+public class PoreBrewingStand extends PoreContainer implements org.bukkit.block.BrewingStand {
 
     public static PoreBrewingStand of(BrewingStand handle) {
         return WrapperConverter.of(PoreBrewingStand.class, handle);
@@ -51,12 +52,12 @@ public class PoreBrewingStand extends PoreBlockState implements org.bukkit.block
 
     @Override
     public int getBrewingTime() {
-        throw new NotImplementedException("TODO");
+        return getTileEntity().get(BrewingStandData.class).get().remainingBrewTime().get();
     }
 
     @Override
     public void setBrewingTime(int brewTime) {
-        throw new NotImplementedException("TODO");
+        getTileEntity().get(BrewingStandData.class).get().remainingBrewTime().set(brewTime);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PoreBrewingStand extends PoreBlockState implements org.bukkit.block
     }
 
     @Override
-    public int getFuelLevel() {
+    public int getFuelLevel() { //TODO bug Sponge about this
         throw new NotImplementedException("TODO");
     }
 

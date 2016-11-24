@@ -33,7 +33,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.FurnaceInventory;
 import org.spongepowered.api.block.tileentity.carrier.Furnace;
 
-public class PoreFurnace extends PoreBlockState implements org.bukkit.block.Furnace {
+public class PoreFurnace extends PoreContainer implements org.bukkit.block.Furnace {
 
     public static PoreFurnace of(Furnace handle) {
         return WrapperConverter.of(PoreFurnace.class, handle);
@@ -49,27 +49,28 @@ public class PoreFurnace extends PoreBlockState implements org.bukkit.block.Furn
     }
 
     @Override
-    public short getBurnTime() {
-        throw new NotImplementedException("TODO");
+    public short getBurnTime() { //TODO is this correct
+        return getTileEntity().passedBurnTime().get().shortValue();
     }
 
     @Override
     public void setBurnTime(short burnTime) {
-        throw new NotImplementedException("TODO");
+        getTileEntity().passedBurnTime().set((int)burnTime);
     }
 
     @Override
     public short getCookTime() {
-        throw new NotImplementedException("TODO");
+        return getTileEntity().passedCookTime().get().shortValue();
     }
 
     @Override
     public void setCookTime(short cookTime) {
-        throw new NotImplementedException("TODO");
+        getTileEntity().passedCookTime().set((int)cookTime);
     }
 
     @Override
     public FurnaceInventory getInventory() {
         return PoreFurnaceInventory.of(getTileEntity().getInventory());
     }
+
 }

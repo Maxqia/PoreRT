@@ -33,7 +33,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.Inventory;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
 
-public class PoreChest extends PoreBlockState implements org.bukkit.block.Chest {
+public class PoreChest extends PoreContainer implements org.bukkit.block.Chest {
 
     public static PoreChest of(Chest handle) {
         return WrapperConverter.of(PoreChest.class, handle);

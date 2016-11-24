@@ -33,7 +33,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.Inventory;
 import org.spongepowered.api.block.tileentity.carrier.Dropper;
 
-public class PoreDropper extends PoreBlockState implements org.bukkit.block.Dropper {
+public class PoreDropper extends PoreContainer implements org.bukkit.block.Dropper {
 
     public static PoreDropper of(Dropper handle) {
         return WrapperConverter.of(PoreDropper.class, handle);
@@ -49,7 +49,7 @@ public class PoreDropper extends PoreBlockState implements org.bukkit.block.Drop
     }
 
     @Override
-    public void drop() {
+    public void drop() { //TODO bug Sponge about this
         throw new NotImplementedException("TODO");
     }
 

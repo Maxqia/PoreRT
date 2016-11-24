@@ -32,7 +32,7 @@ import blue.lapis.pore.impl.inventory.PoreInventory;
 import org.bukkit.inventory.Inventory;
 import org.spongepowered.api.block.tileentity.carrier.Hopper;
 
-public class PoreHopper extends PoreBlockState implements org.bukkit.block.Hopper {
+public class PoreHopper extends PoreContainer implements org.bukkit.block.Hopper {
 
     public static PoreHopper of(Hopper handle) {
         return WrapperConverter.of(PoreHopper.class, handle);

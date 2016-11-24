@@ -35,7 +35,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
 
-public class PoreDispenser extends PoreBlockState implements org.bukkit.block.Dispenser {
+public class PoreDispenser extends PoreContainer implements org.bukkit.block.Dispenser {
 
     public static PoreDispenser of(Dispenser handle) {
         return WrapperConverter.of(PoreDispenser.class, handle);
@@ -56,7 +56,7 @@ public class PoreDispenser extends PoreBlockState implements org.bukkit.block.Di
     }
 
     @Override
-    public boolean dispense() {
+    public boolean dispense() { //TODO bug sponge about this
         throw new NotImplementedException("TODO");
     }
 
