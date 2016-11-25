@@ -84,6 +84,7 @@ import blue.lapis.pore.impl.entity.PoreGuardian;
 import blue.lapis.pore.impl.entity.PoreHanging;
 import blue.lapis.pore.impl.entity.PoreHorse;
 import blue.lapis.pore.impl.entity.PoreHumanEntity;
+import blue.lapis.pore.impl.entity.PoreHusk;
 import blue.lapis.pore.impl.entity.PoreIronGolem;
 import blue.lapis.pore.impl.entity.PoreItem;
 import blue.lapis.pore.impl.entity.PoreItemFrame;
@@ -114,6 +115,7 @@ import blue.lapis.pore.impl.entity.PoreSnowball;
 import blue.lapis.pore.impl.entity.PoreSnowman;
 import blue.lapis.pore.impl.entity.PoreSpider;
 import blue.lapis.pore.impl.entity.PoreSquid;
+import blue.lapis.pore.impl.entity.PoreStray;
 import blue.lapis.pore.impl.entity.PoreTNTPrimed;
 import blue.lapis.pore.impl.entity.PoreThrownExpBottle;
 import blue.lapis.pore.impl.entity.PoreThrownPotion;
@@ -122,10 +124,12 @@ import blue.lapis.pore.impl.entity.PoreWaterMob;
 import blue.lapis.pore.impl.entity.PoreWeather;
 import blue.lapis.pore.impl.entity.PoreWitch;
 import blue.lapis.pore.impl.entity.PoreWither;
+import blue.lapis.pore.impl.entity.PoreWitherSkeleton;
 import blue.lapis.pore.impl.entity.PoreWitherSkull;
 import blue.lapis.pore.impl.entity.PoreWolf;
 import blue.lapis.pore.impl.entity.PoreZombie;
 import blue.lapis.pore.impl.entity.PoreZombieHorse;
+import blue.lapis.pore.impl.entity.PoreZombieVillager;
 import blue.lapis.pore.impl.entity.minecart.PoreCommandMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreExplosiveMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreHopperMinecart;
@@ -216,16 +220,20 @@ import org.spongepowered.api.entity.living.monster.Endermite;
 import org.spongepowered.api.entity.living.monster.Ghast;
 import org.spongepowered.api.entity.living.monster.Giant;
 import org.spongepowered.api.entity.living.monster.Guardian;
+import org.spongepowered.api.entity.living.monster.Husk;
 import org.spongepowered.api.entity.living.monster.MagmaCube;
 import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.monster.Silverfish;
 import org.spongepowered.api.entity.living.monster.Skeleton;
 import org.spongepowered.api.entity.living.monster.Slime;
 import org.spongepowered.api.entity.living.monster.Spider;
+import org.spongepowered.api.entity.living.monster.Stray;
 import org.spongepowered.api.entity.living.monster.Witch;
 import org.spongepowered.api.entity.living.monster.Wither;
+import org.spongepowered.api.entity.living.monster.WitherSkeleton;
 import org.spongepowered.api.entity.living.monster.Zombie;
 import org.spongepowered.api.entity.living.monster.ZombiePigman;
+import org.spongepowered.api.entity.living.monster.ZombieVillager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.projectile.Egg;
@@ -303,11 +311,18 @@ public final class WrapperConverter {
                             .register(Guardian.class, PoreGuardian.class)
                             .register(Silverfish.class, PoreSilverfish.class)
                             .register(Skeleton.class, PoreSkeleton.class)
+                                .register(WitherSkeleton.class, PoreWitherSkeleton.class)
+                                .register(Stray.class, PoreStray.class)
+
                             .register(Spider.class, PoreSpider.class)
                                 .register(CaveSpider.class, PoreCaveSpider.class)
                             .register(Witch.class, PoreWitch.class)
+
                             .register(Zombie.class, PoreZombie.class)
                                 .register(ZombiePigman.class, PorePigZombie.class)
+                                .register(Husk.class, PoreHusk.class)
+                                .register(ZombieVillager.class, PoreZombieVillager.class)
+
                         .register(Aquatic.class, PoreWaterMob.class)
                             .register(Squid.class, PoreSquid.class)
                         .register(Ageable.class, PoreAgeable.class)

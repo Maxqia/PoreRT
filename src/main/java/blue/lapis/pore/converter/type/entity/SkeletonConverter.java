@@ -33,6 +33,7 @@ import org.bukkit.entity.Skeleton;
 import org.spongepowered.api.data.type.SkeletonType;
 import org.spongepowered.api.data.type.SkeletonTypes;
 
+@Deprecated
 public final class SkeletonConverter {
 
     private SkeletonConverter() {
