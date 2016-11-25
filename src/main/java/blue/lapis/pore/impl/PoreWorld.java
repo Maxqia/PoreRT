@@ -36,7 +36,7 @@ import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.block.PoreBlock;
 import blue.lapis.pore.impl.entity.PoreEntity;
-import blue.lapis.pore.impl.entity.PoreFallingSand;
+import blue.lapis.pore.impl.entity.PoreFallingBlock;
 import blue.lapis.pore.impl.entity.PoreLivingEntity;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.metadata.PoreMetadataStore;
@@ -584,7 +584,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
         }
         org.spongepowered.api.entity.FallingBlock fb = (org.spongepowered.api.entity.FallingBlock) spawned;
         //TODO: set type and such
-        return PoreFallingSand.of(fb);
+        return PoreFallingBlock.of(fb);
     }
 
     @SuppressWarnings("deprecation")
