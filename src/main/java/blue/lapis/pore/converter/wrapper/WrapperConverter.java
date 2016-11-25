@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.converter.wrapper;
@@ -48,6 +44,7 @@ import blue.lapis.pore.impl.block.PoreSkull;
 import blue.lapis.pore.impl.command.PoreBlockCommandSender;
 import blue.lapis.pore.impl.command.PoreCommandSender;
 import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
+import blue.lapis.pore.impl.entity.PoreAbstractHorse;
 import blue.lapis.pore.impl.entity.PoreAgeable;
 import blue.lapis.pore.impl.entity.PoreAmbient;
 import blue.lapis.pore.impl.entity.PoreAnimalTamer;
@@ -64,6 +61,7 @@ import blue.lapis.pore.impl.entity.PoreComplexLivingEntity;
 import blue.lapis.pore.impl.entity.PoreCow;
 import blue.lapis.pore.impl.entity.PoreCreature;
 import blue.lapis.pore.impl.entity.PoreCreeper;
+import blue.lapis.pore.impl.entity.PoreDonkey;
 import blue.lapis.pore.impl.entity.PoreEgg;
 import blue.lapis.pore.impl.entity.PoreEnderCrystal;
 import blue.lapis.pore.impl.entity.PoreEnderDragon;
@@ -93,8 +91,11 @@ import blue.lapis.pore.impl.entity.PoreLargeFireball;
 import blue.lapis.pore.impl.entity.PoreLeashHitch;
 import blue.lapis.pore.impl.entity.PoreLightningStrike;
 import blue.lapis.pore.impl.entity.PoreLivingEntity;
+import blue.lapis.pore.impl.entity.PoreLlama;
+import blue.lapis.pore.impl.entity.PoreLlamaSpit;
 import blue.lapis.pore.impl.entity.PoreMagmaCube;
 import blue.lapis.pore.impl.entity.PoreMonster;
+import blue.lapis.pore.impl.entity.PoreMule;
 import blue.lapis.pore.impl.entity.PoreMushroomCow;
 import blue.lapis.pore.impl.entity.PoreOcelot;
 import blue.lapis.pore.impl.entity.PorePainting;
@@ -106,6 +107,7 @@ import blue.lapis.pore.impl.entity.PoreRabbit;
 import blue.lapis.pore.impl.entity.PoreSheep;
 import blue.lapis.pore.impl.entity.PoreSilverfish;
 import blue.lapis.pore.impl.entity.PoreSkeleton;
+import blue.lapis.pore.impl.entity.PoreSkeletonHorse;
 import blue.lapis.pore.impl.entity.PoreSlime;
 import blue.lapis.pore.impl.entity.PoreSmallFireball;
 import blue.lapis.pore.impl.entity.PoreSnowball;
@@ -123,6 +125,7 @@ import blue.lapis.pore.impl.entity.PoreWither;
 import blue.lapis.pore.impl.entity.PoreWitherSkull;
 import blue.lapis.pore.impl.entity.PoreWolf;
 import blue.lapis.pore.impl.entity.PoreZombie;
+import blue.lapis.pore.impl.entity.PoreZombieHorse;
 import blue.lapis.pore.impl.entity.minecart.PoreCommandMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreExplosiveMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreHopperMinecart;
@@ -142,6 +145,7 @@ import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
 
+import org.bukkit.entity.SkeletonHorse;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Banner;
 import org.spongepowered.api.block.tileentity.CommandBlock;
@@ -185,13 +189,18 @@ import org.spongepowered.api.entity.living.Villager;
 import org.spongepowered.api.entity.living.animal.Animal;
 import org.spongepowered.api.entity.living.animal.Chicken;
 import org.spongepowered.api.entity.living.animal.Cow;
+import org.spongepowered.api.entity.living.animal.Donkey;
 import org.spongepowered.api.entity.living.animal.Horse;
+import org.spongepowered.api.entity.living.animal.Llama;
 import org.spongepowered.api.entity.living.animal.Mooshroom;
+import org.spongepowered.api.entity.living.animal.Mule;
 import org.spongepowered.api.entity.living.animal.Ocelot;
 import org.spongepowered.api.entity.living.animal.Pig;
 import org.spongepowered.api.entity.living.animal.Rabbit;
+import org.spongepowered.api.entity.living.animal.RideableHorse;
 import org.spongepowered.api.entity.living.animal.Sheep;
 import org.spongepowered.api.entity.living.animal.Wolf;
+import org.spongepowered.api.entity.living.animal.ZombieHorse;
 import org.spongepowered.api.entity.living.complex.ComplexLiving;
 import org.spongepowered.api.entity.living.complex.ComplexLivingPart;
 import org.spongepowered.api.entity.living.complex.EnderDragon;
@@ -224,6 +233,7 @@ import org.spongepowered.api.entity.projectile.EnderPearl;
 import org.spongepowered.api.entity.projectile.EyeOfEnder;
 import org.spongepowered.api.entity.projectile.Firework;
 import org.spongepowered.api.entity.projectile.FishHook;
+import org.spongepowered.api.entity.projectile.LlamaSpit;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.entity.projectile.ThrownExpBottle;
@@ -308,14 +318,24 @@ public final class WrapperConverter {
                                 .register(Pig.class, PorePig.class)
                                 .register(Rabbit.class, PoreRabbit.class)
                                 .register(Sheep.class, PoreSheep.class)
+
                                 //.register(Tameable.class, PoreTameable.class) TODO
-                                    .register(Horse.class, PoreHorse.class)
+                                    .register(Horse.class, PoreAbstractHorse.class)
+                                        .register(RideableHorse.class, PoreHorse.class)
+                                        //.register(sponge, PoreChestedHorse.class)
+                                        .register(Donkey.class, PoreDonkey.class)
+                                        .register(Llama.class, PoreLlama.class)
+                                        .register(Mule.class, PoreMule.class)
+                                        .register(SkeletonHorse.class, PoreSkeletonHorse.class)
+                                        .register(ZombieHorse.class, PoreZombieHorse.class)
                                     .register(Ocelot.class, PoreOcelot.class)
                                     .register(Wolf.class, PoreWolf.class)
+
                             .register(Villager.class, PoreVillager.class)
                         .register(Golem.class, PoreGolem.class)
                             .register(IronGolem.class, PoreIronGolem.class)
                             .register(SnowGolem.class, PoreSnowman.class)
+
                     .register(ArmorStand.class, PoreArmorStand.class)
                 .register(ComplexLivingPart.class, PoreComplexEntityPart.class)
                     .register(EnderDragonPart.class, PoreEnderDragonPart.class)
@@ -342,6 +362,8 @@ public final class WrapperConverter {
                     .register(Snowball.class, PoreSnowball.class)
                     .register(ThrownExpBottle.class, PoreThrownExpBottle.class)
                     .register(ThrownPotion.class, PoreThrownPotion.class)
+                    .register(LlamaSpit.class, PoreLlamaSpit.class)
+
                 .register(PrimedTNT.class, PoreTNTPrimed.class)
                 .register(WeatherEffect.class, PoreWeather.class)
                 .register(Minecart.class, PoreMinecart.class)
