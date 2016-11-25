@@ -779,7 +779,9 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch) {
-        getHandle().playSound(SoundConverter.of(sound), SoundCategoryConverter.of(category), VectorConverter.create3d(location), volume, pitch);
+        getHandle().playSound(SoundConverter.of(sound),
+                SoundCategoryConverter.of(category),
+                VectorConverter.create3d(location), volume, pitch);
     }
 
     @Override

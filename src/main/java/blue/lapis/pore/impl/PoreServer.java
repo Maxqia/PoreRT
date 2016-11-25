@@ -70,6 +70,7 @@ import org.bukkit.help.HelpMap;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permissible;
@@ -884,6 +885,11 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Merchant createMerchant(String title) {
         throw new NotImplementedException("TODO");
     }
 }
