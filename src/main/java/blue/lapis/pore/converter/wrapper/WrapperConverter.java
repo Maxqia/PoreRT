@@ -74,7 +74,7 @@ import blue.lapis.pore.impl.entity.PoreEnderman;
 import blue.lapis.pore.impl.entity.PoreEndermite;
 import blue.lapis.pore.impl.entity.PoreEntity;
 import blue.lapis.pore.impl.entity.PoreExperienceOrb;
-import blue.lapis.pore.impl.entity.PoreFallingSand;
+import blue.lapis.pore.impl.entity.PoreFallingBlock;
 import blue.lapis.pore.impl.entity.PoreFireball;
 import blue.lapis.pore.impl.entity.PoreFirework;
 import blue.lapis.pore.impl.entity.PoreFish;
@@ -322,7 +322,7 @@ public final class WrapperConverter {
                 .register(EnderCrystal.class, PoreEnderCrystal.class)
                 .register(EyeOfEnder.class, PoreEnderSignal.class)
                 .register(ExperienceOrb.class, PoreExperienceOrb.class)
-                .register(FallingBlock.class, PoreFallingSand.class)
+                .register(FallingBlock.class, PoreFallingBlock.class)
                 .register(Firework.class, PoreFirework.class)
                 .register(Hanging.class, PoreHanging.class)
                     .register(ItemFrame.class, PoreItemFrame.class)

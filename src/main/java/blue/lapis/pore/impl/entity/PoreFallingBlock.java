@@ -32,17 +32,16 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingSand;
 import org.spongepowered.api.entity.FallingBlock;
 
 @SuppressWarnings("deprecation")
-public class PoreFallingSand extends PoreEntity implements FallingSand {
+public class PoreFallingBlock extends PoreEntity implements org.bukkit.entity.FallingBlock {
 
-    public static PoreFallingSand of(FallingBlock handle) {
-        return WrapperConverter.of(PoreFallingSand.class, handle);
+    public static PoreFallingBlock of(FallingBlock handle) {
+        return WrapperConverter.of(PoreFallingBlock.class, handle);
     }
 
-    protected PoreFallingSand(FallingBlock handle) {
+    protected PoreFallingBlock(FallingBlock handle) {
         super(handle);
     }
 
@@ -83,12 +82,12 @@ public class PoreFallingSand extends PoreEntity implements FallingSand {
 
     @Override
     public boolean canHurtEntities() {
-        throw new NotImplementedException("TODO");
+        return getHandle().canHurtEntities().get();
     }
 
     @Override
     public void setHurtEntities(boolean hurtEntities) {
-        throw new NotImplementedException("TODO");
+        getHandle().canHurtEntities().set(hurtEntities);
     }
 
 }
