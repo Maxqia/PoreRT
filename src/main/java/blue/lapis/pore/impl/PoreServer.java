@@ -586,11 +586,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     }
 
     @Override
-    public boolean useExactLoginLocation() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
     public void shutdown() {
         throw new NotImplementedException("TODO");
     }

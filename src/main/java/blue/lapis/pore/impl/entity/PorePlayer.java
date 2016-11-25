@@ -61,6 +61,7 @@ import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.conversations.Conversation;
@@ -295,6 +296,18 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public void playNote(Location loc, Instrument instrument, Note note) {
         throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void playSound(Location location, String sound, SoundCategory category, float volume, float pitch) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -919,12 +932,22 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    public void stopSound(Sound sound) {
+    public void stopSound(Sound sound, SoundCategory category) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void stopSound(String sound, SoundCategory category) {
         throw new NotImplementedException("TODO");
     }
 
     @Override
     public void stopSound(String sound) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void stopSound(Sound sound) {
         throw new NotImplementedException("TODO");
     }
 

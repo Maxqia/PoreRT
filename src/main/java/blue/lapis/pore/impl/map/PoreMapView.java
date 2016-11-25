@@ -102,4 +102,14 @@ public class PoreMapView implements MapView {
         throw new NotImplementedException("TODO");
     }
 
+    @Override
+    public boolean isUnlimitedTracking() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setUnlimitedTracking(boolean unlimited) {
+        throw new NotImplementedException("TODO");
+    }
+
 }

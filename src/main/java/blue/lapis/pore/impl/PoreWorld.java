@@ -30,6 +30,7 @@ import blue.lapis.pore.converter.type.world.DifficultyConverter;
 import blue.lapis.pore.converter.type.world.EnvironmentConverter;
 import blue.lapis.pore.converter.type.world.GeneratorTypeConverter;
 import blue.lapis.pore.converter.type.world.effect.EffectConverter;
+import blue.lapis.pore.converter.type.world.effect.SoundCategoryConverter;
 import blue.lapis.pore.converter.type.world.effect.SoundConverter;
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
@@ -58,6 +59,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.TreeType;
 import org.bukkit.WorldBorder;
 import org.bukkit.WorldType;
@@ -771,6 +773,16 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
+    public void playSound(Location location, String sound, SoundCategory category, float volume, float pitch) {
+        this.playSound(location, Sound.valueOf(sound), category, volume, pitch);
+    }
+
+    @Override
+    public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch) {
+        getHandle().playSound(SoundConverter.of(sound), SoundCategoryConverter.of(category), VectorConverter.create3d(location), volume, pitch);
+    }
+
+    @Override
     public void playSound(Location location, String sound, float volume, float pitch) {
         this.playSound(location, Sound.valueOf(sound), volume, pitch);
     }
@@ -914,4 +926,5 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
             double offsetY, double offsetZ, double extra, T data) {
         throw new NotImplementedException("TODO");
     }
+
 }

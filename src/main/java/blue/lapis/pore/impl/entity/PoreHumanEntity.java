@@ -43,6 +43,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MainHand;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -293,7 +294,11 @@ public class PoreHumanEntity extends PoreLivingEntity implements HumanEntity {
 
     @Override
     public boolean isHandRaised() {
-        // TODO Auto-generated method stub
-        return false;
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public InventoryView openMerchant(Merchant merchant, boolean force) {
+        throw new NotImplementedException("TODO");
     }
 }
