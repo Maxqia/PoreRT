@@ -226,11 +226,11 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
         System.out.println(getHandle().getClass());
         InventoryPlayer inv = (InventoryPlayer) getHandle();
         net.minecraft.item.ItemStack[] combined = new net.minecraft.item.ItemStack[
-                     inv.mainInventory.length + inv.armorInventory.length + inv.offHandInventory.length];
-        System.arraycopy(inv.mainInventory, 0, combined, 0, inv.mainInventory.length);
-        System.arraycopy(inv.armorInventory, 0, combined, inv.mainInventory.length, inv.armorInventory.length);
+                     inv.mainInventory.size() + inv.armorInventory.size() + inv.offHandInventory.size()];
+        System.arraycopy(inv.mainInventory, 0, combined, 0, inv.mainInventory.size());
+        System.arraycopy(inv.armorInventory, 0, combined, inv.mainInventory.size(), inv.armorInventory.size());
         System.arraycopy(inv.offHandInventory, 0, combined,
-                inv.mainInventory.length + inv.armorInventory.length, inv.offHandInventory.length);
+                inv.mainInventory.size() + inv.armorInventory.size(), inv.offHandInventory.size());
         return combined;
     }
 
