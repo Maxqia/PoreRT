@@ -69,6 +69,10 @@ public class InventoryTypeConverter {
     }
 
     public static InventoryType of(InventoryArchetype type) {
-        return CONVERTER.reverse().convert(type);
+        try {
+            return CONVERTER.reverse().convert(type);
+        } catch (UnsupportedOperationException e) {
+            return InventoryType.CHEST;
+        }
     }
 }

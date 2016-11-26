@@ -30,6 +30,8 @@ import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 
 import org.apache.commons.lang.Validate;
@@ -55,6 +57,16 @@ import java.util.Optional;
 public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.inventory.Inventory {
 
     public static PoreInventory of(Inventory handle) {
+        if (handle instanceof ContainerChest) {
+            try {
+                Field field = handle.getClass().getDeclaredField("field_75155_e");
+                field.setAccessible(true);
+                return WrapperConverter.of(PoreInventory.class, field.get(handle));
+            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         return WrapperConverter.of(PoreInventory.class, handle);
     }
 
