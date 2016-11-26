@@ -66,7 +66,6 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public boolean register(String label, String fallbackPrefix, Command command) {
-        // TODO: Label
         // TODO: Fallback prefix
 
         Object plugin = Pore.getPlugin();
@@ -81,8 +80,12 @@ public class PoreCommandMap extends SimpleCommandMap {
         }
         aliases.add(0, name);
 
-        Optional<CommandMapping> result = handle.register(plugin, new PoreCommandCallable(command), aliases);
-        if (result.isPresent()) {
+        Optional<CommandMapping> result = handle.register(plugin, new PoreCommandCallable(command, label), aliases);
+        if (result.isPresent()) { // Test if the aliases are in use
+            handle.removeMapping(result.get());
+            for (String alias : aliases) {
+                handle.register(plugin, new PoreCommandCallable(command, alias), alias);
+            }
             command.register(this);
             return true;
         } else {
