@@ -47,15 +47,16 @@ import java.util.Optional;
 @NonnullByDefault
 public class PoreCommandCallable extends PoreWrapper<Command> implements CommandCallable {
 
-    public PoreCommandCallable(Command handle) {
+    final String label;
+
+    public PoreCommandCallable(Command handle, String label) {
         super(handle);
+        this.label = label;
     }
 
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
-        // TODO: Label
-        if (getHandle().execute(PoreCommandSender.of(source), getHandle().getLabel(),
-                StringUtils.split(arguments))) {
+        if (getHandle().execute(PoreCommandSender.of(source), label, StringUtils.split(arguments))) {
             return CommandResult.success();
         } else {
             return CommandResult.empty();
@@ -65,9 +66,7 @@ public class PoreCommandCallable extends PoreWrapper<Command> implements Command
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition)
             throws CommandException {
-        // TODO: Label
-        return getHandle().tabComplete(PoreCommandSender.of(source), getHandle().getLabel(),
-                StringUtils.split(arguments));
+        return getHandle().tabComplete(PoreCommandSender.of(source), label, StringUtils.split(arguments));
     }
 
     @Override

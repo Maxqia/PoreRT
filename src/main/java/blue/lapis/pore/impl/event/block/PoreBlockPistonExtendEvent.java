@@ -36,47 +36,46 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.Piston;
-import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.PistonTypes;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
-    implements PoreEvent<ChangeBlockEvent.Post> {
+    implements PoreEvent<ChangeBlockEvent.Pre> {
 
-    private final ChangeBlockEvent.Post handle;
+    private final ChangeBlockEvent.Pre handle;
+    private final BlockSnapshot block;
 
-    public PoreBlockPistonExtendEvent(ChangeBlockEvent.Post handle) {
+    public PoreBlockPistonExtendEvent(ChangeBlockEvent.Pre handle, BlockSnapshot block) {
         super(null, new ArrayList<Block>(), null);
         this.handle = checkNotNull(handle, "handle");
+        this.block = checkNotNull(block, "block");
     }
 
-    public ChangeBlockEvent.Post getHandle() {
+    public ChangeBlockEvent.Pre getHandle() {
         return handle;
-    }
-
-    public Piston getPiston() {
-        return getHandle().getCause().get(NamedCause.SOURCE, Piston.class).get();
     }
 
     @Override
     public Block getBlock() {
-        return PoreBlock.of(getPiston().getLocation());
+        return PoreBlock.of(block.getLocation().get());
     } //TODO check which block this is, the piston or the block moved
 
     @Override
     public boolean isSticky() {
-        return getPiston().get(Keys.PISTON_TYPE).get().equals(PistonTypes.STICKY);
+        return block.get(Keys.PISTON_TYPE).get().equals(PistonTypes.STICKY);
     }
 
     @Override
     public BlockFace getDirection() {
-        return DirectionConverter.of(getPiston().getBlock().get(Keys.DIRECTION).get());
+        return DirectionConverter.of(block.get(Keys.DIRECTION).get());
     }
 
     @Override
@@ -87,12 +86,8 @@ public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
     @Override
     public List<Block> getBlocks() {
         ArrayList<Block> blocks = new ArrayList<Block>();
-        for (Transaction<BlockSnapshot> trans : getHandle().getTransactions()) {
-            if (trans.getOriginal().getExtendedState().getType()
-                    .toString().toLowerCase().contains("piston")) {
-                continue;
-            }
-            blocks.add(PoreBlock.of(trans.getOriginal().getLocation().get()));
+        for (Location<World> trans : getHandle().getLocations()) {
+            blocks.add(PoreBlock.of(trans));
         }
         return ImmutableList.copyOf(blocks);
     }
@@ -112,13 +107,13 @@ public final class PoreBlockPistonExtendEvent extends BlockPistonExtendEvent
         return toStringHelper().toString();
     }
 
-    //@RegisterEvent
+    @RegisterEvent
     public static void register() {
-        PoreEventRegistry.register(PoreBlockPistonExtendEvent.class, ChangeBlockEvent.Post.class, event -> {
-            for (Transaction<BlockSnapshot> trans : event.getTransactions()) {
-                if (!trans.getOriginal().getExtendedState().getType().equals(BlockTypes.PISTON_HEAD)
-                        && trans.getFinal().getExtendedState().getType().equals(BlockTypes.PISTON_HEAD)) {
-                    return ImmutableList.of(new PoreBlockPistonExtendEvent(event));
+        PoreEventRegistry.register(PoreBlockPistonExtendEvent.class, ChangeBlockEvent.Pre.class, event -> {
+            Optional<BlockSnapshot> block = event.getCause().get(NamedCause.SOURCE, BlockSnapshot.class);
+            if (block.isPresent() && block.get().getExtendedState().getType().equals(BlockTypes.PISTON)) {
+                if (!block.get().get(Keys.EXTENDED).get()) {
+                    return ImmutableList.of(new PoreBlockPistonExtendEvent(event, block.get()));
                 }
             }
             return ImmutableList.of();

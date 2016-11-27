@@ -422,8 +422,9 @@ public final class WrapperConverter {
             .register(Team.class, PoreTeam.class)
 
             // Inventory classes
-            .register(Inventory.class, PoreInventory.class)
-                .register(PlayerInventory.class, PorePlayerInventory.class)
+            .register(PlayerInventory.class, PorePlayerInventory.class)
+                .register(Inventory.class, PoreInventory.class)
+
             .register(Carrier.class, PoreInventoryHolder.class)
 
             // Well, more or less...

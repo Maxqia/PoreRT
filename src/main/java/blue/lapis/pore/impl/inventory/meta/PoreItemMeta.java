@@ -22,9 +22,11 @@
 
 package blue.lapis.pore.impl.inventory.meta;
 
+import blue.lapis.pore.impl.enchantments.PoreEnchantment;
 import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.enchantments.Enchantment;
@@ -32,10 +34,14 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
+import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
+import org.spongepowered.api.data.meta.ItemEnchantment;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -112,37 +118,94 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
 
     @Override
     public boolean hasEnchants() {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        return enchants.isPresent() && enchants.get().asList().size() > 0 ;
     }
 
     @Override
     public boolean hasEnchant(Enchantment ench) {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        if (enchants.isPresent()) {
+            for (ItemEnchantment itmEnch : enchants.get().asList()) {
+                if (itmEnch.getEnchantment().equals(target)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
     public int getEnchantLevel(Enchantment ench) {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        if (enchants.isPresent()) {
+            for (ItemEnchantment itmEnch : enchants.get().asList()) {
+                if (itmEnch.getEnchantment().equals(target)) {
+                    return itmEnch.getLevel();
+                }
+            }
+        }
+        return 0;
     }
 
     @Override
     public Map<Enchantment, Integer> getEnchants() {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        Map<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
+        if (enchants.isPresent()) {
+            for (ItemEnchantment itmEnch : enchants.get().asList()) {
+                map.put(Enchantment.getByName(itmEnch.getEnchantment().getName()), itmEnch.getLevel());
+            }
+        }
+        return ImmutableMap.copyOf(map);
     }
 
     @Override
     public boolean addEnchant(Enchantment ench, int level, boolean ignoreLevelRestriction) {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().getOrCreate(EnchantmentData.class);
+        if (enchants.isPresent()) {
+            if (level > ench.getMaxLevel() && !ignoreLevelRestriction) {
+                level = ench.getMaxLevel();
+            }
+
+            org.spongepowered.api.item.Enchantment copy = ((PoreEnchantment) ench).getHandle();
+            if (!copy.canBeAppliedToStack((ItemStack) getHandle()) && !this.hasConflictingEnchant(ench)) {
+                enchants.get().addElement(new ItemEnchantment(copy, level));
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean removeEnchant(Enchantment ench) {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        if (enchants.isPresent()) {
+            for (ItemEnchantment itmEnch : enchants.get().asList()) {
+                if (itmEnch.getEnchantment().equals(target)) {
+                    getHandle().get(EnchantmentData.class).get().remove(itmEnch);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean hasConflictingEnchant(Enchantment ench) {
-        throw new NotImplementedException("TODO");
+        Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
+        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        if (enchants.isPresent()) {
+        for (ItemEnchantment itmEnch : enchants.get().asList()) {
+            if (!itmEnch.getEnchantment().isCompatibleWith(target)) {
+                return true;
+            }
+        }
+        }
+        return false;
     }
 
     @Override
