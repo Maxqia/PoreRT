@@ -23,11 +23,10 @@ package blue.lapis.pore.converter.type.entity;
 
 import blue.lapis.pore.converter.type.TypeConverter;
 
+import com.google.common.base.Converter;
 import org.bukkit.entity.Llama;
 import org.spongepowered.api.data.type.LlamaVariant;
 import org.spongepowered.api.data.type.LlamaVariants;
-
-import com.google.common.base.Converter;
 
 public final class LlamaConverter {
 

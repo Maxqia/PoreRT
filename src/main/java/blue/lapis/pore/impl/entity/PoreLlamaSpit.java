@@ -27,7 +27,7 @@ import org.spongepowered.api.entity.projectile.LlamaSpit;
 import org.spongepowered.api.entity.projectile.Projectile;
 
 /**
- * You have to be kidding me
+ * You have to be kidding me.
  */
 public class PoreLlamaSpit extends PoreProjectile implements org.bukkit.entity.LlamaSpit {
 

@@ -102,4 +102,9 @@ public class PoreEnchantment extends org.bukkit.enchantments.Enchantment {
         return getHandle().canBeAppliedToStack(ItemStackConverter.of(item));
     }
 
+    @Override
+    public boolean isCursed() {
+        return ((net.minecraft.enchantment.Enchantment) getHandle()).isCurse();
+    }
+
 }
