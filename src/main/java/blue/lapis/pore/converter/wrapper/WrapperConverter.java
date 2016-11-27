@@ -149,7 +149,6 @@ import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
 
-import org.bukkit.entity.SkeletonHorse;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Banner;
 import org.spongepowered.api.block.tileentity.CommandBlock;
@@ -203,6 +202,7 @@ import org.spongepowered.api.entity.living.animal.Pig;
 import org.spongepowered.api.entity.living.animal.Rabbit;
 import org.spongepowered.api.entity.living.animal.RideableHorse;
 import org.spongepowered.api.entity.living.animal.Sheep;
+import org.spongepowered.api.entity.living.animal.SkeletonHorse;
 import org.spongepowered.api.entity.living.animal.Wolf;
 import org.spongepowered.api.entity.living.animal.ZombieHorse;
 import org.spongepowered.api.entity.living.complex.ComplexLiving;
