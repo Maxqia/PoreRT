@@ -75,8 +75,8 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
     }
 
     protected IInventory getInventory() {
-        System.out.println(getHandle().getClass().getName());
-        if (getHandle().getClass().isAssignableFrom(IInventory.class)) {
+        //System.out.println(getHandle().getClass().getName());
+        if (IInventory.class.isAssignableFrom(getHandle().getClass())) {
             return (IInventory) getHandle();
         } else {
             try {
