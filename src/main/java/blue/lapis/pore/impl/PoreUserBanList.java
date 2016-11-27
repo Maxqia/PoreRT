@@ -32,6 +32,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.util.ban.BanTypes;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public final class PoreUserBanList extends PoreBanList<Ban.Profile> {
 
     @Override
     protected boolean setTarget(Ban.Builder builder, String target) {
+        builder.type(BanTypes.PROFILE);
         Optional<GameProfile> profile = getGameProfile(target);
         if (!profile.isPresent()) {
             return false;

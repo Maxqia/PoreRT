@@ -27,6 +27,7 @@
 package blue.lapis.pore.impl;
 
 import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.util.ban.BanTypes;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -46,6 +47,7 @@ public final class PoreIpBanList extends PoreBanList<Ban.Ip> {
 
     @Override
     protected boolean setTarget(Ban.Builder builder, String target) {
+        builder.type(BanTypes.IP);
         try {
             builder.address(InetAddress.getByName(target));
             return true;
