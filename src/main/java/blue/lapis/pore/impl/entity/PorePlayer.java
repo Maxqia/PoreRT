@@ -343,6 +343,11 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
+    public Inventory getEnderChest() {
+        return PoreInventory.of(getHandle().getEnderChestInventory());
+    }
+
+    @Override
     public void updateInventory() {
         EntityPlayerMP player = ((EntityPlayerMP) getHandle());
         player.sendContainerToPlayer(player.inventoryContainer);
