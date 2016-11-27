@@ -525,7 +525,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public void setPlayerTime(long time, boolean relative) {
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("CANTDO");
     }
 
     @Override
@@ -535,7 +535,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public long getPlayerTimeOffset() {
-        throw new NotImplementedException("TODO");
+        return 0;
     }
 
     @Override
@@ -550,7 +550,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
 
     @Override
     public void setPlayerWeather(WeatherType type) {
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("CANTDO");
     }
 
     @Override
