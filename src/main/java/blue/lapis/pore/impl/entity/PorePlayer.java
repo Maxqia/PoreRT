@@ -350,7 +350,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public void updateInventory() {
         EntityPlayerMP player = ((EntityPlayerMP) getHandle());
-        player.sendContainerToPlayer(player.inventoryContainer);
+        player.inventoryContainer.detectAndSendChanges();
     } // No function to do this natively in Sponge
 
     @Override
