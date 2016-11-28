@@ -33,6 +33,7 @@ import com.google.common.collect.Iterables;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.NonNullList;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
@@ -46,6 +47,8 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PorePlayerInventory extends PoreInventory implements org.bukkit.inventory.PlayerInventory {
@@ -222,15 +225,13 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
     }
 
     @Override
-    protected net.minecraft.item.ItemStack[] getInternalContents() {
+    protected List<net.minecraft.item.ItemStack> getInternalContents() {
         System.out.println(getHandle().getClass());
         InventoryPlayer inv = (InventoryPlayer) getHandle();
-        net.minecraft.item.ItemStack[] combined = new net.minecraft.item.ItemStack[
-                     inv.mainInventory.size() + inv.armorInventory.size() + inv.offHandInventory.size()];
-        System.arraycopy(inv.mainInventory, 0, combined, 0, inv.mainInventory.size());
-        System.arraycopy(inv.armorInventory, 0, combined, inv.mainInventory.size(), inv.armorInventory.size());
-        System.arraycopy(inv.offHandInventory, 0, combined,
-                inv.mainInventory.size() + inv.armorInventory.size(), inv.offHandInventory.size());
+        List<net.minecraft.item.ItemStack> combined = new ArrayList<net.minecraft.item.ItemStack>();
+        combined.addAll(inv.mainInventory);
+        combined.addAll(inv.armorInventory);
+        combined.addAll(inv.offHandInventory);
         return combined;
     }
 

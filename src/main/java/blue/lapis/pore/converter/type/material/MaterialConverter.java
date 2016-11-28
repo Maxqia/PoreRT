@@ -29,6 +29,7 @@ package blue.lapis.pore.converter.type.material;
 import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
+import net.minecraft.item.ItemAir;
 import org.bukkit.Material;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -657,6 +658,9 @@ public final class MaterialConverter {
     }
 
     public static Material of(ItemType type) {
+        if (type instanceof ItemAir) {
+            return Material.AIR;
+        }
         return ITEM_TYPE_CONVERTER.reverse().convert(type);
     }
 
