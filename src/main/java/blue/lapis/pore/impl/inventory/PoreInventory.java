@@ -76,9 +76,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
 
     protected IInventory getInventory() {
         //System.out.println(getHandle().getClass().getName());
-        if (IInventory.class.isAssignableFrom(getHandle().getClass())) {
-            return (IInventory) getHandle();
-        } else {
+        if (getHandle() instanceof CustomInventory) {
             try {
                 CustomInventory handle = ((CustomInventory) getHandle());
                 Field field = handle.getClass().getDeclaredField("inv");
@@ -87,19 +85,21 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
             } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
                 throw new RuntimeException(e.getMessage());
             }
+        } else if (IInventory.class.isAssignableFrom(getHandle().getClass())) {
+            return (IInventory) getHandle();
+        } else {
+            throw new RuntimeException("Couldn't get inventory!");
         }
     }
 
     protected net.minecraft.item.ItemStack[] getInternalContents() {
         try {
-            System.out.println(getHandle().getClass());
+            //System.out.println(getHandle().getClass());
             Field field = getInventory().getClass().getDeclaredField("field_70482_c");
             field.setAccessible(true);
             return (net.minecraft.item.ItemStack[]) field.get(getInventory());
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Couldn't get inventory contents!");
         }
     }
 

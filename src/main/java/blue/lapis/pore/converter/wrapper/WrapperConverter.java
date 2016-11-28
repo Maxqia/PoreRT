@@ -391,6 +391,10 @@ public final class WrapperConverter {
                     .register(TNTMinecart.class, PoreExplosiveMinecart.class)
                 .register(Boat.class, PoreBoat.class)
 
+            // Inventory classes
+            .register(PlayerInventory.class, PorePlayerInventory.class)
+                .register(Inventory.class, PoreInventory.class)
+
             //.register(TileEntity.class, PoreTileEntity.class)
                 .register(Banner.class, PoreBanner.class)
                 .register(Beacon.class, PoreBeacon.class)
@@ -420,10 +424,6 @@ public final class WrapperConverter {
             .register(Scoreboard.Builder.class, PoreScoreboardManager.class)
             .register(Scoreboard.class, PoreScoreboard.class)
             .register(Team.class, PoreTeam.class)
-
-            // Inventory classes
-            .register(PlayerInventory.class, PorePlayerInventory.class)
-                .register(Inventory.class, PoreInventory.class)
 
             .register(Carrier.class, PoreInventoryHolder.class)
 
