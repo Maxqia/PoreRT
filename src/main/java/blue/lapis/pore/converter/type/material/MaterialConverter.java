@@ -26,6 +26,7 @@
 
 package blue.lapis.pore.converter.type.material;
 
+import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
@@ -269,7 +270,12 @@ public final class MaterialConverter {
     }
 
     public static Material of(BlockType type) {
-        return BLOCK_TYPE_CONVERTER.reverse().convert(type);
+        try {
+            return BLOCK_TYPE_CONVERTER.reverse().convert(type);
+        } catch (UnsupportedOperationException e) {
+            Pore.getLogger().warn("Requested type of unknown block : " + type);
+            return Material.STONE; // Modded block?
+        }
     }
 
     private static final Converter<Material, ItemType> ITEM_TYPE_CONVERTER =
@@ -653,7 +659,12 @@ public final class MaterialConverter {
     }
 
     public static Material of(ItemType type) {
-        return ITEM_TYPE_CONVERTER.reverse().convert(type);
+        try {
+            return ITEM_TYPE_CONVERTER.reverse().convert(type);
+        } catch (UnsupportedOperationException e) {
+            Pore.getLogger().warn("Requested type of unknown item : " + type);
+            return Material.STONE; // Modded item?
+        }
     }
 
 }
