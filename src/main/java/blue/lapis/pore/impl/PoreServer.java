@@ -28,6 +28,7 @@ import blue.lapis.pore.converter.type.attribute.InventoryTypeConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.command.PoreCommandMap;
 import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
+import blue.lapis.pore.impl.enchantments.PoreEnchantment;
 import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.help.PoreHelpMap;
 import blue.lapis.pore.impl.inventory.PoreInventory;
@@ -63,6 +64,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
@@ -92,6 +94,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.Enchantments;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
@@ -106,6 +109,7 @@ import org.spongepowered.api.util.ban.Ban;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -151,6 +155,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         this.servicesManager = new SimpleServicesManager();
         Bukkit.setServer(this);
         getFavicon();
+        registerEnchantments();
     }
 
     public Game getGame() {
@@ -163,6 +168,19 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         } catch (Exception e) {
             logger.log(Level.CONFIG, "Could not find the server icon!");
         }
+    }
+
+    private static void registerEnchantments() {
+        System.out.println(Enchantment.class.getClassLoader());
+        for (Field field : Enchantments.class.getFields()) {
+            try {
+                Enchantment.registerEnchantment(new PoreEnchantment(
+                        (org.spongepowered.api.item.Enchantment) field.get(null)));
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        Enchantment.stopAcceptingRegistrations();
     }
 
     public void loadPlugins() {
