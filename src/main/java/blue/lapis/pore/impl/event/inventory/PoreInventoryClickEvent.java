@@ -131,17 +131,17 @@ public final class PoreInventoryClickEvent extends InventoryClickEvent implement
 
     @Override
     public boolean isRightClick() {
-        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Secondary.class);
+        return ClickInventoryEvent.Secondary.class.isAssignableFrom(getHandle().getClass());
     }
 
     @Override
     public boolean isLeftClick() {
-        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Primary.class);
+        return ClickInventoryEvent.Primary.class.isAssignableFrom(getHandle().getClass());
     }
 
     @Override
     public boolean isShiftClick() {
-        return getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.class);
+        return ClickInventoryEvent.Shift.class.isAssignableFrom(getHandle().getClass());
     }
 
     @Override
@@ -169,51 +169,51 @@ public final class PoreInventoryClickEvent extends InventoryClickEvent implement
 
     @Override
     public ClickType getClick() {
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.Primary.class)) {
+        if (ClickInventoryEvent.Shift.Primary.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.SHIFT_LEFT;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Shift.Secondary.class)) {
+        if (ClickInventoryEvent.Shift.Secondary.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.SHIFT_RIGHT;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Primary.class)) {
+        if (ClickInventoryEvent.Primary.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.LEFT;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Middle.class)) {
+        if (ClickInventoryEvent.Middle.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.MIDDLE;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Secondary.class)) {
+        if (ClickInventoryEvent.Secondary.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.RIGHT;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Creative.class)) {
+        if (ClickInventoryEvent.Creative.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.CREATIVE;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.NumberPress.class)) {
+        if (ClickInventoryEvent.NumberPress.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.NUMBER_KEY;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Drop.Full.class)) {
+        if (ClickInventoryEvent.Drop.Full.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.CONTROL_DROP;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.Drop.class)) {
+        if (ClickInventoryEvent.Drop.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.DROP;
         }
 
-        /*if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+        /*if (ClickInventoryEvent.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.WINDOW_BORDER_LEFT; //TODO not available in Sponge
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+        if (ClickInventoryEvent.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.WINDOW_BORDER_RIGHT;
         }
 
-        if (getHandle().getClass().isAssignableFrom(ClickInventoryEvent.class)) {
+        if (ClickInventoryEvent.class.isAssignableFrom(getHandle().getClass())) {
             return ClickType.DOUBLE_CLICK;
         }*/
 
