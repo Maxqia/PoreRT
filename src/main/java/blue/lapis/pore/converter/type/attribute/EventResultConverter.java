@@ -26,20 +26,37 @@
 
 package blue.lapis.pore.converter.type.attribute;
 
+import blue.lapis.pore.converter.type.TypeConverter;
+
+import com.google.common.base.Converter;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.Result;
+import org.spongepowered.api.util.Tristate;
 
 public final class EventResultConverter {
     private EventResultConverter() {
     }
 
+    private static final Converter<Result, Tristate> CONVERTER =
+            TypeConverter.builder(Event.Result.class, Tristate.class)
+            .add(Event.Result.ALLOW, Tristate.TRUE)
+            .add(Event.Result.DEFAULT, Tristate.UNDEFINED)
+            .add(Event.Result.DENY, Tristate.FALSE)
+            .build();
+
     public static Boolean of(Event.Result result) {
-        if (result == Event.Result.DENY) {
-            return true;
-        }
-        return false;
+        return CONVERTER.convert(result).asBoolean();
     }
 
     public static Event.Result of(Boolean canceled) {
-        return canceled ? Event.Result.DENY : Event.Result.ALLOW;
+        return CONVERTER.reverse().convert(Tristate.fromBoolean(canceled));
+    }
+
+    public static Tristate ofTristate(Event.Result result) {
+        return CONVERTER.convert(result);
+    }
+
+    public static Event.Result ofTristate(Tristate result) {
+        return CONVERTER.reverse().convert(result);
     }
 }

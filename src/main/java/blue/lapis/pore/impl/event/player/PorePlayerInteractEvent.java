@@ -24,6 +24,8 @@ package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import blue.lapis.pore.converter.type.attribute.EventResultConverter;
+import blue.lapis.pore.converter.type.material.ItemStackConverter;
 import blue.lapis.pore.converter.type.world.DirectionConverter;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.RegisterEvent;
@@ -40,15 +42,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.property.entity.DominantHandProperty;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
 
-import java.util.Optional;
-
-public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> extends PlayerInteractEvent
-        implements PoreEvent<T> {
+public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent & HandInteractEvent>
+    extends PlayerInteractEvent implements PoreEvent<T> {
 
     private final T handle;
     private final Player player;
@@ -70,9 +70,12 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
     }
 
     @Override
-    @SuppressWarnings("deprecation") //TODO fix this
     public ItemStack getItem() {
-        return getPlayer().getItemInHand();
+        ItemStack result = ItemStackConverter.of(player.getItemInHand(getHandle().getHandType()).orElse(null));
+        if (result.getType() == Material.AIR) {
+            return null;
+        }
+        return result;
     }
 
     @Override
@@ -88,12 +91,16 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public boolean hasItem() {
-        return false; //TODO idk
+        return this.getItem() != null;
     }
 
     @Override
     public boolean isBlockInHand() {
-        return false; //TODO bug sponge devs about this
+        if (!hasItem()) {
+            return false;
+        }
+
+        return getItem().getType().isBlock();
     }
 
     @Override
@@ -143,8 +150,7 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
 
     @Override
     public EquipmentSlot getHand() {
-        Optional<DominantHandProperty> hand = player.getProperty(DominantHandProperty.class);
-        return !hand.isPresent() || hand.get().getValue() == HandTypes.MAIN_HAND
+        return getHandle().getHandType() == HandTypes.MAIN_HAND
                 ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
     }
 
@@ -172,6 +178,27 @@ public abstract class PorePlayerInteractEvent<T extends InteractBlockEvent> exte
         @Override
         public Action getAction() {
             return hasBlock() ? Action.RIGHT_CLICK_BLOCK : Action.RIGHT_CLICK_AIR;
+        }
+
+        // Only usable on right click
+        @Override
+        public Result useInteractedBlock() {
+            return EventResultConverter.ofTristate(getHandle().getOriginalUseBlockResult());
+        }
+
+        @Override
+        public void setUseInteractedBlock(Result useInteractedBlock) {
+            getHandle().setUseBlockResult(EventResultConverter.ofTristate(useInteractedBlock));
+        }
+
+        @Override
+        public Result useItemInHand() {
+            return EventResultConverter.ofTristate(getHandle().getOriginalUseItemResult());
+        }
+
+        @Override
+        public void setUseItemInHand(Result useItemInHand) {
+            getHandle().setUseItemResult(EventResultConverter.ofTristate(useItemInHand));
         }
 
     }

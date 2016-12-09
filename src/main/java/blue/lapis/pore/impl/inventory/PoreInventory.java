@@ -44,6 +44,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
@@ -76,19 +77,25 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
 
     protected IInventory getInventory() {
         //System.out.println(getHandle().getClass().getName());
-        if (getHandle() instanceof CustomInventory) {
-            try {
-                CustomInventory handle = ((CustomInventory) getHandle());
-                Field field = handle.getClass().getDeclaredField("inv");
-                field.setAccessible(true);
-                return (IInventory) field.get(handle);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        } else if (IInventory.class.isAssignableFrom(getHandle().getClass())) {
-            return (IInventory) getHandle();
+        Object handle = getHandle();
+        while (handle instanceof CustomContainer || handle instanceof CustomInventory) {
+            handle = getCustom(handle);
+        }
+
+        if (IInventory.class.isAssignableFrom(handle.getClass())) {
+            return (IInventory) handle;
         } else {
             throw new RuntimeException("Couldn't get inventory!");
+        }
+    }
+
+    protected Object getCustom(Object handle) {
+        try {
+            Field field = handle.getClass().getDeclaredField("inv");
+            field.setAccessible(true);
+            return field.get(handle);
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
