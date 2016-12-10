@@ -27,14 +27,14 @@ import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
+import org.spongepowered.api.data.manipulator.mutable.item.HideData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.data.meta.ItemEnchantment;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -47,9 +47,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
+public class PoreItemMeta extends PoreWrapper<ItemStack> implements ItemMeta {
 
-    public PoreItemMeta(DataHolder holder) {
+    public PoreItemMeta(ItemStack holder) {
         super(holder);
     }
 
@@ -77,8 +77,9 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
     public void setDisplayName(String name) {
         Optional<DisplayNameData> displayName = getHandle().getOrCreate(DisplayNameData.class);
         if (displayName.isPresent()) {
-            displayName.get().displayName().set(PoreText.convert(name));
+            getHandle().offer(displayName.get().displayName().set(PoreText.convert(name)));
         }
+
     }
 
     @Override
@@ -125,7 +126,7 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
     @Override
     public boolean hasEnchant(Enchantment ench) {
         Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
-        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        org.spongepowered.api.item.Enchantment target = getEnchant(ench);
         if (enchants.isPresent()) {
             for (ItemEnchantment itmEnch : enchants.get().asList()) {
                 if (itmEnch.getEnchantment().equals(target)) {
@@ -139,7 +140,7 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
     @Override
     public int getEnchantLevel(Enchantment ench) {
         Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
-        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        org.spongepowered.api.item.Enchantment target = getEnchant(ench);
         if (enchants.isPresent()) {
             for (ItemEnchantment itmEnch : enchants.get().asList()) {
                 if (itmEnch.getEnchantment().equals(target)) {
@@ -170,11 +171,9 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
                 level = ench.getMaxLevel();
             }
 
-            org.spongepowered.api.item.Enchantment copy = ((PoreEnchantment) ench).getHandle();
-            if (!copy.canBeAppliedToStack((ItemStack) getHandle()) && !this.hasConflictingEnchant(ench)) {
-                enchants.get().addElement(new ItemEnchantment(copy, level));
-                return true;
-            }
+            org.spongepowered.api.item.Enchantment copy = getEnchant(ench);
+            getHandle().offer(enchants.get().addElement(new ItemEnchantment(copy, level)));
+            return true;
         }
         return false;
     }
@@ -182,11 +181,11 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
     @Override
     public boolean removeEnchant(Enchantment ench) {
         Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
-        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        org.spongepowered.api.item.Enchantment target = getEnchant(ench);
         if (enchants.isPresent()) {
             for (ItemEnchantment itmEnch : enchants.get().asList()) {
                 if (itmEnch.getEnchantment().equals(target)) {
-                    getHandle().get(EnchantmentData.class).get().remove(itmEnch);
+                    getHandle().offer(enchants.get().remove(itmEnch));
                     return true;
                 }
             }
@@ -197,7 +196,7 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
     @Override
     public boolean hasConflictingEnchant(Enchantment ench) {
         Optional<EnchantmentData> enchants = getHandle().get(EnchantmentData.class);
-        org.spongepowered.api.item.Enchantment target = ((PoreEnchantment) ench).getHandle();
+        org.spongepowered.api.item.Enchantment target = getEnchant(ench);
         if (enchants.isPresent()) {
         for (ItemEnchantment itmEnch : enchants.get().asList()) {
             if (!itmEnch.getEnchantment().isCompatibleWith(target)) {
@@ -208,9 +207,39 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
         return false;
     }
 
+    private static org.spongepowered.api.item.Enchantment getEnchant(Enchantment ench) {
+        if (ench instanceof EnchantmentWrapper) {
+            ench = ((EnchantmentWrapper) ench).getEnchantment();
+        }
+        return ((PoreEnchantment) ench).getHandle();
+    }
+
     @Override
     public void addItemFlags(ItemFlag... itemFlags) {
-        //throw new NotImplementedException("TODO");
+        for (ItemFlag flag : itemFlags) {
+            switch (flag) {
+                case HIDE_ATTRIBUTES:
+                    getHandle().getOrCreate(HideData.class).get().hideAttributes().set(true);
+                    break;
+                case HIDE_DESTROYS:
+                    getHandle().getOrCreate(HideData.class).get().hideCanDestroy().set(true);
+                    break;
+                case HIDE_ENCHANTS:
+                    getHandle().getOrCreate(HideData.class).get().hideEnchantments().set(true);
+                    break;
+                case HIDE_PLACED_ON:
+                    getHandle().getOrCreate(HideData.class).get().hideCanPlace().set(true);
+                    break;
+                case HIDE_POTION_EFFECTS:
+                    getHandle().getOrCreate(HideData.class).get().hideMiscellaneous().set(true);
+                    break;
+                case HIDE_UNBREAKABLE:
+                    getHandle().getOrCreate(HideData.class).get().hideUnbreakable().set(true);
+                    break;
+                default:
+                    throw new NotImplementedException("TODO");
+            }
+        }
     }
 
     @Override
@@ -220,7 +249,8 @@ public class PoreItemMeta extends PoreWrapper<DataHolder> implements ItemMeta {
 
     @Override
     public Set<ItemFlag> getItemFlags() {
-        return ImmutableSet.of();
+        //return ImmutableSet.of();
+        throw new NotImplementedException("TODO");
     }
 
     @Override

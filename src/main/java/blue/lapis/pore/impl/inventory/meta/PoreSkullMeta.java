@@ -28,7 +28,7 @@ package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 // TODO: bridge
 
@@ -36,7 +36,7 @@ import org.spongepowered.api.data.DataHolder;
 
 public class PoreSkullMeta extends PoreItemMeta implements SkullMeta {
 
-    public PoreSkullMeta(DataHolder holder) {
+    public PoreSkullMeta(ItemStack holder) {
         super(holder);
         // TODO Auto-generated constructor stub
     }
