@@ -74,6 +74,7 @@ import blue.lapis.pore.impl.entity.PoreEnderSignal;
 import blue.lapis.pore.impl.entity.PoreEnderman;
 import blue.lapis.pore.impl.entity.PoreEndermite;
 import blue.lapis.pore.impl.entity.PoreEntity;
+import blue.lapis.pore.impl.entity.PoreEvoker;
 import blue.lapis.pore.impl.entity.PoreExperienceOrb;
 import blue.lapis.pore.impl.entity.PoreFallingBlock;
 import blue.lapis.pore.impl.entity.PoreFireball;
@@ -124,7 +125,9 @@ import blue.lapis.pore.impl.entity.PoreStray;
 import blue.lapis.pore.impl.entity.PoreTNTPrimed;
 import blue.lapis.pore.impl.entity.PoreThrownExpBottle;
 import blue.lapis.pore.impl.entity.PoreThrownPotion;
+import blue.lapis.pore.impl.entity.PoreVex;
 import blue.lapis.pore.impl.entity.PoreVillager;
+import blue.lapis.pore.impl.entity.PoreVindicator;
 import blue.lapis.pore.impl.entity.PoreWaterMob;
 import blue.lapis.pore.impl.entity.PoreWeather;
 import blue.lapis.pore.impl.entity.PoreWitch;
@@ -225,6 +228,7 @@ import org.spongepowered.api.entity.living.monster.CaveSpider;
 import org.spongepowered.api.entity.living.monster.Creeper;
 import org.spongepowered.api.entity.living.monster.Enderman;
 import org.spongepowered.api.entity.living.monster.Endermite;
+import org.spongepowered.api.entity.living.monster.Evoker;
 import org.spongepowered.api.entity.living.monster.Ghast;
 import org.spongepowered.api.entity.living.monster.Giant;
 import org.spongepowered.api.entity.living.monster.Guardian;
@@ -236,6 +240,8 @@ import org.spongepowered.api.entity.living.monster.Skeleton;
 import org.spongepowered.api.entity.living.monster.Slime;
 import org.spongepowered.api.entity.living.monster.Spider;
 import org.spongepowered.api.entity.living.monster.Stray;
+import org.spongepowered.api.entity.living.monster.Vex;
+import org.spongepowered.api.entity.living.monster.Vindicator;
 import org.spongepowered.api.entity.living.monster.Witch;
 import org.spongepowered.api.entity.living.monster.Wither;
 import org.spongepowered.api.entity.living.monster.WitherSkeleton;
@@ -321,6 +327,9 @@ public final class WrapperConverter {
                             .register(Giant.class, PoreGiant.class)
                             .register(Guardian.class, PoreGuardian.class)
                             .register(Silverfish.class, PoreSilverfish.class)
+                            .register(Evoker.class, PoreEvoker.class)
+                            .register(Vex.class, PoreVex.class)
+                            .register(Vindicator.class, PoreVindicator.class)
                             .register(Skeleton.class, PoreSkeleton.class)
                                 .register(WitherSkeleton.class, PoreWitherSkeleton.class)
                                 .register(Stray.class, PoreStray.class)

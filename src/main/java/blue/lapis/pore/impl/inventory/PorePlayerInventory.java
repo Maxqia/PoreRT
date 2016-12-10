@@ -33,7 +33,6 @@ import com.google.common.collect.Iterables;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.util.NonNullList;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Material;
