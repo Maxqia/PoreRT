@@ -30,17 +30,15 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fish;
 import org.spongepowered.api.entity.projectile.FishHook;
 
-@SuppressWarnings("deprecation")
-public class PoreFish extends PoreProjectile implements Fish {
+public class PoreFishHook extends PoreProjectile implements org.bukkit.entity.FishHook {
 
-    public static PoreFish of(FishHook handle) {
-        return WrapperConverter.of(PoreFish.class, handle);
+    public static PoreFishHook of(FishHook handle) {
+        return WrapperConverter.of(PoreFishHook.class, handle);
     }
 
-    protected PoreFish(FishHook handle) {
+    protected PoreFishHook(FishHook handle) {
         super(handle);
     }
 
@@ -56,11 +54,11 @@ public class PoreFish extends PoreProjectile implements Fish {
 
     @Override
     public double getBiteChance() {
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("Deprecated");
     }
 
     @Override
     public void setBiteChance(double chance) throws IllegalArgumentException {
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("Deprecated");
     }
 }

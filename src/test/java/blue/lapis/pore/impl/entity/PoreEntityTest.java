@@ -74,6 +74,7 @@ public class PoreEntityTest {
             try {
                 entities.remove(type.getInterfaces()[0]);
             } catch (Exception e) {
+                // interface not found?
             }
         }
 

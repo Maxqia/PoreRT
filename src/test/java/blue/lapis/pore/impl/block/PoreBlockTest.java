@@ -75,6 +75,7 @@ public class PoreBlockTest {
             try {
                 blocks.remove(type.getInterfaces()[0]);
             } catch (Exception e) {
+                // interface not found?
             }
         }
 

@@ -47,6 +47,10 @@ public class PoreFireball extends PoreProjectile implements org.bukkit.entity.Fi
         super(handle);
     }
 
+    protected PoreFireball(DamagingProjectile handle) {
+        super(handle);
+    }
+
     @Override
     public DamagingProjectile getHandle() {
         return (Fireball) super.getHandle();
@@ -60,12 +64,12 @@ public class PoreFireball extends PoreProjectile implements org.bukkit.entity.Fi
     @Override
     public Vector getDirection() {
         //TODO: I'm not entirely sure how this method is supposed to behave, so this impl might change
-        return VectorConverter.getUnitVector(this.getVelocity()).multiply(0.1);
+        return VectorConverter.createBukkitVector(getHandle().getRotation());
     }
 
     @Override
     public void setDirection(Vector direction) {
-        throw new NotImplementedException("TODO");
+        getHandle().setRotation(VectorConverter.create3d(direction));
     }
 
     @Override
