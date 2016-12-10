@@ -31,7 +31,7 @@ import blue.lapis.pore.impl.entity.PoreArrow;
 import blue.lapis.pore.impl.entity.PoreEgg;
 import blue.lapis.pore.impl.entity.PoreEnderPearl;
 import blue.lapis.pore.impl.entity.PoreFireball;
-import blue.lapis.pore.impl.entity.PoreFish;
+import blue.lapis.pore.impl.entity.PoreFishHook;
 import blue.lapis.pore.impl.entity.PoreLargeFireball;
 import blue.lapis.pore.impl.entity.PoreSmallFireball;
 import blue.lapis.pore.impl.entity.PoreSnowball;
@@ -44,7 +44,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Fish;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
@@ -57,7 +57,6 @@ import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation") //TODO fix this
 public final class ProjectileUtil {
 
     private ProjectileUtil() {
@@ -121,8 +120,8 @@ public final class ProjectileUtil {
                         VectorConverter.create3d(velocity)
                 ).orElse(null)));
             }
-        } else if (projectile.isAssignableFrom(Fish.class)) {
-            entity = Optional.fromNullable((T) PoreFish.of(source.launchProjectile(
+        } else if (projectile.isAssignableFrom(FishHook.class)) {
+            entity = Optional.fromNullable((T) PoreFishHook.of(source.launchProjectile(
                     org.spongepowered.api.entity.projectile.FishHook.class,
                     VectorConverter.create3d(velocity)
             ).orElse(null)));

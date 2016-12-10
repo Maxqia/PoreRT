@@ -35,6 +35,7 @@ import blue.lapis.pore.impl.block.PoreCommandBlock;
 import blue.lapis.pore.impl.block.PoreCreatureSpawner;
 import blue.lapis.pore.impl.block.PoreDispenser;
 import blue.lapis.pore.impl.block.PoreDropper;
+import blue.lapis.pore.impl.block.PoreFlowerPot;
 import blue.lapis.pore.impl.block.PoreFurnace;
 import blue.lapis.pore.impl.block.PoreHopper;
 import blue.lapis.pore.impl.block.PoreJukebox;
@@ -49,6 +50,7 @@ import blue.lapis.pore.impl.entity.PoreAgeable;
 import blue.lapis.pore.impl.entity.PoreAmbient;
 import blue.lapis.pore.impl.entity.PoreAnimalTamer;
 import blue.lapis.pore.impl.entity.PoreAnimals;
+import blue.lapis.pore.impl.entity.PoreAreaEffectCloud;
 import blue.lapis.pore.impl.entity.PoreArmorStand;
 import blue.lapis.pore.impl.entity.PoreArrow;
 import blue.lapis.pore.impl.entity.PoreBat;
@@ -62,6 +64,7 @@ import blue.lapis.pore.impl.entity.PoreCow;
 import blue.lapis.pore.impl.entity.PoreCreature;
 import blue.lapis.pore.impl.entity.PoreCreeper;
 import blue.lapis.pore.impl.entity.PoreDonkey;
+import blue.lapis.pore.impl.entity.PoreDragonFireball;
 import blue.lapis.pore.impl.entity.PoreEgg;
 import blue.lapis.pore.impl.entity.PoreEnderCrystal;
 import blue.lapis.pore.impl.entity.PoreEnderDragon;
@@ -75,7 +78,7 @@ import blue.lapis.pore.impl.entity.PoreExperienceOrb;
 import blue.lapis.pore.impl.entity.PoreFallingBlock;
 import blue.lapis.pore.impl.entity.PoreFireball;
 import blue.lapis.pore.impl.entity.PoreFirework;
-import blue.lapis.pore.impl.entity.PoreFish;
+import blue.lapis.pore.impl.entity.PoreFishHook;
 import blue.lapis.pore.impl.entity.PoreFlying;
 import blue.lapis.pore.impl.entity.PoreGhast;
 import blue.lapis.pore.impl.entity.PoreGiant;
@@ -106,6 +109,8 @@ import blue.lapis.pore.impl.entity.PorePlayer;
 import blue.lapis.pore.impl.entity.PoreProjectile;
 import blue.lapis.pore.impl.entity.PoreRabbit;
 import blue.lapis.pore.impl.entity.PoreSheep;
+import blue.lapis.pore.impl.entity.PoreShulker;
+import blue.lapis.pore.impl.entity.PoreShulkerBullet;
 import blue.lapis.pore.impl.entity.PoreSilverfish;
 import blue.lapis.pore.impl.entity.PoreSkeleton;
 import blue.lapis.pore.impl.entity.PoreSkeletonHorse;
@@ -148,10 +153,10 @@ import blue.lapis.pore.impl.util.PoreCachedServerIcon;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
-
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Banner;
 import org.spongepowered.api.block.tileentity.CommandBlock;
+import org.spongepowered.api.block.tileentity.FlowerPot;
 import org.spongepowered.api.block.tileentity.Jukebox;
 import org.spongepowered.api.block.tileentity.MobSpawner;
 import org.spongepowered.api.block.tileentity.Note;
@@ -167,11 +172,13 @@ import org.spongepowered.api.block.tileentity.carrier.Hopper;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.entity.AreaEffectCloud;
 import org.spongepowered.api.entity.EnderCrystal;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.ExperienceOrb;
 import org.spongepowered.api.entity.FallingBlock;
 import org.spongepowered.api.entity.Item;
+import org.spongepowered.api.entity.ShulkerBullet;
 import org.spongepowered.api.entity.Tamer;
 import org.spongepowered.api.entity.explosive.PrimedTNT;
 import org.spongepowered.api.entity.hanging.Hanging;
@@ -211,6 +218,7 @@ import org.spongepowered.api.entity.living.complex.EnderDragon;
 import org.spongepowered.api.entity.living.complex.EnderDragonPart;
 import org.spongepowered.api.entity.living.golem.Golem;
 import org.spongepowered.api.entity.living.golem.IronGolem;
+import org.spongepowered.api.entity.living.golem.Shulker;
 import org.spongepowered.api.entity.living.golem.SnowGolem;
 import org.spongepowered.api.entity.living.monster.Blaze;
 import org.spongepowered.api.entity.living.monster.CaveSpider;
@@ -247,6 +255,7 @@ import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.entity.projectile.ThrownExpBottle;
 import org.spongepowered.api.entity.projectile.ThrownPotion;
 import org.spongepowered.api.entity.projectile.arrow.Arrow;
+import org.spongepowered.api.entity.projectile.explosive.DragonFireball;
 import org.spongepowered.api.entity.projectile.explosive.WitherSkull;
 import org.spongepowered.api.entity.projectile.explosive.fireball.Fireball;
 import org.spongepowered.api.entity.projectile.explosive.fireball.LargeFireball;
@@ -278,12 +287,14 @@ public final class WrapperConverter {
     }
 
     @SuppressWarnings("rawtypes")
+    // Note : This evaluates in order
     static final CachedWrapperConverter<PoreWrapper> converter = CachedWrapperConverter.builder(PoreWrapper.class)
             // @formatter:off
             .register(Favicon.class, PoreCachedServerIcon.class)
 
             // Entities
             .register(Entity.class, PoreEntity.class)
+                .register(AreaEffectCloud.class, PoreAreaEffectCloud.class)
                 .register(Living.class, PoreLivingEntity.class)
                     .register(Ambient.class, PoreAmbient.class)
                         .register(Bat.class, PoreBat.class)
@@ -350,7 +361,7 @@ public final class WrapperConverter {
                         .register(Golem.class, PoreGolem.class)
                             .register(IronGolem.class, PoreIronGolem.class)
                             .register(SnowGolem.class, PoreSnowman.class)
-
+                            .register(Shulker.class, PoreShulker.class)
                     .register(ArmorStand.class, PoreArmorStand.class)
                 .register(ComplexLivingPart.class, PoreComplexEntityPart.class)
                     .register(EnderDragonPart.class, PoreEnderDragonPart.class)
@@ -373,11 +384,13 @@ public final class WrapperConverter {
                         .register(LargeFireball.class, PoreLargeFireball.class)
                         .register(SmallFireball.class, PoreSmallFireball.class)
                         .register(WitherSkull.class, PoreWitherSkull.class)
-                    .register(FishHook.class, PoreFish.class)
+                        .register(DragonFireball.class, PoreDragonFireball.class)
+                    .register(FishHook.class, PoreFishHook.class)
                     .register(Snowball.class, PoreSnowball.class)
                     .register(ThrownExpBottle.class, PoreThrownExpBottle.class)
                     .register(ThrownPotion.class, PoreThrownPotion.class)
                     .register(LlamaSpit.class, PoreLlamaSpit.class)
+                    .register(ShulkerBullet.class, PoreShulkerBullet.class)
 
                 .register(PrimedTNT.class, PoreTNTPrimed.class)
                 .register(WeatherEffect.class, PoreWeather.class)
@@ -410,6 +423,7 @@ public final class WrapperConverter {
                 .register(Note.class, PoreNoteBlock.class)
                 .register(Sign.class, PoreSign.class)
                 .register(Skull.class, PoreSkull.class)
+                .register(FlowerPot.class, PoreFlowerPot.class)
                 .register(BlockSnapshot.class, PoreBlockState.class)
 
             .register(Chunk.class, PoreChunk.class)
