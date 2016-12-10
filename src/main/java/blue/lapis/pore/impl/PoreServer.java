@@ -171,7 +171,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     }
 
     private static void registerEnchantments() {
-        System.out.println(Enchantment.class.getClassLoader());
         for (Field field : Enchantments.class.getFields()) {
             try {
                 Enchantment.registerEnchantment(new PoreEnchantment(
