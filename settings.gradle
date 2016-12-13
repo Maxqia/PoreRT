@@ -1,2 +1,3 @@
 rootProject.name = 'PoreRT'
-include 'Porekit', 'ap'
+include 'Porekit', 'ap', 'ReflectionRemapper'
+project(":ReflectionRemapper").projectDir = new File(rootDir, "lib/ReflectionRemapper")

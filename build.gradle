@@ -38,7 +38,7 @@ sponge {
     }
 }
 
-minecraft {
+minecraft { // reminder : keep updated
     version = '1.10.2'
     mappings = 'snapshot_20161023'
 }
@@ -156,13 +156,19 @@ jar {
                 'Implementation-Title': project.name,
                 'Implementation-Version': project.version + versionSuffix,
                 'Implementation-Vendor': 'Lapis',
-                'Main-Class': 'blue.lapis.pore.util.InfoMain'
+                'Main-Class': 'blue.lapis.pore.util.InfoMain',
+                'FMLAT': 'pore_at.cfg'
         )
     }
 }
 
+def mappings = "lib/SpongeRemapping/mappings/v1_10_R1/" // reminder : keep updated
 shadowJar {
-    from { ["LICENSE", "LICENSE-AGPL", "LICENSE-MIT"] }
+    from { ["LICENSE", "LICENSE-AGPL", "LICENSE-MIT"] } // include licences
+    from { [mappings + "vcb2pore.srg"] } // vcb2pore translation
+    from (mappings + "pore_at.cfg") { // include AT configuration
+        into ("META-INF/pore_at.cfg")
+    }
     classifier = ''
     exclude 'remap.txt'
 
