@@ -1,14 +1,14 @@
-From fee22f38946ec8bdde61e8872c3e30df015b806f Mon Sep 17 00:00:00 2001
+From f8005647035615202a24bd44969d0fc810938741 Mon Sep 17 00:00:00 2001
 From: Max Qian <public@maxqia.com>
 Date: Sat, 10 Dec 2016 02:32:02 -0800
 Subject: [PATCH] Add Reflection Remapping Support
 
 ---
- .../org/bukkit/plugin/java/PluginClassLoader.java  | 88 +++++++++++++++++++++-
- 1 file changed, 87 insertions(+), 1 deletion(-)
+ .../org/bukkit/plugin/java/PluginClassLoader.java  | 89 +++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-index 13f8633..33e7929 100644
+index 13f8633..9be4bed 100644
 --- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 @@ -1,9 +1,17 @@
@@ -82,7 +82,7 @@ index 13f8633..33e7929 100644
  
                  if (result != null) {
                      loader.setClass(name, result);
-@@ -87,6 +118,61 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -87,6 +118,62 @@ final class PluginClassLoader extends URLClassLoader {
          return result;
      }
  
@@ -100,6 +100,7 @@ index 13f8633..33e7929 100644
 +                    byte[] bytecode = ByteStreams.toByteArray(stream);
 +
 +                    // Remap the classes
++                    RemappedMethods.loader = this;
 +                    byte[] remappedBytecode = Transformer.transformSS(bytecode);
 +
 +                    if (debug) {
