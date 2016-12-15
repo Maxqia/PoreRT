@@ -167,7 +167,7 @@ shadowJar {
     from { ["LICENSE", "LICENSE-AGPL", "LICENSE-MIT"] } // include licences
     from { [mappings + "vcb2pore.srg"] } // vcb2pore translation
     from (mappings + "pore_at.cfg") { // include AT configuration
-        into ("META-INF/pore_at.cfg")
+        into ("META-INF/")
     }
     classifier = ''
     exclude 'remap.txt'
