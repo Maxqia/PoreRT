@@ -151,8 +151,10 @@ public final class Pore implements PoreEventManager {
                     new blue.lapis.pore.impl.event.player.PorePlayerChatEvent(asyncBukkitEvent);
             Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
 
-            event.setMessage(PoreText.convert(String.format(bukkitEvent.getFormat(),
-                    bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage())));
+            if (!bukkitEvent.getMessage().equals(PoreText.convert(event.getRawMessage()))) {
+                event.setMessage(PoreText.convert(String.format(bukkitEvent.getFormat(),
+                        bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage())));
+            }
         }
     }
 }
