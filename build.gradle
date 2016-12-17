@@ -162,7 +162,7 @@ jar {
     }
 }
 
-def mappings = "lib/SpongeRemapping/mappings/v1_10_R1/" // reminder : keep updated
+def mappings = "lib/SpongeRemapping/mappings/v1_11_R1/" // reminder : keep updated
 shadowJar {
     from { ["LICENSE", "LICENSE-AGPL", "LICENSE-MIT"] } // include licences
     from { [mappings + "vcb2pore.srg"] } // vcb2pore translation
