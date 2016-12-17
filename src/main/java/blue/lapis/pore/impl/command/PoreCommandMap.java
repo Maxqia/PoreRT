@@ -33,6 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -47,7 +48,9 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,14 +76,15 @@ public class PoreCommandMap extends SimpleCommandMap {
             plugin = Pore.getPlugin(((PluginIdentifiableCommand) command).getPlugin());
         }
 
-        List<String> aliases = Lists.newArrayList(command.getAliases());
+        HashSet<String> aliases = Sets.newHashSet(command.getAliases()); // using hashset to remove duplicates
         String name = command.getName();
         if (!name.equals(label)) {
-            aliases.add(0, label);
+            aliases.add(label);
         }
-        aliases.add(0, name);
+        aliases.add(name);
 
-        Optional<CommandMapping> result = handle.register(plugin, new PoreCommandCallable(command, label), aliases);
+        Optional<CommandMapping> result = handle.register(plugin, new PoreCommandCallable(command, label),
+                aliases.toArray(new String[aliases.size()]));
         if (result.isPresent()) { // Test if the aliases are in use
             handle.removeMapping(result.get());
             for (String alias : aliases) {
