@@ -1,0 +1,150 @@
+From f8005647035615202a24bd44969d0fc810938741 Mon Sep 17 00:00:00 2001
+From: Max Qian <public@maxqia.com>
+Date: Sat, 10 Dec 2016 02:32:02 -0800
+Subject: [PATCH] Add Reflection Remapping Support
+
+---
+ .../org/bukkit/plugin/java/PluginClassLoader.java  | 89 +++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+index 13f8633..9be4bed 100644
+--- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
++++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
+@@ -1,9 +1,17 @@
+ package org.bukkit.plugin.java;
+ 
++import java.io.BufferedReader;
+ import java.io.File;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.InputStreamReader;
++import java.net.JarURLConnection;
+ import java.net.MalformedURLException;
+ import java.net.URL;
+ import java.net.URLClassLoader;
++import java.security.CodeSigner;
++import java.security.CodeSource;
+ import java.util.HashMap;
+ import java.util.Map;
+ import java.util.Set;
+@@ -12,6 +20,12 @@ import org.apache.commons.lang.Validate;
+ import org.bukkit.plugin.InvalidPluginException;
+ import org.bukkit.plugin.PluginDescriptionFile;
+ 
++import com.google.common.io.ByteStreams;
++import com.maxqia.ReflectionRemapper.RemappedMethods;
++import com.maxqia.ReflectionRemapper.Transformer;
++
++import net.md_5.specialsource.JarMapping;
++
+ /**
+  * A ClassLoader for plugins, to allow shared classes across multiple plugins
+  */
+@@ -24,6 +38,7 @@ final class PluginClassLoader extends URLClassLoader {
+     final JavaPlugin plugin;
+     private JavaPlugin pluginInit;
+     private IllegalStateException pluginState;
++    private static JarMapping jarMapping;
+ 
+     PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws InvalidPluginException, MalformedURLException {
+         super(new URL[] {file.toURI().toURL()}, parent);
+@@ -34,6 +49,22 @@ final class PluginClassLoader extends URLClassLoader {
+         this.dataFolder = dataFolder;
+         this.file = file;
+ 
++
++        if (jarMapping == null) {
++            try {
++                jarMapping = new JarMapping();
++                jarMapping.loadMappings(
++                        new BufferedReader(new InputStreamReader(loader.getClass().getClassLoader().getResourceAsStream("vcb2pore.srg"))),
++                        null, null, false);
++                RemappedMethods.loader = this;
++                Transformer.loadMapping(jarMapping);
++            } catch (IOException | IllegalArgumentException | SecurityException e) {
++                // TODO Auto-generated catch block
++                e.printStackTrace();
++                throw new RuntimeException(e);
++            }
++        }
++
+         try {
+             Class<?> jarClass;
+             try {
+@@ -74,7 +105,7 @@ final class PluginClassLoader extends URLClassLoader {
+             }
+ 
+             if (result == null) {
+-                result = super.findClass(name);
++                result = this.remappedFindClass(name);
+ 
+                 if (result != null) {
+                     loader.setClass(name, result);
+@@ -87,6 +118,62 @@ final class PluginClassLoader extends URLClassLoader {
+         return result;
+     }
+ 
++    final boolean debug = false;
++    private Class<?> remappedFindClass(String name) throws ClassNotFoundException { // based on Cauldron's method
++        Class<?> result = null;
++
++        try {
++            // Load the resource to the name
++            String path = name.replace('.', '/').concat(".class");
++            URL url = this.findResource(path);
++            if (url != null) {
++                InputStream stream = url.openStream();
++                if (stream != null) {
++                    byte[] bytecode = ByteStreams.toByteArray(stream);
++
++                    // Remap the classes
++                    RemappedMethods.loader = this;
++                    byte[] remappedBytecode = Transformer.transformSS(bytecode);
++
++                    if (debug) {
++                        File file = new File("remapped-plugin-classes/"+name+".class");
++                        file.getParentFile().mkdirs();
++                        try {
++                            FileOutputStream fileOutputStream = new FileOutputStream(file);
++                            fileOutputStream.write(remappedBytecode);
++                            fileOutputStream.close();
++                        } catch (IOException ex) {
++                            ex.printStackTrace();
++                        }
++                    }
++
++                    // Define (create) the class using the modified byte code
++                    // The top-child class loader is used for this to prevent access violations
++                    // Set the codesource to the jar, not within the jar, for compatibility with
++                    // plugins that do new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()))
++                    // instead of using getResourceAsStream - see https://github.com/MinecraftPortCentral/Cauldron-Plus/issues/75
++                    JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection(); // parses only
++                    URL jarURL = jarURLConnection.getJarFileURL();
++                    CodeSource codeSource = new CodeSource(jarURL, new CodeSigner[0]);
++
++                    result = this.defineClass(name, remappedBytecode, 0, remappedBytecode.length, codeSource);
++                    if (result != null) {
++                        // Resolve it - sets the class loader of the class
++                        this.resolveClass(result);
++                    }
++                }
++            }
++        } catch (Throwable t) {
++            if (debug) {
++                System.out.println("remappedFindClass("+name+") exception: "+t);
++                t.printStackTrace();
++            }
++            throw new ClassNotFoundException("Failed to remap class "+name, t);
++        }
++
++         return result;
++    }
++
+     Set<String> getClasses() {
+         return classes.keySet();
+     }
+-- 
+2.10.2
+

@@ -29,7 +29,7 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
-import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class PoreBannerMeta extends PoreItemMeta implements org.bukkit.inventory
 
     //TODO: bridge
 
-    public PoreBannerMeta(DataHolder holder) {
+    public PoreBannerMeta(ItemStack holder) {
         super(holder);
     }
 

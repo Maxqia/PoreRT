@@ -1,3 +1,9 @@
 [submodule "lib/Bukkit"]
 	path = lib/Bukkit
 	url = https://hub.spigotmc.org/stash/scm/spigot/bukkit.git
+[submodule "lib/ReflectionRemapper"]
+	path = lib/ReflectionRemapper
+	url = https://github.com/Maxqia/ReflectionRemapper.git
+[submodule "lib/SpongeRemapping"]
+	path = lib/SpongeRemapping
+	url = https://github.com/Maxqia/SpongeRemapping.git

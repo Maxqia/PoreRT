@@ -29,7 +29,7 @@ package blue.lapis.pore.impl.inventory.meta;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.MapMeta;
-import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 // TODO: bridge
 
@@ -37,7 +37,7 @@ import org.spongepowered.api.data.DataHolder;
 
 public class PoreMapMeta extends PoreItemMeta implements MapMeta {
 
-    public PoreMapMeta(DataHolder holder) {
+    public PoreMapMeta(ItemStack holder) {
         super(holder);
         // TODO Auto-generated constructor stub
     }

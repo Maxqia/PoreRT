@@ -23,12 +23,16 @@
 package blue.lapis.pore.converter.type.material;
 
 import blue.lapis.pore.impl.inventory.PoreItemStack;
+import blue.lapis.pore.impl.inventory.meta.PoreItemMeta;
 
 import org.bukkit.Material;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.DataManipulator;
+import org.spongepowered.api.data.property.item.UseLimitProperty;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+
+import java.util.Optional;
 
 public final class ItemStackConverter {
 
@@ -57,10 +61,15 @@ public final class ItemStackConverter {
         // IntelliJ doesn't recognize the above check and thinks withItemType() may throw an NPE
         //noinspection ConstantConditions
         ItemStack.Builder builder = ItemStack.builder()
+                .fromItemStack(((PoreItemMeta)stack.getItemMeta()).getHandle())
                 .itemType(type)
-                .quantity(stack.getAmount())
+                .quantity(stack.getAmount());
                 //.maxQuantity(stack.getType().getMaxStackSize()) //TODO
-                .add(Keys.ITEM_DURABILITY, (int) stack.getDurability());
+
+        Optional<UseLimitProperty> useLimit = type.getDefaultProperty(UseLimitProperty.class);
+        if (useLimit.isPresent()) {
+            builder = builder.add(Keys.ITEM_DURABILITY, useLimit.get().getValue() - stack.getDurability());
+        }
 
         DataManipulator<?,?> maniuplator = DurabilityConverter.getItemData(stack);
         if (maniuplator != null) {
