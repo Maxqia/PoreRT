@@ -38,6 +38,11 @@ import org.spongepowered.api.plugin.Plugin;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Launches Pore in a Classloader
+ * with Listener redirects
+ * @See Pore
+ */
 @Plugin(id = "pore", name = "PoreRT")
 public class PoreBootstrap implements PoreEventManager {
 
