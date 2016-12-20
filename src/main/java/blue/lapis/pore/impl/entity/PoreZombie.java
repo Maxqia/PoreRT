@@ -34,6 +34,7 @@ import org.bukkit.entity.Villager.Profession;
 import org.spongepowered.api.data.type.ZombieTypes;
 import org.spongepowered.api.entity.living.monster.Zombie;
 
+@SuppressWarnings("deprecation")
 public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie {
 
     public static PoreZombie of(Zombie handle) {
@@ -65,11 +66,13 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
     }
 
     @Override
+    @Deprecated
     public boolean isVillager() {
         return getHandle().getZombieData().type().equals(ZombieTypes.VILLAGER);
     }
 
     @Override
+    @Deprecated
     public void setVillager(boolean isVillager) {
         if (isVillager != isVillager()) {
             if (isVillager) {
@@ -81,11 +84,13 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
     }
 
     @Override
+    @Deprecated
     public void setVillagerProfession(Profession profession) {
         getHandle().getZombieData().profession().setTo(ProfessionConverter.of(profession));
     }
 
     @Override
+    @Deprecated
     public Profession getVillagerProfession() {
         return ProfessionConverter.of(getHandle().getZombieData().profession().get().orElse(null));
     }

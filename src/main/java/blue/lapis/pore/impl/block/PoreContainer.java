@@ -21,13 +21,17 @@
 
 package blue.lapis.pore.impl.block;
 
+import blue.lapis.pore.util.PoreText;
+
+import org.bukkit.Nameable;
 import org.bukkit.block.Lockable;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.LockableData;
 
 import java.util.Optional;
 
-public class PoreContainer extends PoreBlockState implements Lockable {
+public class PoreContainer extends PoreBlockState implements Lockable, Nameable {
 
     protected PoreContainer(TileEntity handle) {
         super(handle);
@@ -52,6 +56,16 @@ public class PoreContainer extends PoreBlockState implements Lockable {
     @Override
     public void setLock(String key) {
         getTileEntity().get(LockableData.class).get().lockToken().set(key);
+    }
+
+    @Override
+    public String getCustomName() {
+        return PoreText.convert(getTileEntity().get(DisplayNameData.class).get().displayName().get());
+    } // TODO shulkerboxes might not have this data ...
+
+    @Override
+    public void setCustomName(String name) {
+        getTileEntity().get(DisplayNameData.class).get().displayName().set(PoreText.convert(name));
     }
 
 }

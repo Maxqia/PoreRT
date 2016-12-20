@@ -267,4 +267,14 @@ public class PoreItemMeta extends PoreWrapper<ItemStack> implements ItemMeta {
     public Map<String, Object> serialize() {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public boolean isUnbreakable() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setUnbreakable(boolean unbreakable) {
+        throw new NotImplementedException("TODO");
+    }
 }

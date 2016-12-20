@@ -53,8 +53,9 @@ import java.util.Optional;
 
 /**
  * An implementation of the Bukkit API built on Sponge.
- *
+ * (Main Plugin Class)
  * @author Lapis Blue
+ * @see PoreBootstrap
  */
 public final class Pore implements PoreEventManager {
 
@@ -108,6 +109,7 @@ public final class Pore implements PoreEventManager {
 
         logger.info("Loading Pore server, please wait...");
 
+        // init server
         server = new PoreServer(game, logger);
         PoreEventRegistry.register();
 
@@ -142,7 +144,7 @@ public final class Pore implements PoreEventManager {
     @SuppressWarnings("deprecation")
     public void onChatEvent(MessageChannelEvent.Chat event) {
         Optional<Player> optPlayer = event.getCause().get(NamedCause.SOURCE, Player.class);
-        if (optPlayer.isPresent()) {
+        if (optPlayer.isPresent()) { // fire ASyncPlayerChatEvent and PlayerChatEvent
             blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent asyncBukkitEvent =
                     new blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent(event, optPlayer.get());
             Bukkit.getServer().getPluginManager().callEvent(asyncBukkitEvent);

@@ -59,6 +59,7 @@ public class PoreGuardian extends PoreMonster implements org.bukkit.entity.Guard
     }
 
     @Override
+    @Deprecated
     public void setElder(boolean shouldBeElder) {
         if (shouldBeElder != isElder()) {
             if (shouldBeElder) {

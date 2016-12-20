@@ -30,6 +30,7 @@ import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
+import net.minecraft.item.ItemAir;
 import org.bukkit.Material;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -135,6 +136,8 @@ public final class MaterialConverter {
                     .add(Material.RED_NETHER_BRICK, BlockTypes.RED_NETHER_BRICK)
                     .add(Material.BONE_BLOCK, BlockTypes.BONE_BLOCK)
                     .add(Material.STRUCTURE_VOID, BlockTypes.STRUCTURE_VOID)
+                    //.add(Material.OBSERVER, BlockTypes.)
+                    //.add(Material.WHITE_SHULKER_BOX, BlockTypes.)
                     .add(Material.STRUCTURE_BLOCK, BlockTypes.STRUCTURE_BLOCK)
                     // Item Separator
                     .add(Material.LADDER, BlockTypes.LADDER)
@@ -640,6 +643,8 @@ public final class MaterialConverter {
                     .add(Material.BOAT_JUNGLE, ItemTypes.JUNGLE_BOAT)
                     .add(Material.BOAT_ACACIA, ItemTypes.ACACIA_BOAT)
                     .add(Material.BOAT_DARK_OAK,ItemTypes.DARK_OAK_BOAT)
+                    //.add(Material.TOTEM, ItemTypes.)
+                    //.add(Material.SHULKER_SHELL, ItemTypes.)
                     .add(Material.GOLD_RECORD, ItemTypes.RECORD_13)
                     .add(Material.GREEN_RECORD, ItemTypes.RECORD_CAT)
                     .add(Material.RECORD_3, ItemTypes.RECORD_BLOCKS)
@@ -659,6 +664,10 @@ public final class MaterialConverter {
     }
 
     public static Material of(ItemType type) {
+        if (type instanceof ItemAir) {
+            return Material.AIR;
+        }
+
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) {

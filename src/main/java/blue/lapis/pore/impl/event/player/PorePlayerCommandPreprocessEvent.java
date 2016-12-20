@@ -78,16 +78,6 @@ public final class PorePlayerCommandPreprocessEvent extends PlayerCommandPreproc
     }
 
     @Override
-    public String getFormat() {
-        throw new NotImplementedException("TODO"); // TODO
-    }
-
-    @Override
-    public void setFormat(String format) {
-        throw new NotImplementedException("TODO"); // TODO
-    }
-
-    @Override
     public Set<org.bukkit.entity.Player> getRecipients() {
         return ImmutableSet.of();
     }

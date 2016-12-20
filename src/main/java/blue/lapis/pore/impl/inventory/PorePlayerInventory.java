@@ -46,6 +46,8 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PorePlayerInventory extends PoreInventory implements org.bukkit.inventory.PlayerInventory {
@@ -222,15 +224,13 @@ public class PorePlayerInventory extends PoreInventory implements org.bukkit.inv
     }
 
     @Override
-    protected net.minecraft.item.ItemStack[] getInternalContents() {
+    protected List<net.minecraft.item.ItemStack> getInternalContents() {
         System.out.println(getHandle().getClass());
         InventoryPlayer inv = (InventoryPlayer) getHandle();
-        net.minecraft.item.ItemStack[] combined = new net.minecraft.item.ItemStack[
-                     inv.mainInventory.length + inv.armorInventory.length + inv.offHandInventory.length];
-        System.arraycopy(inv.mainInventory, 0, combined, 0, inv.mainInventory.length);
-        System.arraycopy(inv.armorInventory, 0, combined, inv.mainInventory.length, inv.armorInventory.length);
-        System.arraycopy(inv.offHandInventory, 0, combined,
-                inv.mainInventory.length + inv.armorInventory.length, inv.offHandInventory.length);
+        List<net.minecraft.item.ItemStack> combined = new ArrayList<net.minecraft.item.ItemStack>();
+        combined.addAll(inv.mainInventory);
+        combined.addAll(inv.armorInventory);
+        combined.addAll(inv.offHandInventory);
         return combined;
     }
 

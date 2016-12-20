@@ -27,6 +27,7 @@
 package blue.lapis.pore.impl.inventory.meta;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.Color;
 import org.bukkit.inventory.meta.MapMeta;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -53,6 +54,36 @@ public class PoreMapMeta extends PoreItemMeta implements MapMeta {
 
     @Override
     public MapMeta clone() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean hasLocationName() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public String getLocationName() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setLocationName(String name) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public boolean hasColor() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Color getColor() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setColor(Color color) {
         throw new NotImplementedException("TODO");
     }
 

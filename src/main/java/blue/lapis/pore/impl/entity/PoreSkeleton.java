@@ -32,6 +32,7 @@ import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.entity.living.monster.Skeleton;
 
+@SuppressWarnings("deprecation")
 public class PoreSkeleton extends PoreMonster implements org.bukkit.entity.Skeleton {
 
     public static PoreSkeleton of(Skeleton handle) {

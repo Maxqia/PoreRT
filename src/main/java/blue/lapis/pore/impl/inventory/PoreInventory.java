@@ -33,7 +33,7 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
-
+import net.minecraft.util.NonNullList;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Location;
@@ -99,12 +99,13 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
         }
     }
 
-    protected net.minecraft.item.ItemStack[] getInternalContents() {
+    @SuppressWarnings("unchecked")
+    protected List<net.minecraft.item.ItemStack> getInternalContents() {
         try {
             //System.out.println(getHandle().getClass());
             Field field = getInventory().getClass().getDeclaredField("field_70482_c");
             field.setAccessible(true);
-            return (net.minecraft.item.ItemStack[]) field.get(getInventory());
+            return (NonNullList<net.minecraft.item.ItemStack>) field.get(getInventory());
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             throw new RuntimeException("Couldn't get inventory contents!");
         }
@@ -149,7 +150,7 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
     @SuppressWarnings("deprecation")
     public void setItem(int index, ItemStack item) {
         getInventory().setInventorySlotContents(index, ((item == null || item.getTypeId() == 0)
-                ? null : ItemStackUtil.toNative(ItemStackConverter.of(item)).copy()));
+                ? net.minecraft.item.ItemStack.EMPTY : ItemStackUtil.toNative(ItemStackConverter.of(item)).copy()));
     }
 
     @Override
@@ -189,11 +190,12 @@ public class PoreInventory extends PoreWrapper<Inventory> implements org.bukkit.
     @Override
     public ItemStack[] getContents() {
         ItemStack[] items = new ItemStack[getSize()];
-        net.minecraft.item.ItemStack[] mcItems = this.getInternalContents();
+        List<net.minecraft.item.ItemStack> mcItems = this.getInternalContents();
 
-        int size = Math.min(items.length, mcItems.length);
+        int size = Math.min(items.length, mcItems.size());
         for (int i = 0; i < size; i++) {
-            items[i] = mcItems[i] == null ? null : ItemStackConverter.of(ItemStackUtil.fromNative(mcItems[i]));
+            items[i] = (mcItems.get(i) == net.minecraft.item.ItemStack.EMPTY) ? null :
+                ItemStackConverter.of(ItemStackUtil.fromNative(mcItems.get(i)));
         }
         return items;
     }
