@@ -816,7 +816,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public boolean isPrimaryThread() {
-        return false; //TODO actually implement this
+        return getHandle().isMainThread();
     }
 
     @Override

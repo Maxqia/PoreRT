@@ -479,12 +479,12 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
 
     @Override
     public void setCollidable(boolean collidable) {
-        throw new NotImplementedException("TODO");
+        getHandle().offer(Keys.VANISH_IGNORES_COLLISION, collidable);
     }
 
     @Override
     public boolean isCollidable() {
-        throw new NotImplementedException("TODO");
+        return getHandle().get(Keys.VANISH_IGNORES_COLLISION).orElse(false);
     }
 
     @Override
