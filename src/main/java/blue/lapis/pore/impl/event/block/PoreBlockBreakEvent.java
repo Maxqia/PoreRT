@@ -84,12 +84,12 @@ public final class PoreBlockBreakEvent extends BlockBreakEvent implements PoreEv
 
     @Override
     public boolean isCancelled() {
-        return transaction.isValid();
+        return !transaction.isValid();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        transaction.setValid(cancel);
+        transaction.setValid(!cancel);
     }
 
     @Override
