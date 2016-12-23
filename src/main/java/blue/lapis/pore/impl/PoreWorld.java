@@ -929,4 +929,9 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
         throw new NotImplementedException("TODO");
     }
 
+    @Override
+    public Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
+
 }

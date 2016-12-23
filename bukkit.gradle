@@ -2,6 +2,13 @@ defaultTasks 'clean', 'build'
 
 version = '1.11-R0.1-SNAPSHOT' // TODO: Keep up to date
 
+repositories {
+    maven { // needed for some reason
+        name = 'bungeecord-repo'
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
 // Project dependencies
 dependencies {
     // TODO: Keep up to date
@@ -13,7 +20,10 @@ dependencies {
     compile 'com.google.guava:guava:17.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.avaje:ebean:2.8.1'
-    compile 'org.yaml:snakeyaml:1.16'
+    compile 'org.yaml:snakeyaml:1.17'
+    compile ('net.md-5:bungeecord-chat:1.10-SNAPSHOT') {
+        transitive = false
+    }
     compile (project(':ReflectionRemapper')) {
         exclude module: 'guava'
     }

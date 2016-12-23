@@ -47,7 +47,7 @@ pore_update() {
     echo "> Updating submodules..."
     git submodule update --init
     echo "> Updating Porekit..."
-    apply_patches lib/Bukkit Porekit patches
+    apply_patches lib/Bukkit Porekit lib/Spigot/Bukkit-Patches && apply_patches Porekit Porekit patches
 }
 
 

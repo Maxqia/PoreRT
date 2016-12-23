@@ -277,4 +277,9 @@ public class PoreItemMeta extends PoreWrapper<ItemStack> implements ItemMeta {
     public void setUnbreakable(boolean unbreakable) {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
 }

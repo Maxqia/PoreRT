@@ -909,4 +909,9 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     public Merchant createMerchant(String title) {
         throw new NotImplementedException("TODO");
     }
+
+    @Override
+    public Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
 }

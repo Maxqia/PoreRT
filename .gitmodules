@@ -7,3 +7,6 @@
 [submodule "lib/SpongeRemapping"]
 	path = lib/SpongeRemapping
 	url = https://github.com/Maxqia/SpongeRemapping.git
+[submodule "lib/Spigot"]
+	path = lib/Spigot
+	url = https://hub.spigotmc.org/stash/scm/spigot/spigot.git

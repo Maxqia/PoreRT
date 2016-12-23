@@ -28,6 +28,7 @@ package blue.lapis.pore.impl.entity;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LightningStrike;
 import org.spongepowered.api.entity.weather.Lightning;
@@ -55,5 +56,10 @@ public class PoreLightningStrike extends PoreEntity implements LightningStrike {
     @Override
     public boolean isEffect() {
         return getHandle().isEffect();
+    }
+
+    @Override
+    public LightningStrike.Spigot spigot() {
+        throw new NotImplementedException("TODO");
     }
 }

@@ -22,7 +22,7 @@ plugins {
     id 'org.spongepowered.plugin' version '0.8'
     id 'checkstyle'
 
-    id 'net.minecrell.gitpatcher' version '0.8'
+    //id 'net.minecrell.gitpatcher' version '0.8'
     id 'blue.lapis.methodremapper' version '0.2'
 
     id 'com.github.johnrengelman.shadow' version '1.2.3'
@@ -66,16 +66,25 @@ repositories {
     }
 }
 
-patches {
+/*patches {
     submodule = 'lib/Bukkit'
     target = file('Porekit')
     patches = file('patches')
-}
+}*/
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+}
+
+
+task applyPatches(type:Exec) {
+    if (org.gradle.internal.os.OperatingSystem.current().windows) {
+        throw new GradleScriptException("You use Windows? RIP", null)
+    } else {
+        commandLine './etc/poredev', 'update'
+    }
 }
 
 project('Porekit') {

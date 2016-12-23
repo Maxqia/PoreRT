@@ -477,4 +477,9 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     public boolean removeScoreboardTag(String tag) {
         throw new NotImplementedException("Sponge API needs Merge");
     }
+
+    @Override
+    public org.bukkit.entity.Entity.Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
 }

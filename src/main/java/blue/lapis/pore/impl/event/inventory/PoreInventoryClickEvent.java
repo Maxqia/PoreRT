@@ -74,6 +74,11 @@ public final class PoreInventoryClickEvent extends InventoryClickEvent implement
     }
 
     @Override
+    public Inventory getClickedInventory() {
+        return getInventory();
+    }
+
+    @Override
     public List<HumanEntity> getViewers() {
         return this.getInventory().getViewers();
     }

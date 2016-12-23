@@ -1,17 +1,17 @@
-From f8005647035615202a24bd44969d0fc810938741 Mon Sep 17 00:00:00 2001
+From 31bcb9c16c15c437f770fe880a55a45a5467e3ff Mon Sep 17 00:00:00 2001
 From: Max Qian <public@maxqia.com>
 Date: Sat, 10 Dec 2016 02:32:02 -0800
 Subject: [PATCH] Add Reflection Remapping Support
 
 ---
- .../org/bukkit/plugin/java/PluginClassLoader.java  | 89 +++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
+ .../org/bukkit/plugin/java/PluginClassLoader.java  | 94 +++++++++++++++++++++-
+ 1 file changed, 90 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-index 13f8633..9be4bed 100644
+index 4cffa137..3bfe658a 100644
 --- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-@@ -1,9 +1,17 @@
+@@ -1,10 +1,17 @@
  package org.bukkit.plugin.java;
  
 +import java.io.BufferedReader;
@@ -24,12 +24,13 @@ index 13f8633..9be4bed 100644
  import java.net.MalformedURLException;
  import java.net.URL;
  import java.net.URLClassLoader;
+-import java.util.HashMap;
 +import java.security.CodeSigner;
 +import java.security.CodeSource;
- import java.util.HashMap;
  import java.util.Map;
  import java.util.Set;
-@@ -12,6 +20,12 @@ import org.apache.commons.lang.Validate;
+ 
+@@ -12,6 +19,12 @@ import org.apache.commons.lang.Validate;
  import org.bukkit.plugin.InvalidPluginException;
  import org.bukkit.plugin.PluginDescriptionFile;
  
@@ -42,15 +43,24 @@ index 13f8633..9be4bed 100644
  /**
   * A ClassLoader for plugins, to allow shared classes across multiple plugins
   */
-@@ -24,6 +38,7 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -24,6 +37,7 @@ final class PluginClassLoader extends URLClassLoader {
      final JavaPlugin plugin;
      private JavaPlugin pluginInit;
      private IllegalStateException pluginState;
 +    private static JarMapping jarMapping;
  
+     // Spigot Start
+     static
+@@ -48,7 +62,7 @@ final class PluginClassLoader extends URLClassLoader {
+         }
+     }
+     // Spigot End
+-    
++
      PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws InvalidPluginException, MalformedURLException {
          super(new URL[] {file.toURI().toURL()}, parent);
-@@ -34,6 +49,22 @@ final class PluginClassLoader extends URLClassLoader {
+         Validate.notNull(loader, "Loader cannot be null");
+@@ -58,6 +72,22 @@ final class PluginClassLoader extends URLClassLoader {
          this.dataFolder = dataFolder;
          this.file = file;
  
@@ -73,7 +83,7 @@ index 13f8633..9be4bed 100644
          try {
              Class<?> jarClass;
              try {
-@@ -74,7 +105,7 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -98,19 +128,75 @@ final class PluginClassLoader extends URLClassLoader {
              }
  
              if (result == null) {
@@ -82,7 +92,13 @@ index 13f8633..9be4bed 100644
  
                  if (result != null) {
                      loader.setClass(name, result);
-@@ -87,6 +118,62 @@ final class PluginClassLoader extends URLClassLoader {
+                 }
+             }
+ 
+-            classes.put(name, result);
++            if (result != null) classes.put(name, result);
+         }
+ 
          return result;
      }
  
@@ -146,5 +162,5 @@ index 13f8633..9be4bed 100644
          return classes.keySet();
      }
 -- 
-2.10.2
+2.11.0
 

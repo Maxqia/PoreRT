@@ -1,8 +1,19 @@
-From 4f42d0a63396ab7606e0075d106e62149869cf48 Mon Sep 17 00:00:00 2001
+From 65eb0f343925cbf316a09fe0d60b5569b0b4fa4b Mon Sep 17 00:00:00 2001
 From: Minecrell <dev@minecrell.net>
 Date: Tue, 3 Mar 2015 22:31:03 +0100
-Subject: [PATCH] Make events properly initialisable
+Subject: [PATCH 1/5] Make events properly initialisable
 
+---
+ src/main/java/org/bukkit/event/Event.java                      |  4 ++++
+ src/main/java/org/bukkit/event/block/BlockMultiPlaceEvent.java | 10 ++++++++--
+ .../java/org/bukkit/event/enchantment/EnchantItemEvent.java    |  2 +-
+ .../java/org/bukkit/event/inventory/InventoryClickEvent.java   |  6 +++++-
+ src/main/java/org/bukkit/event/player/PlayerEditBookEvent.java | 10 ++++++----
+ src/main/java/org/bukkit/event/world/ChunkEvent.java           |  2 +-
+ src/main/java/org/bukkit/event/world/PortalCreateEvent.java    |  4 ++--
+ src/main/java/org/bukkit/event/world/StructureGrowEvent.java   |  2 +-
+ src/main/java/org/bukkit/event/world/WorldEvent.java           |  8 ++++++++
+ 9 files changed, 36 insertions(+), 12 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/event/Event.java b/src/main/java/org/bukkit/event/Event.java
 index 6677e1b..d8ce291 100644
@@ -52,13 +63,13 @@ index de28f1d..a06ceba 100644
          this.button = i;
      }
 diff --git a/src/main/java/org/bukkit/event/inventory/InventoryClickEvent.java b/src/main/java/org/bukkit/event/inventory/InventoryClickEvent.java
-index 28198b8..20ac7d9 100644
+index 60feaf3..0a8dd9f 100644
 --- a/src/main/java/org/bukkit/event/inventory/InventoryClickEvent.java
 +++ b/src/main/java/org/bukkit/event/inventory/InventoryClickEvent.java
-@@ -62,7 +62,11 @@ public class InventoryClickEvent extends InventoryInteractEvent {
-         super(view);
-         this.slot_type = type;
-         this.rawSlot = slot;
+@@ -65,7 +65,11 @@ public class InventoryClickEvent extends InventoryInteractEvent {
+         } else {
+             this.clickedInventory = view.getBottomInventory();
+         }
 -        this.whichSlot = view.convertSlot(slot);
 +        if (isPoreEvent()) {
 +            this.whichSlot = -1;
@@ -156,5 +167,5 @@ index bd89b81..e4bc7c3 100644
       * Gets the world primarily involved with this event
       *
 -- 
-2.4.2
+2.10.2
 

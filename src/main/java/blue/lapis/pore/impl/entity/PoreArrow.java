@@ -93,4 +93,9 @@ public class PoreArrow extends PoreProjectile implements org.bukkit.entity.Arrow
         throw new NotImplementedException("TODO");
     }
 
+    @Override
+    public org.bukkit.entity.Arrow.Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
+
 }

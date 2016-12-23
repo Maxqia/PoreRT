@@ -85,4 +85,9 @@ public class PoreScore extends PoreWrapper<Score> implements org.bukkit.scoreboa
         Preconditions.checkState(!getHandle().getObjectives().isEmpty(), "Score has been unregistered");
     }
 
+    @Override
+    public boolean isScoreSet() throws IllegalStateException {
+        return !getHandle().getObjectives().isEmpty();
+    }
+
 }

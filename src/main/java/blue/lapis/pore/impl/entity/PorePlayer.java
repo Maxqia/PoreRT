@@ -1024,4 +1024,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         throw new NotImplementedException("TODO");
     }
 
+    @Override
+    public org.bukkit.entity.Player.Spigot spigot() {
+        throw new NotImplementedException("TODO");
+    }
+
 }

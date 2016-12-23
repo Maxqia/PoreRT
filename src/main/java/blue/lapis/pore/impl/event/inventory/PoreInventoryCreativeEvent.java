@@ -72,6 +72,11 @@ public final class PoreInventoryCreativeEvent extends InventoryCreativeEvent
     }
 
     @Override
+    public Inventory getClickedInventory() {
+        return getInventory();
+    }
+
+    @Override
     public List<HumanEntity> getViewers() {
         return this.getInventory().getViewers();
     }
