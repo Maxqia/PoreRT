@@ -92,12 +92,12 @@ public final class PoreEntityChangeBlockEvent extends EntityChangeBlockEvent imp
 
     @Override
     public boolean isCancelled() {
-        return transaction.isValid();
+        return !transaction.isValid();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        transaction.setValid(cancel);
+        transaction.setValid(!cancel);
     }
 
     @Override
