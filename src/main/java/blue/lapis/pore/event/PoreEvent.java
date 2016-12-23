@@ -26,15 +26,15 @@
 
 package blue.lapis.pore.event;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.spongepowered.api.event.Event;
 
 public interface PoreEvent<S extends Event> {
 
     S getHandle();
 
-    default Objects.ToStringHelper toStringHelper() {
-        return Objects.toStringHelper(this)
+    default MoreObjects.ToStringHelper toStringHelper() {
+        return MoreObjects.toStringHelper(this)
                 .addValue(getHandle());
     }
 
