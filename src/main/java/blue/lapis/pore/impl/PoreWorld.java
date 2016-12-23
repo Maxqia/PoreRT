@@ -925,7 +925,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
     }
 
     @Override
-    public org.bukkit.World .Spigot spigot() {
+    public org.bukkit.World.Spigot spigot() {
         return new Spigot();
     }
 
