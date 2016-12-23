@@ -20,7 +20,7 @@ buildscript {
 // Apply Gradle plugins
 plugins {
     id 'org.spongepowered.plugin' version '0.8'
-    id 'checkstyle'
+    //id 'checkstyle'
 
     //id 'net.minecrell.gitpatcher' version '0.8'
     id 'blue.lapis.methodremapper' version '0.2'
@@ -193,14 +193,14 @@ sourceJar {
     from { ["LICENSE", "LICENSE-AGPL", "LICENSE-MIT"] }
 }
 
-checkstyle {
+/*checkstyle {
     toolVersion = '6.14.1'
     configProperties = [
             'basedir': project.projectDir,
             'severity': 'warning'
     ]
     configFile = file('etc/checkstyle.xml')
-}
+}*/
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2'
