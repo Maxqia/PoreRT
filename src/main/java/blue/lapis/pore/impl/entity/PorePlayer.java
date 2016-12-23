@@ -35,6 +35,8 @@ import blue.lapis.pore.converter.type.material.MaterialConverter;
 import blue.lapis.pore.converter.type.statistic.AchievementConverter;
 import blue.lapis.pore.converter.type.statistic.StatisticConverter;
 import blue.lapis.pore.converter.type.world.effect.EffectConverter;
+import blue.lapis.pore.converter.type.world.effect.ParticleConverter;
+import blue.lapis.pore.converter.type.world.effect.SoundCategoryConverter;
 import blue.lapis.pore.converter.type.world.effect.SoundConverter;
 import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
@@ -299,15 +301,15 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
-    public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch) {
-        // TODO Auto-generated method stub
-
+    public void playSound(Location location, String sound, SoundCategory category, float volume, float pitch) {
+        this.playSound(location, Sound.valueOf(sound), category, volume, pitch);
     }
 
     @Override
-    public void playSound(Location location, String sound, SoundCategory category, float volume, float pitch) {
-        // TODO Auto-generated method stub
-
+    public void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch) {
+        getHandle().playSound(SoundConverter.of(sound),
+                SoundCategoryConverter.of(category),
+                VectorConverter.create3d(location), volume, pitch);
     }
 
     @Override
@@ -956,77 +958,95 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         throw new NotImplementedException("TODO");
     }
 
+    // --snip craftbukkit--
     @Override
     public void spawnParticle(Particle particle, Location location, int count) {
-        throw new NotImplementedException("TODO");
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count);
     }
 
     @Override
     public void spawnParticle(Particle particle, double x, double y, double z, int count) {
-        throw new NotImplementedException("TODO");
+        spawnParticle(particle, x, y, z, count, null);
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, Location location, int count, T data) {
-        throw new NotImplementedException("TODO");
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, data);
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data) {
-        throw new NotImplementedException("TODO");
+        spawnParticle(particle, x, y, z, count, 0, 0, 0, data);
     }
 
     @Override
-    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
-            double offsetZ) {
-        throw new NotImplementedException("TODO");
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ) {
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, offsetX, offsetY, offsetZ);
     }
 
     @Override
-    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
-            double offsetY, double offsetZ) {
-        throw new NotImplementedException("TODO");
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ) {
+        spawnParticle(particle, x, y, z, count, offsetX, offsetY, offsetZ, null);
     }
 
     @Override
-    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
-            double offsetZ, T data) {
-        throw new NotImplementedException("TODO");
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data) {
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, offsetX, offsetY, offsetZ, data);
     }
 
     @Override
-    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
-            double offsetY, double offsetZ, T data) {
-        throw new NotImplementedException("TODO");
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data) {
+        spawnParticle(particle, x, y, z, count, offsetX, offsetY, offsetZ, 1, data);
     }
 
     @Override
-    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
-            double offsetZ, double extra) {
-        throw new NotImplementedException("TODO");
+    public void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra) {
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, offsetX, offsetY, offsetZ, extra);
     }
 
     @Override
-    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
-            double offsetY, double offsetZ, double extra) {
-        throw new NotImplementedException("TODO");
+    public void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra) {
+        spawnParticle(particle, x, y, z, count, offsetX, offsetY, offsetZ, extra, null);
     }
 
     @Override
-    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
-            double offsetZ, double extra, T data) {
-        throw new NotImplementedException("TODO");
+    public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) {
+        spawnParticle(particle, location.getX(), location.getY(), location.getZ(), count, offsetX, offsetY, offsetZ, extra, data);
     }
+    // -- end snip --
 
     @Override
-    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX,
-            double offsetY, double offsetZ, double extra, T data) {
-        throw new NotImplementedException("TODO");
+    public <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data) {
+        ParticleConverter.spawnParticle(getHandle(), particle, x, y, z, count, offsetX, offsetY, offsetZ, extra, data);
     }
 
     @Override
     public org.bukkit.entity.Player.Spigot spigot() {
-        throw new NotImplementedException("TODO");
+        return new Spigot();
+    }
+
+    public class Spigot extends org.bukkit.entity.Player.Spigot {
+        @Override
+        @Deprecated
+        public boolean getCollidesWithEntities() {
+            return PorePlayer.this.isCollidable();
+        }
+
+        @Override
+        @Deprecated
+        public void setCollidesWithEntities(boolean collides) {
+            PorePlayer.this.setCollidable(collides);
+        }
+
+        @Override
+        public void respawn() {
+            PorePlayer.this.getHandle().respawnPlayer();
+        }
+
+        @Override
+        public String getLocale() {
+            return PorePlayer.this.getHandle().getLocale().toString();
+        }
     }
 
 }

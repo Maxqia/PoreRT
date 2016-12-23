@@ -911,7 +911,14 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
     }
 
     @Override
-    public Spigot spigot() {
-        throw new NotImplementedException("TODO");
+    public Server.Spigot spigot() {
+        return new Spigot();
+    }
+
+    public class Spigot extends Server.Spigot {
+        @Override
+        public void restart() {
+            PoreServer.this.shutdown();
+        }
     }
 }
