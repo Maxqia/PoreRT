@@ -789,24 +789,24 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         getHandle().offer(Keys.CAN_FLY, flight); // TODO
     }
 
-    @Override
+    @Override // Craftbukkit multiplies/divides it by 2 for some reason ...
     public float getWalkSpeed() {
-        return getHandle().get(Keys.WALKING_SPEED).get().floatValue();
+        return getHandle().get(Keys.WALKING_SPEED).get().floatValue() * 2;
     }
 
     @Override
     public void setWalkSpeed(float value) throws IllegalArgumentException {
-        getHandle().offer(Keys.WALKING_SPEED, (double) value);
+        getHandle().offer(Keys.WALKING_SPEED, (double) value / 2);
     }
 
     @Override
     public float getFlySpeed() {
-        return getHandle().get(Keys.FLYING_SPEED).get().floatValue();
+        return getHandle().get(Keys.FLYING_SPEED).get().floatValue() * 2;
     }
 
     @Override
     public void setFlySpeed(float value) throws IllegalArgumentException {
-        getHandle().offer(Keys.FLYING_SPEED, (double) value);
+        getHandle().offer(Keys.FLYING_SPEED, (double) value / 2);
     }
 
     @Override
