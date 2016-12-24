@@ -30,12 +30,17 @@ import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAir;
 import org.bukkit.Material;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public final class MaterialConverter {
 
@@ -275,9 +280,15 @@ public final class MaterialConverter {
     public static Material of(BlockType type) {
         try {
             return BLOCK_TYPE_CONVERTER.reverse().convert(type);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) { // Modded block?
             Pore.getLogger().warn("Requested type of unknown block : " + type.getId());
-            return Material.STONE; // Modded block?
+            try {
+                Constructor<Material> constructor = Material.class.getDeclaredConstructor(int.class);
+                constructor.setAccessible(true);
+                return constructor.newInstance(Block.getIdFromBlock((Block) type));
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+                return Material.STONE;
+            }
         }
     }
 
@@ -670,9 +681,15 @@ public final class MaterialConverter {
 
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) { // Modded item?
             Pore.getLogger().warn("Requested type of unknown item : " + type.getId());
-            return Material.STONE; // Modded item?
+            try {
+                Constructor<Material> constructor = Material.class.getDeclaredConstructor(int.class);
+                constructor.setAccessible(true);
+                return constructor.newInstance(Item.getIdFromItem((Item) type));
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+                return Material.STONE;
+            }
         }
     }
 }
