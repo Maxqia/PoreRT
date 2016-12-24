@@ -1,5 +1,4 @@
-# Pore Returned for 1.10 [![Build Status](http://jenkins.maxqia.com/buildStatus/icon?job=PoreRT-backport)]
-(https://jenkins.maxqia.com/job/PoreRT-backport/)
+# Pore Returned for 1.10 [![Build Status](https://jenkins.maxqia.com/buildStatus/icon?job=PoreRT-backport)](https://jenkins.maxqia.com/job/PoreRT-backport/)
 
 Pore was a plugin for the up-and-coming SpongeAPI built to provide compatibility for Bukkit plugins on the platform.
 This is a continuation of Pore to add more features and update it for 1.10 (and beyond hopefully).
