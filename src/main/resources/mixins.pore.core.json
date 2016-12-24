@@ -1,0 +1,10 @@
+{
+    "package": "blue.lapis.pore.mixin",
+    "target": "@env(DEFAULT)",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "entity.player.MixinEntityPlayerMP",
+        "network.MixinNetworkManager",
+        "item.MixinItemStack"
+    ]
+}

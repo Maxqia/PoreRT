@@ -124,6 +124,11 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
+    public EntityPlayerMP getMCHandle() {
+        return (EntityPlayerMP) getHandle();
+    }
+
+    @Override
     public Player getHandle() {
         return (Player) super.getHandle();
     }

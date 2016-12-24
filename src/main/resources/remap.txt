@@ -18,3 +18,6 @@ org/bukkit/entity/Projectile _INVALID_getShooter()Lorg/bukkit/entity/LivingEntit
 org/bukkit/entity/Projectile _INVALID_setShooter(Lorg/bukkit/entity/LivingEntity;)V setShooter
 org/bukkit/Bukkit _INVALID_getOnlinePlayers()[Lorg/bukkit/entity/Player; getOnlinePlayers
 org/bukkit/Server _INVALID_getOnlinePlayers()[Lorg/bukkit/entity/Player; getOnlinePlayers
+blue/lapis/pore/impl/entity/PoreEntity getMCHandle()Lnet/minecraft/entity/Entity; getHandle
+blue/lapis/pore/impl/entity/PorePlayer getMCHandle()Lnet/minecraft/entity/player/EntityPlayerMP; getHandle
+blue/lapis/pore/impl/PoreWorld getMCHandle()Lnet/minecraft/world/WorldServer; getHandle

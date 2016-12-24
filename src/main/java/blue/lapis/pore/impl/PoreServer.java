@@ -44,6 +44,7 @@ import com.avaje.ebean.config.ServerConfig;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -157,6 +158,10 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         Bukkit.setServer(this);
         getFavicon();
         registerEnchantments();
+    }
+
+    public MinecraftServer getServer() {
+        return (MinecraftServer) getHandle();
     }
 
     public Game getGame() {

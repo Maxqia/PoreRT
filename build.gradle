@@ -9,11 +9,16 @@ buildscript {
             name = 'minecrell'
             url = 'http://repo.minecrell.net/releases'
         }
+        maven {
+            name = "sponge"
+            url = "http://repo.spongepowered.org/maven"
+        }
     }
 
     dependencies {
         classpath 'net.minecrell:VanillaGradle:2.0.3_1'
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath "org.spongepowered:mixingradle:0.4-SNAPSHOT"
     }
 }
 
@@ -29,6 +34,8 @@ plugins {
 }
 
 apply plugin: 'net.minecrell.vanilla.server.library'
+apply plugin: "org.spongepowered.mixin"
+
 defaultTasks 'clean', 'build'
 apply from: 'gradle/deploy.gradle'
 
@@ -108,6 +115,7 @@ configurations {
 // Project dependencies
 dependencies {
     compile project(':ap')
+    compile("org.spongepowered:mixin:0.6.1-SNAPSHOT")
 
     // To update, go to https://repo.spongepowered.org/maven/org/spongepowered/spongeapi/2.1-SNAPSHOT/
     // Then pick latest version (or whatever version you want)
@@ -166,7 +174,11 @@ jar {
                 'Implementation-Version': project.version + versionSuffix,
                 'Implementation-Vendor': 'Lapis',
                 'Main-Class': 'blue.lapis.pore.util.InfoMain',
-                'FMLAT': 'pore_at.cfg'
+                "tweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                "TweakOrder": 0,
+                "MixinConfigs": "mixins.pore.core.json",
+                'FMLAT': 'pore_at.cfg',
+                "ForceLoadAsMod": true
         )
     }
 }

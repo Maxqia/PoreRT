@@ -22,7 +22,7 @@
 
 package blue.lapis.pore.launch;
 
-import blue.lapis.pore.util.classloader.PoreClassLoader;
+//import blue.lapis.pore.util.classloader.PoreClassLoader;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -35,7 +35,7 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-import java.net.MalformedURLException;
+//import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -64,11 +64,11 @@ public class PoreBootstrap implements PoreEventManager {
         }
 
         try {
-            ClassLoader loader = new PoreClassLoader(getClass().getClassLoader(),
-                    new URL(location.getProtocol(), location.getHost(), location.getPort(), path));
+            ClassLoader loader = getClass().getClassLoader()/*new PoreClassLoader(getClass().getClassLoader(),
+                    new URL(location.getProtocol(), location.getHost(), location.getPort(), path))*/;
             Class<?> poreClass = Class.forName(IMPLEMENTATION_CLASS, true, loader);
-            this.pore = (PoreEventManager) injector.getInstance(poreClass);
-        } catch (ClassNotFoundException | MalformedURLException e) {
+            pore = (PoreEventManager) injector.getInstance(poreClass);
+        } catch (ClassNotFoundException /*| MalformedURLException*/ e) {
             throw new RuntimeException("Failed to load Pore implementation", e);
         }
     }

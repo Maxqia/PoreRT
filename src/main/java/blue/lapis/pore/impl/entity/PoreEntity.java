@@ -81,6 +81,10 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
         super(handle);
     }
 
+    public net.minecraft.entity.Entity getMCHandle() {
+        return (net.minecraft.entity.Entity) getHandle();
+    }
+
     protected <T extends DataManipulator<T, ?>> boolean hasData(Class<T> key) {
         return getHandle().get(key).isPresent();
     }

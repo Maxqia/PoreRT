@@ -49,6 +49,7 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import net.minecraft.world.WorldServer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.Bukkit;
@@ -125,6 +126,10 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     protected PoreWorld(World handle) {
         super(handle);
+    }
+
+    public net.minecraft.world.WorldServer getMCHandle() {
+        return (WorldServer) getHandle();
     }
 
     @Override
