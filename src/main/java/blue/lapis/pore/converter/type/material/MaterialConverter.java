@@ -273,7 +273,7 @@ public final class MaterialConverter {
         try {
             return BLOCK_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) {
-            Pore.getLogger().warn("Requested type of unknown block : " + type);
+            Pore.getLogger().warn("Requested type of unknown block : " + type.getId());
             return Material.STONE; // Modded block?
         }
     }
@@ -662,9 +662,8 @@ public final class MaterialConverter {
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) {
-            Pore.getLogger().warn("Requested type of unknown item : " + type);
+            Pore.getLogger().warn("Requested type of unknown item : " + type.getId());
             return Material.STONE; // Modded item?
         }
     }
-
 }
