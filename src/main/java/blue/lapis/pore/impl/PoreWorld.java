@@ -147,7 +147,7 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public int getHighestBlockYAt(int x, int z) {
-        for (int y = getMaxHeight(); y >= 0; y++) {
+        for (int y = getMaxHeight(); y >= 0; y--) {
             //noinspection ConstantConditions
             if (getHandle().getBlock(x, y, z).getType() != BlockTypes.AIR) {
                 return y;
