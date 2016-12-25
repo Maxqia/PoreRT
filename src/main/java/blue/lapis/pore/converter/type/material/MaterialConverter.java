@@ -281,14 +281,8 @@ public final class MaterialConverter {
         try {
             return BLOCK_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) { // Modded block?
-            Pore.getLogger().warn("Requested type of unknown block : " + type.getId());
-            try {
-                Constructor<Material> constructor = Material.class.getDeclaredConstructor(int.class);
-                constructor.setAccessible(true);
-                return constructor.newInstance(Block.getIdFromBlock((Block) type));
-            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-                return Material.STONE;
-            }
+            Pore.getLogger().warn("Requested type of unknown block \"" + type.getId() + "\", returning Stone");
+            return Material.STONE;
         }
     }
 
@@ -682,14 +676,8 @@ public final class MaterialConverter {
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) { // Modded item?
-            Pore.getLogger().warn("Requested type of unknown item : " + type.getId());
-            try {
-                Constructor<Material> constructor = Material.class.getDeclaredConstructor(int.class);
-                constructor.setAccessible(true);
-                return constructor.newInstance(Item.getIdFromItem((Item) type));
-            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-                return Material.STONE;
-            }
+            Pore.getLogger().warn("Requested type of unknown item \"" + type.getId() + "\", returning Stone");
+            return Material.STONE;
         }
     }
 }
