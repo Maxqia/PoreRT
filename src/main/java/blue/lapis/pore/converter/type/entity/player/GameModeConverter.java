@@ -26,6 +26,7 @@
 
 package blue.lapis.pore.converter.type.entity.player;
 
+import static org.bukkit.GameMode.NOT_SET;
 import static org.bukkit.GameMode.ADVENTURE;
 import static org.bukkit.GameMode.CREATIVE;
 import static org.bukkit.GameMode.SPECTATOR;
@@ -44,6 +45,7 @@ public final class GameModeConverter {
 
     private static final Converter<org.bukkit.GameMode, GameMode> CONVERTER =
             TypeConverter.builder(org.bukkit.GameMode.class, GameMode.class)
+                    .add(NOT_SET, GameModes.NOT_SET)
                     .add(SURVIVAL, GameModes.SURVIVAL)
                     .add(CREATIVE, GameModes.CREATIVE)
                     .add(ADVENTURE, GameModes.ADVENTURE)
