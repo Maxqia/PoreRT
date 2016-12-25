@@ -27,8 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import blue.lapis.pore.event.PoreEvent;
 import blue.lapis.pore.event.Source;
 import blue.lapis.pore.impl.entity.PorePlayer;
-import blue.lapis.pore.util.PoreText;
-
 import com.google.common.collect.ImmutableSet;
 
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -45,9 +43,10 @@ public final class PoreAsyncPlayerChatEvent extends AsyncPlayerChatEvent
 
     private final MessageChannelEvent.Chat handle;
 
-    public PoreAsyncPlayerChatEvent(MessageChannelEvent.Chat handle, @Source Player player) {
-        super(true, PorePlayer.of(player), PoreText.convert(handle.getRawMessage()), setupRecipients(handle));
+    public PoreAsyncPlayerChatEvent(MessageChannelEvent.Chat handle, String text, String format, @Source Player player) {
+        super(false, PorePlayer.of(player), text, setupRecipients(handle));
         this.handle = checkNotNull(handle, "handle");
+        this.setFormat(format);
     }
 
     @Override

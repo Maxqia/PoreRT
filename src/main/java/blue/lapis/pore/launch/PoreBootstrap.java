@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
@@ -92,7 +93,7 @@ public class PoreBootstrap implements PoreEventManager {
         pore.onShutdown(event);
     }
 
-    @Listener
+    @Listener(order = Order.POST)
     @Override
     public void onChatEvent(MessageChannelEvent.Chat event) throws Exception {
         pore.onChatEvent(event);
