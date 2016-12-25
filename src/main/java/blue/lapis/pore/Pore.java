@@ -26,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import blue.lapis.pore.event.PoreEventRegistry;
 import blue.lapis.pore.impl.PoreServer;
+import blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent;
+import blue.lapis.pore.impl.event.player.PorePlayerChatEvent;
 import blue.lapis.pore.launch.PoreEventManager;
 import blue.lapis.pore.lib.org.slf4j.bridge.SLF4JBridgeHandler;
 import blue.lapis.pore.plugin.PorePluginContainer;
@@ -47,7 +49,11 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.message.MessageEvent;
+import org.spongepowered.api.event.message.MessageEvent.MessageFormatter;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.text.TextRepresentable;
+import org.spongepowered.api.text.transform.SimpleTextTemplateApplier;
 
 import java.util.Optional;
 
@@ -141,21 +147,38 @@ public final class Pore implements PoreEventManager {
     }
 
     @Override // This is horrible but it's needed for setDisplayName ...
-    @SuppressWarnings("deprecation")
     public void onChatEvent(MessageChannelEvent.Chat event) {
         Optional<Player> optPlayer = event.getCause().get(NamedCause.SOURCE, Player.class);
         if (optPlayer.isPresent()) { // fire ASyncPlayerChatEvent and PlayerChatEvent
-            blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent asyncBukkitEvent =
-                    new blue.lapis.pore.impl.event.player.PoreAsyncPlayerChatEvent(event, optPlayer.get());
+            Player player = optPlayer.get();
+            MessageFormatter formatter = event.getFormatter();
+            String message = PoreText.convert(event.getMessage());
+
+            SimpleTextTemplateApplier header = formatter.getHeader().get(0);
+            String name = PoreText.convert(((TextRepresentable)header.getParameter(MessageEvent.PARAM_MESSAGE_HEADER)).toText());
+            String first = PoreText.convert(header.toText()).replace(name, "%1$s");
+
+            SimpleTextTemplateApplier body = formatter.getBody().get(0);
+            String text = PoreText.convert(((TextRepresentable)body.getParameter(MessageEvent.PARAM_MESSAGE_BODY)).toText());
+            String second = PoreText.convert(body.toText()).replace(name, "%2$s");
+
+            String format = first.concat(second);
+            if (!name.equals(player.getName())) {
+                Pore.getLogger().warn("Name changed from " + player.getName() + " to " + name + " during chat event!");
+            }
+
+            PoreAsyncPlayerChatEvent asyncBukkitEvent =
+                    new PoreAsyncPlayerChatEvent(event, text, format, player);
             Bukkit.getServer().getPluginManager().callEvent(asyncBukkitEvent);
 
-            blue.lapis.pore.impl.event.player.PorePlayerChatEvent bukkitEvent =
-                    new blue.lapis.pore.impl.event.player.PorePlayerChatEvent(asyncBukkitEvent);
+            PorePlayerChatEvent bukkitEvent =
+                    new PorePlayerChatEvent(asyncBukkitEvent);
             Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
 
-            if (!bukkitEvent.getMessage().equals(PoreText.convert(event.getRawMessage()))) {
-                event.setMessage(PoreText.convert(String.format(bukkitEvent.getFormat(),
-                        bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage())));
+            String finalMessage = String.format(bukkitEvent.getFormat(),
+                    bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage());
+            if (!finalMessage.equals(message)) { // texting is hard :(
+                event.setMessage(PoreText.convert(finalMessage));
             }
         }
     }
