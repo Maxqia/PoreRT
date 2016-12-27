@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.converter.type.material;
@@ -29,7 +25,6 @@ package blue.lapis.pore.converter.type.material;
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.TypeConverter;
 
-import com.google.common.base.Converter;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAir;
@@ -39,15 +34,14 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 public final class MaterialConverter {
 
     private MaterialConverter() {
     }
 
-    private static final Converter<Material, BlockType> BLOCK_TYPE_CONVERTER =
+    private static final TypeConverter<Material, BlockType> BLOCK_TYPE_CONVERTER =
             TypeConverter.builder(Material.class, BlockType.class)
                     .add(Material.AIR, BlockTypes.AIR)
                     .add(Material.STONE, BlockTypes.STONE)
@@ -281,12 +275,12 @@ public final class MaterialConverter {
         try {
             return BLOCK_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) { // Modded block?
-            Pore.getLogger().warn("Requested type of unknown block \"" + type.getId() + "\", returning Stone");
-            return Material.STONE;
+            Pore.getLogger().warn("Requested type of unknown block \"" + type.getId() + "\", creating new material");
+            return addBlockType(type);
         }
     }
 
-    private static final Converter<Material, ItemType> ITEM_TYPE_CONVERTER =
+    private static final TypeConverter<Material, ItemType> ITEM_TYPE_CONVERTER =
             TypeConverter.builder(Material.class, ItemType.class)
                     .add(Material.STONE, ItemTypes.STONE)
                     .add(Material.GRASS, ItemTypes.GRASS)
@@ -676,8 +670,29 @@ public final class MaterialConverter {
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) { // Modded item?
-            Pore.getLogger().warn("Requested type of unknown item \"" + type.getId() + "\", returning Stone");
-            return Material.STONE;
+            Pore.getLogger().warn("Requested type of unknown item \"" + type.getId() + "\", creating new material");
+            return addItemType(type);
         }
+    }
+
+    private static Material addBlockType(BlockType type) {
+        Block block = (Block) type;
+        Material material = Material.addMaterial(Block.getIdFromBlock(block), type.getId(), true);
+        BLOCK_TYPE_CONVERTER.add(material, type);
+
+        Optional<ItemType> itemType = type.getItem();
+        if (itemType.isPresent()) ITEM_TYPE_CONVERTER.add(material, itemType.get());
+        return material;
+    }
+
+    private static Material addItemType(ItemType type) {
+        Optional<BlockType> blockType = type.getBlock();
+        if (blockType.isPresent()) return addBlockType(blockType.get());
+
+        Item item = (Item) type;
+        int id = Item.getIdFromItem(item);
+        Material material = Material.addMaterial(id, type.getId(), false);
+        ITEM_TYPE_CONVERTER.add(material, type); // persistant?
+        return material;
     }
 }
