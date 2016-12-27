@@ -1,14 +1,11 @@
-From 31bcb9c16c15c437f770fe880a55a45a5467e3ff Mon Sep 17 00:00:00 2001
+From 7aa98dc1e9793dae75a85250022997ff1dce40b5 Mon Sep 17 00:00:00 2001
 From: Max Qian <public@maxqia.com>
 Date: Sat, 10 Dec 2016 02:32:02 -0800
 Subject: [PATCH] Add Reflection Remapping Support
 
----
- .../org/bukkit/plugin/java/PluginClassLoader.java  | 94 +++++++++++++++++++++-
- 1 file changed, 90 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-index 4cffa137..3bfe658a 100644
+index 4cffa137..efd385c0 100644
 --- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 +++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
 @@ -1,10 +1,17 @@
@@ -30,12 +27,11 @@ index 4cffa137..3bfe658a 100644
  import java.util.Map;
  import java.util.Set;
  
-@@ -12,6 +19,12 @@ import org.apache.commons.lang.Validate;
+@@ -12,6 +19,11 @@ import org.apache.commons.lang.Validate;
  import org.bukkit.plugin.InvalidPluginException;
  import org.bukkit.plugin.PluginDescriptionFile;
  
 +import com.google.common.io.ByteStreams;
-+import com.maxqia.ReflectionRemapper.RemappedMethods;
 +import com.maxqia.ReflectionRemapper.Transformer;
 +
 +import net.md_5.specialsource.JarMapping;
@@ -43,7 +39,7 @@ index 4cffa137..3bfe658a 100644
  /**
   * A ClassLoader for plugins, to allow shared classes across multiple plugins
   */
-@@ -24,6 +37,7 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -24,6 +36,7 @@ final class PluginClassLoader extends URLClassLoader {
      final JavaPlugin plugin;
      private JavaPlugin pluginInit;
      private IllegalStateException pluginState;
@@ -51,7 +47,7 @@ index 4cffa137..3bfe658a 100644
  
      // Spigot Start
      static
-@@ -48,7 +62,7 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -48,7 +61,7 @@ final class PluginClassLoader extends URLClassLoader {
          }
      }
      // Spigot End
@@ -60,7 +56,7 @@ index 4cffa137..3bfe658a 100644
      PluginClassLoader(final JavaPluginLoader loader, final ClassLoader parent, final PluginDescriptionFile description, final File dataFolder, final File file) throws InvalidPluginException, MalformedURLException {
          super(new URL[] {file.toURI().toURL()}, parent);
          Validate.notNull(loader, "Loader cannot be null");
-@@ -58,6 +72,22 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -58,6 +71,21 @@ final class PluginClassLoader extends URLClassLoader {
          this.dataFolder = dataFolder;
          this.file = file;
  
@@ -71,7 +67,6 @@ index 4cffa137..3bfe658a 100644
 +                jarMapping.loadMappings(
 +                        new BufferedReader(new InputStreamReader(loader.getClass().getClassLoader().getResourceAsStream("vcb2pore.srg"))),
 +                        null, null, false);
-+                RemappedMethods.loader = this;
 +                Transformer.loadMapping(jarMapping);
 +            } catch (IOException | IllegalArgumentException | SecurityException e) {
 +                // TODO Auto-generated catch block
@@ -83,7 +78,7 @@ index 4cffa137..3bfe658a 100644
          try {
              Class<?> jarClass;
              try {
-@@ -98,19 +128,75 @@ final class PluginClassLoader extends URLClassLoader {
+@@ -98,19 +126,75 @@ final class PluginClassLoader extends URLClassLoader {
              }
  
              if (result == null) {
@@ -116,7 +111,7 @@ index 4cffa137..3bfe658a 100644
 +                    byte[] bytecode = ByteStreams.toByteArray(stream);
 +
 +                    // Remap the classes
-+                    RemappedMethods.loader = this;
++                    Transformer.setInheritenceClassLoader(this);
 +                    byte[] remappedBytecode = Transformer.transformSS(bytecode);
 +
 +                    if (debug) {
