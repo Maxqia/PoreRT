@@ -61,6 +61,10 @@ allprojects {
 
     repositories {
         mavenCentral()
+		maven { // needed for some reason
+			name = 'bungeecord-repo'
+			url = 'https://oss.sonatype.org/content/repositories/snapshots'
+		}
     }
 }
 
@@ -88,7 +92,7 @@ subprojects {
 
 task applyPatches(type:Exec) {
     if (org.gradle.internal.os.OperatingSystem.current().windows) {
-        throw new GradleScriptException("You use Windows? RIP", null)
+        commandLine 'cmd', '/c', ".\\etc\\poredev.bat", 'update'
     } else {
         commandLine './etc/poredev', 'update'
     }

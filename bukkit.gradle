@@ -2,13 +2,6 @@ defaultTasks 'clean', 'build'
 
 version = '1.11-R0.1-SNAPSHOT' // TODO: Keep up to date
 
-repositories {
-    maven { // needed for some reason
-        name = 'bungeecord-repo'
-        url = 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-}
-
 // Project dependencies
 dependencies {
     // TODO: Keep up to date
