@@ -64,6 +64,10 @@ repositories {
         name = 'lapis'
         url = 'http://repo.lapis.blue/releases'
     }
+    maven {
+        name = 'vault-repo'
+        url = 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
 }
 
 patches {
@@ -109,6 +113,10 @@ dependencies {
     shadow project('Porekit')
     shadowRuntime 'mysql:mysql-connector-java:5.1.38'
     shadowRuntime 'net.sf.trove4j:trove4j:3.0.3'
+
+    compile ('net.milkbowl.vault:VaultAPI:1.6')  {
+        transitive = false
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
