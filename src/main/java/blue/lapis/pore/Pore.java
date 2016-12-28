@@ -32,6 +32,7 @@ import blue.lapis.pore.launch.PoreEventManager;
 import blue.lapis.pore.lib.org.slf4j.bridge.SLF4JBridgeHandler;
 import blue.lapis.pore.plugin.PorePluginContainer;
 import blue.lapis.pore.util.PoreText;
+import blue.lapis.pore.vault.PoreVaultHook;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
@@ -126,6 +127,7 @@ public final class Pore implements PoreEventManager {
     @Override
     public void onAboutToStart(GameAboutToStartServerEvent event) throws Exception {
         server.enablePlugins(PluginLoadOrder.STARTUP);
+        PoreVaultHook.hook();
     }
 
     @Override
