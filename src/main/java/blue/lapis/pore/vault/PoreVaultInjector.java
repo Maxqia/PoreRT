@@ -28,9 +28,11 @@ import blue.lapis.pore.util.classloader.LocalReflectClassLoader;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.plugin.Plugin;
 
+import java.net.URL;
+
 public class PoreVaultInjector {
 
-    public static final String START = "blue/lapis/pore/vault/PoreVault";
+    public static final String START = "blue.lapis.pore.vault.PoreVault";
     public static final String HOOK = START + "Hook";
 
     public static void inject() throws Exception {
@@ -41,7 +43,8 @@ public class PoreVaultInjector {
         LocalClassLoader injector = new LocalReflectClassLoader(loader);
         for (String addition : new String[]{"Hook", "Chat", "Economy", "Permissions"}) {
             String name = START + addition;
-            byte[] clazz = IOUtils.toByteArray(Pore.class.getClassLoader().getResource(name));
+            URL url = Pore.class.getClassLoader().getResource(name.replace('.', '/') + ".class");
+            byte[] clazz = IOUtils.toByteArray(url);
             injector.defineClass(name, clazz);
         }
         Class.forName(HOOK, true, loader).getMethod("hook").invoke(null);
