@@ -27,7 +27,6 @@ import blue.lapis.pore.converter.type.TypeConverter;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemAir;
 import org.bukkit.Material;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -282,6 +281,7 @@ public final class MaterialConverter {
 
     private static final TypeConverter<Material, ItemType> ITEM_TYPE_CONVERTER =
             TypeConverter.builder(Material.class, ItemType.class)
+                    .add(Material.AIR, ItemTypes.AIR)
                     .add(Material.STONE, ItemTypes.STONE)
                     .add(Material.GRASS, ItemTypes.GRASS)
                     .add(Material.DIRT, ItemTypes.DIRT)
@@ -663,10 +663,6 @@ public final class MaterialConverter {
     }
 
     public static Material of(ItemType type) {
-        if (type instanceof ItemAir) {
-            return Material.AIR;
-        }
-
         try {
             return ITEM_TYPE_CONVERTER.reverse().convert(type);
         } catch (UnsupportedOperationException e) { // Modded item?

@@ -93,7 +93,7 @@ import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.whitelist.WhitelistService;
 import org.spongepowered.api.statistic.BlockStatistic;
 import org.spongepowered.api.statistic.EntityStatistic;
-import org.spongepowered.api.statistic.StatisticGroup;
+import org.spongepowered.api.statistic.StatisticType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.util.ban.Ban;
@@ -421,18 +421,17 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     private void setStatistic(org.spongepowered.api.statistic.Statistic statistic, int newValue) {
-        getHandle().offer(getHandle().getStatisticData().statistics()
-                .put(statistic, (long) newValue));
+        getHandle().offer(getHandle().getStatisticData().put(statistic, (long) newValue));
     }
 
     @Override
     public void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException {
         checkNotNull(statistic, "Statistic must not be null");
-        setStatistic(StatisticConverter.asStdStat(statistic), newValue);
+        setStatistic(StatisticConverter.of(statistic), newValue);
     }
 
     private int getStatistic(org.spongepowered.api.statistic.Statistic statistic) {
-        Long l = getHandle().getStatisticData().statistics().get().get(statistic);
+        Long l = getHandle().getStatisticData().get(statistic).orElse(null);
         return l != null ? l.intValue() : 0;
     }
 
@@ -441,7 +440,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkArgument(statistic.getType() == Statistic.Type.UNTYPED, "Statistic " + statistic.toString()
                 + " requires an additional parameter");
-        return getStatistic(StatisticConverter.asStdStat(statistic));
+        return getStatistic(StatisticConverter.of(statistic));
     }
 
     @Override
@@ -459,9 +458,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkArgument(statistic.getType() == Statistic.Type.BLOCK || statistic.getType() == Statistic.Type.ITEM,
                 "Statistic " + statistic.name() + " cannot accept a Material parameter");
-        StatisticGroup group = StatisticConverter.asGroupStat(statistic);
+        StatisticType type = StatisticConverter.of(statistic).getType();
         Optional<BlockStatistic> stat =
-                Pore.getGame().getRegistry().getBlockStatistic(group, MaterialConverter.asBlock(material));
+                Pore.getGame().getRegistry().getBlockStatistic(type, MaterialConverter.asBlock(material));
         if (!stat.isPresent()) {
             throw new UnsupportedOperationException("Cannot get block statistic " + statistic.name() + " for material "
                     + material.name());
@@ -475,9 +474,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkState(statistic.getType() == Statistic.Type.BLOCK,
                 "Statistic " + statistic.name() + " cannot accept a Material parameter");
-        StatisticGroup group = StatisticConverter.asGroupStat(statistic);
+        StatisticType type = StatisticConverter.of(statistic).getType();
         Optional<BlockStatistic> stat =
-                Pore.getGame().getRegistry().getBlockStatistic(group, MaterialConverter.asBlock(material));
+                Pore.getGame().getRegistry().getBlockStatistic(type, MaterialConverter.asBlock(material));
         if (!stat.isPresent()) {
             throw new UnsupportedOperationException("Cannot get block statistic " + statistic.name() + " for material "
                     + material.name());
@@ -512,9 +511,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkState(statistic.getType() == Statistic.Type.ENTITY,
                 "Statistic " + statistic.name() + " cannot accept an Entity parameter");
-        StatisticGroup group = StatisticConverter.asGroupStat(statistic);
+        StatisticType type = StatisticConverter.of(statistic).getType();;
         Optional<EntityStatistic> stat =
-                Pore.getGame().getRegistry().getEntityStatistic(group, EntityConverter.of(entityType));
+                Pore.getGame().getRegistry().getEntityStatistic(type, EntityConverter.of(entityType));
         if (!stat.isPresent()) {
             throw new UnsupportedOperationException("Cannot get entity statistic " + statistic.name() + " for entity "
                     + entityType.name());
@@ -538,9 +537,9 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkState(statistic.getType() == Statistic.Type.ENTITY,
                 "Statistic " + statistic.name() + " cannot accept an entity parameter");
-        StatisticGroup group = StatisticConverter.asGroupStat(statistic);
+        StatisticType type = StatisticConverter.of(statistic).getType();
         Optional<EntityStatistic> stat =
-                Pore.getGame().getRegistry().getEntityStatistic(group, EntityConverter.of(entityType));
+                Pore.getGame().getRegistry().getEntityStatistic(type, EntityConverter.of(entityType));
         if (!stat.isPresent()) {
             throw new UnsupportedOperationException("Cannot get entity statistic " + statistic.name() + " for entity "
                     + entityType.name());
