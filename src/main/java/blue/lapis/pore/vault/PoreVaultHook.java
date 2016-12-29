@@ -24,24 +24,33 @@ package blue.lapis.pore.vault;
 import blue.lapis.pore.Pore;
 
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
+import org.spongepowered.api.service.economy.EconomyService;
 
 public class PoreVaultHook {
     public static void hook() {
         Plugin vault = Pore.getServer().getPluginManager().getPlugin("Vault");
         if (vault == null || !vault.isEnabled()) return;
 
+        boolean isEconomyRegistered = false;
         final ServicesManager sm = Bukkit.getServer().getServicesManager();
 
         PoreVaultPermissions permissions = new PoreVaultPermissions();
         PoreVaultChat chat = new PoreVaultChat(permissions);
+        if (Pore.getGame().getServiceManager().isRegistered(EconomyService.class)) {
+            isEconomyRegistered = true;
+            sm.register(Economy.class, new PoreVaultEconomy(), vault, ServicePriority.Highest);
+        }
 
         sm.register(Permission.class, permissions, vault, ServicePriority.Highest);
         sm.register(Chat.class, chat, vault, ServicePriority.Highest);
-        Pore.getLogger().info("Registered Vault Permission and Chat Hook");
+        Pore.getLogger().info("Registered Vault Permission" +
+                (isEconomyRegistered ? ", Economy," : "")
+                + " and Chat Hook");
     }
 }
