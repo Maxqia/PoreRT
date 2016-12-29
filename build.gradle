@@ -105,7 +105,7 @@ task applyPatches(type:Exec) {
 
 project('Porekit') {
     apply from: rootProject.file('bukkit.gradle')
-    //compileJava.dependsOn rootProject.tasks.applyPatches
+    compileJava.dependsOn rootProject.tasks.applyPatches
 }
 
 configurations {
