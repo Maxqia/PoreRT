@@ -1,67 +1,95 @@
 /*
- * Pore
- * Copyright (c) 2014-2015, Lapis <https://github.com/LapisBlue>
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
+
 package blue.lapis.pore.impl.event.player;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import blue.lapis.pore.event.PoreEvent;
+import blue.lapis.pore.event.PoreEventRegistry;
+//import blue.lapis.pore.event.RegisterEvent;
+import blue.lapis.pore.impl.entity.PorePlayer;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.bukkit.entity.Player;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.spongepowered.api.event.entity.player.PlayerEvent;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.immutable.ImmutableValue;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.data.ChangeDataHolderEvent;
 
-public class PorePlayerToggleFlightEvent extends PlayerToggleFlightEvent {
+public final class PorePlayerToggleFlightEvent extends PlayerToggleFlightEvent implements PoreEvent<ChangeDataHolderEvent.ValueChange> {
 
-    private final PlayerEvent handle;
+    private final ChangeDataHolderEvent.ValueChange handle;
+    private final ImmutableValue<?> changedData;
 
-    public PorePlayerToggleFlightEvent(PlayerEvent handle) {
+    public PorePlayerToggleFlightEvent(ChangeDataHolderEvent.ValueChange handle, ImmutableValue<?> changedData) {
         super(null, false);
         this.handle = checkNotNull(handle, "handle");
+        this.changedData = checkNotNull(changedData, "changedData");
     }
 
-    public PlayerEvent getHandle() {
+    public ChangeDataHolderEvent.ValueChange getHandle() {
         return handle;
     }
 
     @Override
-    public Player getPlayer() {
-        throw new NotImplementedException("TODO");
+    public org.bukkit.entity.Player getPlayer() {
+        return PorePlayer.of((Player) handle);
     }
 
     @Override
     public boolean isFlying() {
-        throw new NotImplementedException("TODO");
-    }
+        return (Boolean) changedData.get();
+    } // casted to boolean object, not type, otherwise there are compile errors
 
     @Override
     public boolean isCancelled() {
-        throw new NotImplementedException("TODO");
+        return getHandle().isCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        throw new NotImplementedException("TODO");
+        getHandle().setCancelled(cancel);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper()
+                .add("changedData", this.changedData)
+                .toString();
+    }
+
+    //@RegisterEvent TODO this event isn't implemented :(
+    public static void register() {
+        PoreEventRegistry.register(PorePlayerToggleFlightEvent.class, ChangeDataHolderEvent.ValueChange.class, event -> {
+            ImmutableList.Builder<PorePlayerToggleFlightEvent> builder = ImmutableList.builder();
+            if (event.getTargetHolder() instanceof Player) {
+                for (ImmutableValue<?> data : event.getEndResult().getSuccessfulData()) {
+                    if (data.getKey().equals(Keys.IS_FLYING)) {
+                        builder.add(new PorePlayerToggleFlightEvent(event, data));
+                    }
+                }
+            }
+            return builder.build();
+        });
     }
 
 }
