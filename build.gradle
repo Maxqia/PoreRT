@@ -45,6 +45,7 @@ sponge {
     }
 }
 
+sourceSets.main.refMap = "mixins.pore.refmap.json"
 minecraft { // reminder : keep updated
     version = '1.11'
     mappings = 'snapshot_20161124'
@@ -104,7 +105,7 @@ task applyPatches(type:Exec) {
 
 project('Porekit') {
     apply from: rootProject.file('bukkit.gradle')
-    compileJava.dependsOn rootProject.tasks.applyPatches
+    //compileJava.dependsOn rootProject.tasks.applyPatches
 }
 
 configurations {
@@ -171,9 +172,17 @@ compileTestJava {
     options.compilerArgs += '-proc:none'
 }
 
+
 // Remap the older Bukkit methods
 remap {
     inputTask = shadowJar
+}
+
+reobf {
+    jar {
+        mappingType = 'SEARGE'
+    }
+    shadowJar {}
 }
 
 jar {
@@ -228,8 +237,4 @@ sourceJar {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2'
-}
-
-reobf.jar {
-    mappingType = 'SEARGE'
 }

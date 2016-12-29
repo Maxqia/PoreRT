@@ -1,10 +1,15 @@
 {
     "package": "blue.lapis.pore.mixin",
+    "refmap": "mixins.pore.refmap.json",
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
         "entity.player.MixinEntityPlayerMP",
         "network.MixinNetworkManager",
+        "network.MixinNetHandlerPlayServer",
         "item.MixinItemStack"
-    ]
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }
