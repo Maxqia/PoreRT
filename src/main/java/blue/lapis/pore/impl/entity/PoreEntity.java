@@ -32,7 +32,6 @@ import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -52,11 +51,13 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntitySnapshot;
+import org.spongepowered.api.util.AABB;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 //TODO: Determine if metadata methods should be implemented manually
 public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity.Entity {
@@ -155,19 +156,11 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     @Override
     public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
-        // TODO: Optimize this with the SpongeAPI method
-        List<org.bukkit.entity.Entity> worldEntities = getWorld().getEntities();
-        List<org.bukkit.entity.Entity> nearby = Lists.newArrayList();
-        for (org.bukkit.entity.Entity e : worldEntities) {
-            Location loc1 = e.getLocation();
-            Location loc2 = this.getLocation();
-            if (Math.abs(loc1.getX() - loc2.getX()) <= x
-                    && Math.abs(loc1.getY() - loc2.getY()) <= y
-                    && Math.abs(loc1.getZ() - loc2.getZ()) <= z) {
-                nearby.add(e);
-            }
-        }
-        return nearby;
+        Entity handle = getHandle();
+        AABB box = getHandle().getBoundingBox().get().expand(x, y, z);
+
+        return getHandle().getWorld().getIntersectingEntities(box, entity -> !entity.equals(handle))
+            .stream().map(entity -> PoreEntity.of(entity)).collect(Collectors.toList());
     }
 
     @Override

@@ -26,20 +26,28 @@
 
 package blue.lapis.pore.converter.type.world.effect;
 
+import blue.lapis.pore.converter.type.material.MaterialConverter;
+import blue.lapis.pore.converter.type.material.PotionEffectTypeConverter;
+import blue.lapis.pore.converter.type.world.DirectionConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
 
+import net.minecraft.potion.PotionType;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffectType;
 import org.spongepowered.api.effect.Viewer;
 import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleOption;
+import org.spongepowered.api.effect.particle.ParticleOptions;
 import org.spongepowered.api.effect.particle.ParticleType;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.effect.sound.SoundTypes;
+import org.spongepowered.api.util.Direction;
 
 @SuppressWarnings("deprecation") //TODO fix this
 public final class EffectConverter {
@@ -50,29 +58,33 @@ public final class EffectConverter {
     public static <T> void playEffect(Viewer viewer, Location location, Effect effect, T data, int radius) {
         if ((data != null && data.getClass().equals(effect.getData()))
                 || (data == null && effect.getData() == null)) {
-            EffectConverter.playEffect(viewer, location, effect,
-                    data == null ? 0 : EffectConverter.getDataValue(effect, data), radius);
+            EffectConverter.playInternal(viewer, location, effect, data, radius);
         } else {
             throw new IllegalArgumentException("Invalid data type for effect!");
         }
     }
 
     public static void playEffect(Viewer viewer, Location location, Effect effect, int data, int radius) {
+        EffectConverter.playInternal(viewer, location, effect, data, radius);
+    }
+
+    private static <T> void playInternal(Viewer viewer, Location location, Effect effect, T data, int radius) {
         if (effect.getType() == Effect.Type.SOUND && effect != Effect.STEP_SOUND) {
             //noinspection ConstantConditions
-            viewer.playSound(EffectConverter.toSound(effect, data), VectorConverter.create3d(location), radius);
+            viewer.playSound(EffectConverter.toSound(effect, 0), VectorConverter.create3d(location), radius);
         } else {
-            //noinspection ConstantConditions
-            //TODO: define a quantity
+            ParticleEffect.Builder builder = ParticleEffect.builder().type(EffectConverter.toParticle(effect));
+            if (data instanceof Integer) addIntegerOptions(builder, effect, (Integer)data);
+            else addGenericOptions(builder, effect, data);
             viewer.spawnParticles(
-                    ParticleEffect.builder().type(EffectConverter.toParticle(effect)).build(),
+                    builder.build(),
                     VectorConverter.create3d(location),
                     radius);
         }
     }
 
     public static SoundType toSound(Effect effect, int data) {
-        if (effect.getType() == Effect.Type.SOUND) {
+        //if (effect.getType() == Effect.Type.SOUND) {
             switch (effect) {
                 case CLICK2:
                     return SoundTypes.BLOCK_WOOD_BUTTON_CLICK_ON; //TODO check if it's the right sound
@@ -154,91 +166,115 @@ public final class EffectConverter {
                 case ENDERDRAGON_GROWL:
                     return SoundTypes.ENTITY_ENDERDRAGON_GROWL;
                 default:
-                    return null;
+                    throw new NotImplementedException("Unknown Sound Effect : " + effect.getName());
             }
-        }
-        return null;
+        //}
+        //throw new RuntimeException("Requested Sound for type \"" + effect.getType() + "\" effect");
     }
 
     public static ParticleType toParticle(Effect effect) {
-        if (effect.getType() == Effect.Type.VISUAL) {
+        //if (effect.getType() == Effect.Type.VISUAL) {
             switch (effect) {
+                case POTION_BREAK:
+                    return ParticleTypes.SPLASH_POTION;
                 case SMOKE:
-                    return ParticleTypes.SMOKE;
+                    return ParticleTypes.FIRE_SMOKE;
                 case ENDER_SIGNAL:
                     return ParticleTypes.ENDER_TELEPORT;
                 case MOBSPAWNER_FLAMES:
                     return ParticleTypes.MOBSPAWNER_FLAMES;
-                case VILLAGER_PLANT_GROW: //TODO check
+                case VILLAGER_PLANT_GROW:
                     return ParticleTypes.FERTILIZER;
-                case DRAGON_BREATH: //TODO check
+                case DRAGON_BREATH:
                     return ParticleTypes.DRAGON_BREATH_ATTACK;
                 case END_GATEWAY_SPAWN: //TODO actually do
                     throw new NotImplementedException("TODO");
                 case STEP_SOUND:
                     return ParticleTypes.BREAK_BLOCK;
                 default:
-                    return null;
+                    throw new NotImplementedException("Unknown Particle Effect : " + effect.getName());
             }
-        }
-        return null;
+        //}
+        //throw new RuntimeException("Requested Particle for type \"" + effect.getType() + "\" effect");
     }
 
-    public static <T> int getDataValue(Effect effect, T data) {
+    public static <T> void addGenericOptions(ParticleEffect.Builder builder, Effect effect, T data) {
         switch (effect) {
             case POTION_BREAK:
-                return ((Potion) data).toDamageValue() & Integer.parseInt("111111", 2);
-            case RECORD_PLAY:
+                builder.option(ParticleOptions.POTION_EFFECT_TYPE, PotionEffectTypeConverter.of(((Potion) data).getType().getEffectType()));
+                break;
+            /*case RECORD_PLAY: //TODO
                 if (((Material) data).isRecord()) {
                     return ((Material) data).getId();
                 } else {
                     throw new IllegalArgumentException("Data must be a record type!");
-                }
+                }*/
             case SMOKE:
-                switch ((BlockFace) data) {
-                    case UP:
-                        return 0;
-                    case DOWN:
-                        return 0;
-                    case SOUTH_EAST:
-                        return 0;
-                    case SOUTH_SOUTH_EAST:
-                        return 0;
-                    case SOUTH:
-                        return 1;
-                    case SOUTH_SOUTH_WEST:
-                        return 1;
-                    case SOUTH_WEST:
-                        return 2;
-                    case WEST_SOUTH_WEST:
-                        return 2;
-                    case EAST:
-                        return 3;
-                    case EAST_SOUTH_EAST:
-                        return 3;
-                    case SELF:
-                        return 4;
-                    case WEST:
-                        return 5;
-                    case WEST_NORTH_WEST:
-                        return 5;
-                    case NORTH_EAST:
-                        return 6;
-                    case EAST_NORTH_EAST:
-                        return 6;
-                    case NORTH:
-                        return 7;
-                    case NORTH_NORTH_EAST:
-                        return 7;
-                    case NORTH_WEST:
-                        return 8;
-                    case NORTH_NORTH_WEST:
-                        return 8;
-                    default:
-                        throw new IllegalArgumentException("Invalid smoke direction!");
+                builder.option(ParticleOptions.DIRECTION, DirectionConverter.of(((BlockFace) data)));
+                break;
+            case VILLAGER_PLANT_GROW:
+                builder.option(ParticleOptions.QUANTITY, (Integer) data);
+                break;
+            case STEP_SOUND:
+                builder.option(ParticleOptions.ITEM_STACK_SNAPSHOT, MaterialConverter.asItem(((Material)data)).getTemplate());
+                break;
+            default :
+                break;
+        }
+    }
+
+    public static void addIntegerOptions(ParticleEffect.Builder builder,Effect effect, int data) {
+        switch (effect) {
+            case POTION_BREAK:
+                builder.option(ParticleOptions.POTION_EFFECT_TYPE, (org.spongepowered.api.effect.potion.PotionEffectType) PotionType.REGISTRY.getObjectById(data).getEffects().get(0).getPotion());
+                break;
+            /*case RECORD_PLAY: //TODO
+                if (((Material) data).isRecord()) {
+                    return ((Material) data).getId();
+                } else {
+                    throw new IllegalArgumentException("Data must be a record type!");
+                }*/
+            case SMOKE:
+                Direction direction;
+                switch (data) {
+                    case 0:
+                        direction = Direction.SOUTHEAST;
+                        break;
+                    case 1:
+                        direction = Direction.SOUTH;
+                        break;
+                    case 2:
+                        direction = Direction.SOUTHWEST;
+                        break;
+                    case 3:
+                        direction = Direction.EAST;
+                        break;
+                    case 5:
+                        direction = Direction.WEST;
+                        break;
+                    case 6:
+                        direction = Direction.NORTHEAST;
+                        break;
+                    case 7:
+                        direction = Direction.NORTH;
+                        break;
+                    case 8:
+                        direction = Direction.NORTHWEST;
+                        break;
+                    default: // this maps to 4
+                        direction = Direction.NONE;
+                        break;
                 }
+                builder.option(ParticleOptions.DIRECTION, direction);
+                break;
+            case VILLAGER_PLANT_GROW:
+                builder.option(ParticleOptions.QUANTITY, data);
+                break;
+            case STEP_SOUND:
+                builder.option(ParticleOptions.ITEM_STACK_SNAPSHOT, MaterialConverter.asItem(Material.getMaterial(data)).getTemplate());
+                break;
             default:
-                return 0;
+                break;
         }
     }
 
