@@ -39,4 +39,19 @@ public abstract class PoreWrapper<T> {
     public T getHandle() {
         return handle;
     }
+
+    @Override // for storage of objects
+    public int hashCode() {
+        return getHandle().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof PoreWrapper) {
+            return ((PoreWrapper<?>) object)
+                    .getHandle()
+                    .equals(this.getHandle());
+        }
+        return super.equals(object);
+    }
 }
