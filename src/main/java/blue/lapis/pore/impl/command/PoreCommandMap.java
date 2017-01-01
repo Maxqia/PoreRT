@@ -1,38 +1,34 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.command;
 
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.command.PoreCommandCallable;
+import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -45,10 +41,10 @@ import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.plugin.PluginContainer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,31 +64,37 @@ public class PoreCommandMap extends SimpleCommandMap {
     @Override
     public boolean register(String label, String fallbackPrefix, Command command) {
         // TODO: Fallback prefix
-
         Object plugin = Pore.getPlugin();
         if (command instanceof PluginIdentifiableCommand) {
             plugin = Pore.getPlugin(((PluginIdentifiableCommand) command).getPlugin());
         }
 
-        HashSet<String> aliases = Sets.newHashSet(command.getAliases()); // using hashset to remove duplicates
-        String name = command.getName();
-        if (!name.equals(label)) {
-            aliases.add(label);
-        }
-        aliases.add(name);
+        boolean registered = registerCommand(label, false, command, plugin);
 
-        Optional<CommandMapping> result = handle.register(plugin, new PoreCommandCallable(command, label),
-                aliases.toArray(new String[aliases.size()]));
-        if (result.isPresent()) { // Test if the aliases are in use
-            handle.removeMapping(result.get());
-            for (String alias : aliases) {
-                handle.register(plugin, new PoreCommandCallable(command, alias), alias);
-            }
-            command.register(this);
-            return true;
-        } else {
-            return false;
+        Iterator<String> iter = command.getAliases().iterator();
+        while (iter.hasNext()) {
+            if (!registerCommand(iter.next(), true, command, plugin))
+                iter.remove();
         }
+
+        command.setLabel((!registered ? fallbackPrefix + ":" : "")+ label);
+        command.register(this);
+        return registered;
+    }
+
+    private boolean registerCommand(String label, boolean isAlias, Command command, Object plugin) {
+        Optional<? extends CommandMapping> optMapping = handle.get(label);
+        if (optMapping.isPresent()) {
+            if (isAlias) return false;
+
+            CommandMapping mapping = optMapping.get();
+            if (mapping.getPrimaryAlias().equals(label)) return false;
+
+            Optional<PluginContainer> optPlugin = handle.getOwner(mapping);
+            if (optPlugin.isPresent() && optPlugin.get().equals(plugin)) return false;
+        }
+        handle.register(plugin, new PoreCommandCallable(command, label), label);
+        return true;
     }
 
     @Override
@@ -128,14 +130,8 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
-        try {
-            CommandResult result = handle.process((CommandSource) sender.getClass()
-                    .getMethod("getHandle").invoke(sender), commandLine);
-            return result.getSuccessCount().isPresent() && result.getSuccessCount().get() > 0;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
-            throw new CommandException(e.getMessage());
-        }
+        CommandResult result = handle.process((CommandSource) ((PoreWrapper<?>)sender).getHandle(), commandLine);
+        return result.getSuccessCount().isPresent() && result.getSuccessCount().get() > 0;
     }
 
     @Override
