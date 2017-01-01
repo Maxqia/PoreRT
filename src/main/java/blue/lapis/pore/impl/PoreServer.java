@@ -575,8 +575,8 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public void resetRecipes() {
-        throw new NotImplementedException("TODO");
-    }
+        //throw new NotImplementedException("TODO");
+    } // commented for ProtocolSupport
 
     @Override
     public Map<String, String[]> getCommandAliases() {
