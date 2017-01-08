@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.scoreboard;
@@ -30,6 +26,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.converter.type.scoreboard.NameTagVisibilityConverter;
+import blue.lapis.pore.converter.type.scoreboard.OptionStatusConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
@@ -38,7 +35,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
@@ -75,7 +71,7 @@ public class PoreTeam extends PoreWrapper<Team> implements org.bukkit.scoreboard
     @Override
     public void setDisplayName(String displayName) throws IllegalStateException, IllegalArgumentException {
         checkState();
-        checkArgument(displayName.length() > MAX_NAME_LENGTH,
+        checkArgument(displayName.length() < MAX_NAME_LENGTH, // kind of unnecessary because Sponge does this for us (ik, it breaks my head too)
                 "Display name must not be longer than " + MAX_NAME_LENGTH + " characters");
         getHandle().setDisplayName(PoreText.convert(displayName));
     }
@@ -231,14 +227,35 @@ public class PoreTeam extends PoreWrapper<Team> implements org.bukkit.scoreboard
 
     @Override
     public OptionStatus getOption(Option option) throws IllegalStateException {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        switch(option) {
+            case COLLISION_RULE:
+                return OptionStatusConverter.of(getHandle().getCollisionRule());
+            case DEATH_MESSAGE_VISIBILITY:
+                return OptionStatusConverter.of(getHandle().getDeathMessageVisibility());
+            case NAME_TAG_VISIBILITY:
+                return OptionStatusConverter.of(getHandle().getNameTagVisibility());
+            default:
+                throw new IllegalStateException("Unknown Option");
+
+        }
     }
 
     @Override
     public void setOption(Option option, OptionStatus status) throws IllegalStateException {
-        // TODO Auto-generated method stub
-        throw new NotImplementedException("TODO");
+        switch(option) {
+            case COLLISION_RULE:
+                getHandle().setCollisionRule(OptionStatusConverter.ofCollision(status));
+                break;
+            case DEATH_MESSAGE_VISIBILITY:
+                getHandle().setDeathMessageVisibility(OptionStatusConverter.ofVisibility(status));
+                break;
+            case NAME_TAG_VISIBILITY:
+                getHandle().setNameTagVisibility(OptionStatusConverter.ofVisibility(status));
+                break;
+            default:
+                throw new IllegalStateException("Unknown Option");
+
+        }
     }
 
 }
