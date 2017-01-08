@@ -1,27 +1,23 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.scoreboard;
@@ -42,6 +38,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Team;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.critieria.Criterion;
 import org.spongepowered.api.scoreboard.objective.Objective;
@@ -64,17 +61,20 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
     public org.bukkit.scoreboard.Objective registerNewObjective(String name, String criteria)
             throws IllegalArgumentException {
         checkArgument(name != null, "Name must not be null");
+        checkArgument(criteria != null, "Criteria must not be null");
         Objective.Builder builder = Objective.builder();
         //noinspection ConstantConditions
         builder.name(name);
-        if (criteria != null) {
-            //TODO: no idea whether this is right
-            Optional<Criterion> criterion = Pore.getGame().getRegistry().getType(Criterion.class, criteria);
-            if (criterion.isPresent()) {
-                builder.criterion(criterion.get());
-            }
-        }
-        return PoreObjective.of(builder.build());
+        builder.displayName(PoreText.convert(name)); // TODO remove when Sponge bug is fixed
+
+        Optional<Criterion> criterion = Pore.getGame().getRegistry().getType(Criterion.class, criteria);
+        checkArgument(criterion.isPresent(), "Invalid Criteria");
+        builder.criterion(criterion.get());
+
+
+        Objective finalObjective = builder.build();
+        getHandle().addObjective(finalObjective); // throws IllegalArgumentException for duplicate name
+        return PoreObjective.of(finalObjective);
     }
 
     @Override
@@ -87,7 +87,6 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
     public Set<org.bukkit.scoreboard.Objective> getObjectivesByCriteria(String criteria)
             throws IllegalArgumentException {
         checkArgument(criteria != null, "Criterion must not be null");
-        //TODO: no idea whether this is right
         Optional<Criterion> c = Pore.getGame().getRegistry().getType(Criterion.class, criteria);
         checkArgument(c.isPresent(), "Invalid criterion");
         return Sets.newHashSet(Collections2.transform(getHandle().getObjectivesByCriteria(c.get()),
@@ -181,7 +180,7 @@ public class PoreScoreboard extends PoreWrapper<Scoreboard> implements org.bukki
     }
 
     @Override
-    public Set<String> getEntries() {
+    public Set<String> getEntries() { // dunno what entries are ...
         throw new NotImplementedException("TODO");
     }
 

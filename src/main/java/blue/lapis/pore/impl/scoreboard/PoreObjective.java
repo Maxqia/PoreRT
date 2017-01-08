@@ -1,51 +1,53 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
+
 
 package blue.lapis.pore.impl.scoreboard;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import blue.lapis.pore.converter.type.scoreboard.DisplaySlotConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.util.PoreText;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.NotImplementedException;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.ServerScoreboard;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
+import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.critieria.Criteria;
 import org.spongepowered.api.scoreboard.objective.Objective;
+import org.spongepowered.common.registry.type.scoreboard.DisplaySlotRegistryModule;
+import org.spongepowered.common.scoreboard.SpongeObjective;
 
 public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.scoreboard.Objective {
 
     public static PoreObjective of(Objective handle) {
         return WrapperConverter.of(PoreObjective.class, handle);
     }
+
 
     protected PoreObjective(Objective handle) {
         super(handle);
@@ -84,7 +86,7 @@ public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.
     }
 
     @Override
-    public Scoreboard getScoreboard() {
+    public org.bukkit.scoreboard.Scoreboard getScoreboard() {
         //TODO: eh, this might be screwy because Bukkit doesn't account for multiple parents
         return PoreScoreboard.of(
                 (org.spongepowered.api.scoreboard.Scoreboard) getHandle().getScoreboards().toArray()[0]
@@ -103,14 +105,22 @@ public class PoreObjective extends PoreWrapper<Objective> implements org.bukkit.
     public DisplaySlot getDisplaySlot() throws IllegalStateException {
         // I genuinely have no idea why this isn't implemented in SpongeAPI
         checkState();
-        throw new NotImplementedException("TODO");
+        ServerScoreboard board = (ServerScoreboard) ((PoreScoreboard)this.getScoreboard()).getHandle();
+        int slotIndex = board.getObjectiveDisplaySlotCount(((SpongeObjective) getHandle()).getObjectiveFor(board));
+        return DisplaySlotConverter.of(DisplaySlotRegistryModule.getInstance().getForIndex(slotIndex).get());
     }
 
     @Override
     public void setDisplaySlot(DisplaySlot slot) throws IllegalStateException {
         // same goes for this one
         checkState();
-        throw new NotImplementedException("TODO");
+        Scoreboard board = ((PoreScoreboard)this.getScoreboard()).getHandle();
+        ServerScoreboard mcBoard = (ServerScoreboard) board;
+        ScoreObjective objective = ((SpongeObjective) getHandle()).getObjectiveFor(mcBoard);
+
+        int slotIndex = mcBoard.getObjectiveDisplaySlotCount(objective);
+        mcBoard.setObjectiveInDisplaySlot(slotIndex, null);
+        board.updateDisplaySlot(getHandle(), DisplaySlotConverter.of(slot));
     }
 
     @Override

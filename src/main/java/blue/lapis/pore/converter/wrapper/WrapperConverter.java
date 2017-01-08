@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -149,6 +149,8 @@ import blue.lapis.pore.impl.entity.minecart.PoreStorageMinecart;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PorePlayerInventory;
+import blue.lapis.pore.impl.scoreboard.PoreObjective;
+import blue.lapis.pore.impl.scoreboard.PoreScore;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboardManager;
 import blue.lapis.pore.impl.scoreboard.PoreTeam;
@@ -281,8 +283,10 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.network.status.Favicon;
+import org.spongepowered.api.scoreboard.Score;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.Team;
+import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -446,7 +450,9 @@ public final class WrapperConverter {
 
             .register(Scoreboard.Builder.class, PoreScoreboardManager.class)
             .register(Scoreboard.class, PoreScoreboard.class)
+            .register(Objective.class, PoreObjective.class)
             .register(Team.class, PoreTeam.class)
+            .register(Score.class, PoreScore.class)
 
             .register(Carrier.class, PoreInventoryHolder.class)
 
@@ -461,7 +467,7 @@ public final class WrapperConverter {
         return converter.get(handle);
     }
 
-    public static <P extends PoreWrapper<?>> P of(Class<P> type, Object handle) {
+    public static <P extends PoreWrapper<?>> P of(Class<?> type, Object handle) {
         return converter.get(type, handle);
     }
 
