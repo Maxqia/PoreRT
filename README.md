@@ -29,7 +29,7 @@ Gradle is used to handle dependencies.
 
 - Clone the repo: `git clone https://github.com/Maxqia/PoreRT.git`
 - Navigate to the new directory: `cd PoreRT`
-- Update the Submodules 'git submodule update --init --recursive'
+- Update the Submodules `git submodule update --init --recursive`
 - Compile the project using the Gradle wrapper: `./gradlew` (`gradlew` on Windows)
 
 ## Running
