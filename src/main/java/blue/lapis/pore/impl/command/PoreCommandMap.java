@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -24,12 +24,14 @@ package blue.lapis.pore.impl.command;
 
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.command.PoreCommandCallable;
+import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.util.PoreWrapper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -135,9 +137,8 @@ public class PoreCommandMap extends SimpleCommandMap {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String cmdLine) {
-        // TODO: Better target position?
-        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, null);
+    public List<String> tabComplete(CommandSender sender, String cmdLine, Location location) {
+        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, location == null ? null : LocationConverter.of(location));
     }
 
     @Override
