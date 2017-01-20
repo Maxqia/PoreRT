@@ -28,6 +28,7 @@ package blue.lapis.pore.impl.inventory;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.inventory.AnvilInventory;
 import org.spongepowered.api.item.inventory.Inventory;
 
@@ -41,4 +42,19 @@ public class PoreAnvilInventory extends PoreInventory implements AnvilInventory 
         super(handle);
     }
 
+
+    @Override
+    public String getRenameText() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public int getRepairCost() {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public void setRepairCost(int levels) {
+        throw new NotImplementedException("TODO");
+    }
 }
