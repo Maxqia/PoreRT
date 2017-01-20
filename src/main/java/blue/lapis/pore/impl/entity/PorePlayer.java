@@ -879,6 +879,11 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     }
 
     @Override
+    public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        getHandle().sendTitle(Title.of(PoreText.convert(title), PoreText.convert(subtitle))); // TODO: fadeIn, stay and fadeOut
+    }
+
+    @Override
     public void resetTitle() {
         getHandle().resetTitle();
     }
