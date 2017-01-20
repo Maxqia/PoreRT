@@ -24,7 +24,7 @@ buildscript {
 
 // Apply Gradle plugins
 plugins {
-    id 'org.spongepowered.plugin' version '0.8'
+    id 'org.spongepowered.plugin' version '0.8.1'
     //id 'checkstyle'
 
     //id 'net.minecrell.gitpatcher' version '0.8'
@@ -124,7 +124,7 @@ configurations {
 // Project dependencies
 dependencies {
     compile project(':ap')
-    compile("org.spongepowered:mixin:0.6.1-SNAPSHOT")
+    compile("org.spongepowered:mixin:0.6.4-SNAPSHOT")
 
     // To update, go to https://repo.spongepowered.org/maven/org/spongepowered/spongeapi/2.1-SNAPSHOT/
     // Then pick latest version (or whatever version you want)
