@@ -60,6 +60,11 @@ public final class PoreBrewEvent extends BrewEvent implements PoreEvent<BrewingE
     }
 
     @Override
+    public int getFuelLevel() {
+        return getContents().getFuel().getAmount();
+    }
+
+    @Override
     public boolean isCancelled() {
         return this.getHandle().isCancelled();
     }
