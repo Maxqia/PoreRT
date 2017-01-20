@@ -177,26 +177,19 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public void setPlayerListName(String name) {
         Optional<TabListEntry> info = this.getHandle().getTabList().getEntry(this.getUniqueId());
-        if (info.isPresent()) {
-            info.get().setDisplayName(PoreText.convert(name));
-        }
+	    info.ifPresent(tabListEntry -> tabListEntry.setDisplayName(PoreText.convert(name)));
     }
 
     @Override
     public Location getCompassTarget() {
         Optional<TargetedLocationData> data = getHandle().get(TargetedLocationData.class);
-        if (data.isPresent()) {
-            return LocationConverter.fromVector3d(getHandle().getWorld(), data.get().target().get());
-        }
-        return null;
+	    return data.map(targetedLocationData -> LocationConverter.fromVector3d(getHandle().getWorld(), targetedLocationData.target().get())).orElse(null);
     }
 
     @Override
     public void setCompassTarget(Location loc) {
         Optional<TargetedLocationData> data = getHandle().getOrCreate(TargetedLocationData.class);
-        if (data.isPresent()) {
-           data.get().target().set(LocationConverter.of(loc).getPosition());
-        }
+	    data.ifPresent(targetedLocationData -> targetedLocationData.target().set(LocationConverter.of(loc).getPosition()));
     }
 
     @Override
@@ -511,7 +504,7 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
         checkNotNull(statistic, "Statistic must not be null");
         checkState(statistic.getType() == Statistic.Type.ENTITY,
                 "Statistic " + statistic.name() + " cannot accept an Entity parameter");
-        StatisticType type = StatisticConverter.of(statistic).getType();;
+        StatisticType type = StatisticConverter.of(statistic).getType();
         Optional<EntityStatistic> stat =
                 Pore.getGame().getRegistry().getEntityStatistic(type, EntityConverter.of(entityType));
         if (!stat.isPresent()) {
