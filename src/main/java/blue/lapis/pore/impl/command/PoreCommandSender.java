@@ -32,6 +32,9 @@ import org.bukkit.command.CommandSender;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
 
+/**
+ * @see PorePermissable
+ */
 public class PoreCommandSender extends PorePermissible implements CommandSender {
 
     public static CommandSender of(CommandSource source) {
@@ -42,14 +45,21 @@ public class PoreCommandSender extends PorePermissible implements CommandSender 
         super(handle);
     }
 
-    @Override
-    public CommandSource getHandle() {
-        return (CommandSource) super.getHandle();
+    protected PoreCommandSender(Object handle) {
+        super(handle);
+    }
+
+    private boolean isSource() {
+        return getHandle() instanceof CommandSource;
+    }
+
+    private CommandSource getSource() {
+        return (CommandSource) getHandle();
     }
 
     @Override
     public String getName() {
-        return getHandle().getName();
+        return isSource() ? getSource().getName() : null;
     }
 
     @Override
@@ -59,16 +69,18 @@ public class PoreCommandSender extends PorePermissible implements CommandSender 
 
     @Override
     public void sendMessage(String message) {
-        getHandle().sendMessage(PoreText.convert(message));
+        if (isSource()) getSource().sendMessage(PoreText.convert(message));
     }
 
     @Override
     public void sendMessage(String[] messages) {
-        Text[] texts = new Text[messages.length];
-        for (int i = 0; i < messages.length; i++) {
-            texts[i] = PoreText.convert(messages[i]);
+        if (isSource()) {
+            Text[] texts = new Text[messages.length];
+            for (int i = 0; i < messages.length; i++) {
+                texts[i] = PoreText.convert(messages[i]);
+            }
+            getSource().sendMessages(texts);
         }
-        this.getHandle().sendMessages(texts);
     }
 
 }

@@ -149,6 +149,7 @@ import blue.lapis.pore.impl.entity.minecart.PoreStorageMinecart;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PorePlayerInventory;
+import blue.lapis.pore.impl.permissions.PorePermissible;
 import blue.lapis.pore.impl.scoreboard.PoreObjective;
 import blue.lapis.pore.impl.scoreboard.PoreScore;
 import blue.lapis.pore.impl.scoreboard.PoreScoreboard;
@@ -287,6 +288,7 @@ import org.spongepowered.api.scoreboard.Score;
 import org.spongepowered.api.scoreboard.Scoreboard;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.scoreboard.objective.Objective;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -444,6 +446,7 @@ public final class WrapperConverter {
             .register(World.class, PoreWorld.class)
 
             .register(Tamer.class, PoreAnimalTamer.class)
+            .register(Subject.class, PorePermissible.class)
             .register(CommandSource.class, PoreCommandSender.class)
                 .register(CommandBlockSource.class, PoreBlockCommandSender.class)
                 .register(ConsoleSource.class, PoreConsoleCommandSender.class)

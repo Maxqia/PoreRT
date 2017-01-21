@@ -132,13 +132,13 @@ public class PoreCommandMap extends SimpleCommandMap {
 
     @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
-        CommandResult result = handle.process((CommandSource) ((PoreWrapper<?>)sender).getHandle(), commandLine);
+        CommandResult result = handle.process((CommandSource) ((PoreWrapper<?>) sender).getHandle(), commandLine);
         return result.getSuccessCount().isPresent() && result.getSuccessCount().get() > 0;
     }
 
     @Override
     public List<String> tabComplete(CommandSender sender, String cmdLine, Location location) {
-        return handle.getSuggestions(((PoreCommandSender) sender).getHandle(), cmdLine, location == null ? null : LocationConverter.of(location));
+        return handle.getSuggestions((CommandSource) ((PoreWrapper<?>) sender).getHandle(), cmdLine, location == null ? null : LocationConverter.of(location));
     }
 
     @Override
