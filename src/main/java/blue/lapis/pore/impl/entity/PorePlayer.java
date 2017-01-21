@@ -177,19 +177,19 @@ public class PorePlayer extends PoreHumanEntity implements org.bukkit.entity.Pla
     @Override
     public void setPlayerListName(String name) {
         Optional<TabListEntry> info = this.getHandle().getTabList().getEntry(this.getUniqueId());
-	    info.ifPresent(tabListEntry -> tabListEntry.setDisplayName(PoreText.convert(name)));
+        info.ifPresent(tabListEntry -> tabListEntry.setDisplayName(PoreText.convert(name)));
     }
 
     @Override
     public Location getCompassTarget() {
         Optional<TargetedLocationData> data = getHandle().get(TargetedLocationData.class);
-	    return data.map(targetedLocationData -> LocationConverter.fromVector3d(getHandle().getWorld(), targetedLocationData.target().get())).orElse(null);
+        return data.map(targetedLocationData -> LocationConverter.fromVector3d(getHandle().getWorld(), targetedLocationData.target().get())).orElse(null);
     }
 
     @Override
     public void setCompassTarget(Location loc) {
         Optional<TargetedLocationData> data = getHandle().getOrCreate(TargetedLocationData.class);
-	    data.ifPresent(targetedLocationData -> targetedLocationData.target().set(LocationConverter.of(loc).getPosition()));
+        data.ifPresent(targetedLocationData -> targetedLocationData.target().set(LocationConverter.of(loc).getPosition()));
     }
 
     @Override
