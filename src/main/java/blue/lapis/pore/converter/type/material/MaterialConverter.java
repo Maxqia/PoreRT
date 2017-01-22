@@ -134,8 +134,8 @@ public final class MaterialConverter {
                     .add(Material.RED_NETHER_BRICK, BlockTypes.RED_NETHER_BRICK)
                     .add(Material.BONE_BLOCK, BlockTypes.BONE_BLOCK)
                     .add(Material.STRUCTURE_VOID, BlockTypes.STRUCTURE_VOID)
-                    //.add(Material.OBSERVER, BlockTypes.)
-                    //.add(Material.WHITE_SHULKER_BOX, BlockTypes.)
+                    .add(Material.OBSERVER, BlockTypes.OBSERVER)
+                    .add(Material.WHITE_SHULKER_BOX, BlockTypes.WHITE_SHULKER_BOX)
                     .add(Material.STRUCTURE_BLOCK, BlockTypes.STRUCTURE_BLOCK)
                     // Item Separator
                     .add(Material.LADDER, BlockTypes.LADDER)
@@ -642,8 +642,8 @@ public final class MaterialConverter {
                     .add(Material.BOAT_JUNGLE, ItemTypes.JUNGLE_BOAT)
                     .add(Material.BOAT_ACACIA, ItemTypes.ACACIA_BOAT)
                     .add(Material.BOAT_DARK_OAK,ItemTypes.DARK_OAK_BOAT)
-                    //.add(Material.TOTEM, ItemTypes.)
-                    //.add(Material.SHULKER_SHELL, ItemTypes.)
+                    .add(Material.TOTEM, ItemTypes.TOTEM_OF_UNDYING)
+                    .add(Material.SHULKER_SHELL, ItemTypes.SHULKER_SHELL)
                     .add(Material.GOLD_RECORD, ItemTypes.RECORD_13)
                     .add(Material.GREEN_RECORD, ItemTypes.RECORD_CAT)
                     .add(Material.RECORD_3, ItemTypes.RECORD_BLOCKS)
@@ -656,6 +656,7 @@ public final class MaterialConverter {
                     .add(Material.RECORD_10, ItemTypes.RECORD_WARD)
                     .add(Material.RECORD_11, ItemTypes.RECORD_11)
                     .add(Material.RECORD_12, ItemTypes.RECORD_WAIT)
+                    .add(Material.IRON_NUGGET, ItemTypes.IRON_NUGGET)
                     .build();
 
     public static ItemType asItem(Material material) {
@@ -677,7 +678,7 @@ public final class MaterialConverter {
         BLOCK_TYPE_CONVERTER.add(material, type);
 
         Optional<ItemType> itemType = type.getItem();
-        if (itemType.isPresent()) ITEM_TYPE_CONVERTER.add(material, itemType.get());
+        itemType.ifPresent(itemType1 -> ITEM_TYPE_CONVERTER.add(material, itemType1));
         return material;
     }
 
