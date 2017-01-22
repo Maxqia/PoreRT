@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
