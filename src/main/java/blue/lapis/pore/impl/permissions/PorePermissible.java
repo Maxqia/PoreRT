@@ -23,7 +23,6 @@
 package blue.lapis.pore.impl.permissions;
 
 import blue.lapis.pore.Pore;
-import blue.lapis.pore.impl.scheduler.PoreBukkitScheduler;
 import blue.lapis.pore.util.PoreWrapper;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -38,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 // We extend PoreWrapper<Object> here because Entity is permissable, while sponge's isn't
 public class PorePermissible extends PoreWrapper<Object> implements Permissible {
@@ -128,9 +126,9 @@ public class PorePermissible extends PoreWrapper<Object> implements Permissible 
     public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         final PermissionAttachment attachment = new PermissionAttachment(plugin, this);
         attachments.add(attachment);
-        if (ticks != -1) {
+        if (ticks > 0) {
             Pore.getGame().getScheduler().createTaskBuilder()
-                    .delay(PoreBukkitScheduler.ticksToMillis(ticks), TimeUnit.MILLISECONDS)
+                    .delayTicks(ticks)
                     .execute(() -> removeAttachment(attachment)).submit(Pore.getPlugin());
         }
         recalculatePermissions();
