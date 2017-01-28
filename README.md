@@ -1,7 +1,7 @@
 # Pore Returned [![Build Status](https://jenkins.maxqia.com/job/PoreRT/badge/icon)](https://jenkins.maxqia.com/job/PoreRT/)
 
 Pore was a plugin for the up-and-coming SpongeAPI built to provide compatibility for Bukkit plugins on the platform.
-This is a continuation of Pore to add more features and update it for 1.10 (and beyond hopefully).
+This is a continuation of Pore to add more features and update it for 1.11 (and beyond hopefully).
 Please note that this project is still under heavy development and **is not yet considered functional**.  The [statuses of plugins](https://github.com/Maxqia/PoreRT/wiki/Statuses-of-Plugins) wiki page has the statuses of some of the plugins I've tested. If you have a plugin that you would like to be supported and currently doesn't work correctly, please file an issue [here](https://github.com/Maxqia/PoreRT/issues).
 
 ## Running PoreRT on Your Sponge Server
@@ -57,10 +57,6 @@ profile.
 4. In the `Processor FQ Name` pane, click the `Add` button and enter the following:
 `blue.lapis.pore.event.EventProcessor`
 5. Click `Apply`. The processor will be run when the project is rebuilt (`Build`->`Rebuild Project`).
-
-## Questions?
-
-Have an issue or a question about PoreRT? No problem! Feel free to ask in #lapis on EsperNet.
 
 ## Licensing
 
