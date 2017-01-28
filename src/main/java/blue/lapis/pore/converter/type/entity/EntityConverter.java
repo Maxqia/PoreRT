@@ -122,7 +122,10 @@ public final class EntityConverter {
     }
 
     public static org.bukkit.entity.EntityType of(org.spongepowered.api.entity.EntityType entityType) {
-        EntityType bukkitType = CONVERTER.reverse().convert(entityType);
-        return bukkitType != null ? bukkitType : EntityType.UNKNOWN;
+        try {
+            return CONVERTER.reverse().convert(entityType);
+        } catch (UnsupportedOperationException e) {
+            return EntityType.UNKNOWN;
+        }
     }
 }
