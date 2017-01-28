@@ -22,6 +22,7 @@
 
 package blue.lapis.pore.converter.wrapper;
 
+import blue.lapis.pore.converter.wrapper.world.BiomeVolumeWrapper;
 import blue.lapis.pore.impl.PoreChunk;
 import blue.lapis.pore.impl.PoreOfflinePlayer;
 import blue.lapis.pore.impl.PoreWorld;
@@ -146,6 +147,7 @@ import blue.lapis.pore.impl.entity.minecart.PorePoweredMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreRideableMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreSpawnerMinecart;
 import blue.lapis.pore.impl.entity.minecart.PoreStorageMinecart;
+import blue.lapis.pore.impl.generator.PoreChunkData;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreInventoryHolder;
 import blue.lapis.pore.impl.inventory.PorePlayerInventory;
@@ -292,6 +294,8 @@ import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.extent.MutableBiomeVolume;
+import org.spongepowered.api.world.extent.MutableBlockVolume;
 
 public final class WrapperConverter {
 
@@ -444,6 +448,8 @@ public final class WrapperConverter {
             .register(Chunk.class, PoreChunk.class)
             .register(User.class, PoreOfflinePlayer.class)
             .register(World.class, PoreWorld.class)
+            .register(MutableBlockVolume.class, PoreChunkData.class)
+            .register(MutableBiomeVolume.class, BiomeVolumeWrapper.class)
 
             .register(Tamer.class, PoreAnimalTamer.class)
             .register(Subject.class, PorePermissible.class)

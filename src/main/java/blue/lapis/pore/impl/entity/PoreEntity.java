@@ -30,7 +30,6 @@ import blue.lapis.pore.impl.PoreWorld;
 import blue.lapis.pore.impl.command.PoreCommandSender;
 import blue.lapis.pore.impl.metadata.PoreMetadataStore;
 import blue.lapis.pore.util.PoreText;
-import blue.lapis.pore.util.PoreWrapper;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.EntityEffect;

@@ -2,7 +2,6 @@
  * PoreRT - A Bukkit to Sponge Bridge
  *
  * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,36 +19,32 @@
  * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
-
 package blue.lapis.pore.converter.type.world;
 
 import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
-import org.bukkit.WorldType;
-import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.GeneratorTypes;
+import org.bukkit.World;
+import org.spongepowered.api.world.WorldArchetype;
+import org.spongepowered.api.world.WorldArchetypes;
 
-public final class GeneratorTypeConverter {
+public class WorldArchetypeConverter {
 
-    private GeneratorTypeConverter() {
+    private WorldArchetypeConverter() {
     }
 
-    private static final Converter<WorldType, GeneratorType> CONVERTER =
-            TypeConverter.builder(WorldType.class, GeneratorType.class)
-                    .add(WorldType.NORMAL, GeneratorTypes.DEFAULT)
-                    .add(WorldType.FLAT, GeneratorTypes.FLAT)
-                    .add(WorldType.VERSION_1_1, (GeneratorType) net.minecraft.world.WorldType.DEFAULT_1_1) // dunno why this isn't in sponge...
-                    .add(WorldType.LARGE_BIOMES, GeneratorTypes.LARGE_BIOMES)
-                    .add(WorldType.AMPLIFIED, GeneratorTypes.AMPLIFIED)
-                    .add(WorldType.CUSTOMIZED, (GeneratorType) net.minecraft.world.WorldType.CUSTOMIZED) // same with this one
+    private static final Converter<World.Environment, WorldArchetype> CONVERTER =
+            TypeConverter.builder(World.Environment.class, WorldArchetype.class)
+                    .add(World.Environment.NORMAL, WorldArchetypes.OVERWORLD)
+                    .add(World.Environment.NETHER, WorldArchetypes.THE_NETHER)
+                    .add(World.Environment.THE_END, WorldArchetypes.THE_END)
                     .build();
 
-    public static GeneratorType of(WorldType worldType) {
+    public static WorldArchetype of(World.Environment worldType) {
         return CONVERTER.convert(worldType);
     }
 
-    public static WorldType of(GeneratorType dimension) {
+    public static World.Environment of(WorldArchetype dimension) {
         return CONVERTER.reverse().convert(dimension);
     }
 }
