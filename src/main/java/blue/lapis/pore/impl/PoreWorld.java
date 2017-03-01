@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -78,9 +78,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataStore;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Consumer;
 import org.bukkit.util.Vector;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.EntityTypes;
@@ -95,6 +97,7 @@ import org.spongepowered.api.world.extent.Extent;
 import org.spongepowered.api.world.weather.Weathers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -547,12 +550,12 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public boolean getPVP() {
-        throw new NotImplementedException("TODO");
+        return getHandle().getProperties().isPVPEnabled();
     }
 
     @Override
     public void setPVP(boolean pvp) {
-        throw new NotImplementedException("TODO");
+        getHandle().getProperties().setPVPEnabled(pvp);
     }
 
     @Override
@@ -562,12 +565,22 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
 
     @Override
     public void save() {
-        throw new NotImplementedException("TODO");
+        try {
+            getHandle().save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<BlockPopulator> getPopulators() {
         throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public <T extends Entity> T spawn(Location location, Class<T> clazz, Consumer<T> function)
+            throws IllegalArgumentException {
+        return spawn(location, clazz); //TODO: temporary fix
     }
 
     @Override
@@ -581,6 +594,12 @@ public class PoreWorld extends PoreWrapper<World> implements org.bukkit.World {
             throw new IllegalStateException("Spawned entity was not of the appropriate type: "
                     + "Expected " + clazz + ", found " + spawned.getClass());
         }
+    }
+
+    @Override
+    public FallingBlock spawnFallingBlock(Location location, MaterialData data)
+            throws IllegalArgumentException {
+        return spawnFallingBlock(location, null, (byte) 0); //TODO: temporary fix
     }
 
     @Override

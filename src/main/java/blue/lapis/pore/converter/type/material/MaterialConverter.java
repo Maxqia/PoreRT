@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -78,9 +78,9 @@ public final class MaterialConverter {
                     .add(Material.LONG_GRASS, BlockTypes.TALLGRASS)
                     .add(Material.DEAD_BUSH, BlockTypes.DEADBUSH)
                     .add(Material.PISTON_BASE, BlockTypes.PISTON)
-                    .add(Material.PISTON_MOVING_PIECE, BlockTypes.PISTON_HEAD)
-                    .add(Material.WOOL, BlockTypes.WOOL)
                     .add(Material.PISTON_EXTENSION, BlockTypes.PISTON_EXTENSION)
+                    .add(Material.WOOL, BlockTypes.WOOL)
+                    .add(Material.PISTON_MOVING_PIECE, BlockTypes.PISTON_HEAD)
                     .add(Material.YELLOW_FLOWER, BlockTypes.YELLOW_FLOWER)
                     .add(Material.RED_ROSE, BlockTypes.RED_FLOWER)
                     .add(Material.BROWN_MUSHROOM, BlockTypes.BROWN_MUSHROOM)
@@ -134,8 +134,23 @@ public final class MaterialConverter {
                     .add(Material.RED_NETHER_BRICK, BlockTypes.RED_NETHER_BRICK)
                     .add(Material.BONE_BLOCK, BlockTypes.BONE_BLOCK)
                     .add(Material.STRUCTURE_VOID, BlockTypes.STRUCTURE_VOID)
-                    //.add(Material.OBSERVER, BlockTypes.)
-                    //.add(Material.WHITE_SHULKER_BOX, BlockTypes.)
+                    .add(Material.OBSERVER, BlockTypes.OBSERVER)
+                    .add(Material.WHITE_SHULKER_BOX, BlockTypes.WHITE_SHULKER_BOX) // Why Mojang? Why?
+                    .add(Material.ORANGE_SHULKER_BOX, BlockTypes.ORANGE_SHULKER_BOX)
+                    .add(Material.MAGENTA_SHULKER_BOX, BlockTypes.MAGENTA_SHULKER_BOX)
+                    .add(Material.LIGHT_BLUE_SHULKER_BOX, BlockTypes.LIGHT_BLUE_SHULKER_BOX)
+                    .add(Material.YELLOW_SHULKER_BOX, BlockTypes.YELLOW_SHULKER_BOX)
+                    .add(Material.LIME_SHULKER_BOX, BlockTypes.LIME_SHULKER_BOX)
+                    .add(Material.PINK_SHULKER_BOX, BlockTypes.PINK_SHULKER_BOX)
+                    .add(Material.GRAY_SHULKER_BOX, BlockTypes.GRAY_SHULKER_BOX)
+                    .add(Material.SILVER_SHULKER_BOX, BlockTypes.SILVER_SHULKER_BOX)
+                    .add(Material.CYAN_SHULKER_BOX, BlockTypes.CYAN_SHULKER_BOX)
+                    .add(Material.PURPLE_SHULKER_BOX, BlockTypes.PURPLE_SHULKER_BOX)
+                    .add(Material.BLUE_SHULKER_BOX, BlockTypes.BLUE_SHULKER_BOX)
+                    .add(Material.BROWN_SHULKER_BOX, BlockTypes.BROWN_SHULKER_BOX)
+                    .add(Material.GREEN_SHULKER_BOX, BlockTypes.GREEN_SHULKER_BOX)
+                    .add(Material.RED_SHULKER_BOX, BlockTypes.RED_SHULKER_BOX)
+                    .add(Material.BLACK_SHULKER_BOX, BlockTypes.BLACK_SHULKER_BOX)
                     .add(Material.STRUCTURE_BLOCK, BlockTypes.STRUCTURE_BLOCK)
                     // Item Separator
                     .add(Material.LADDER, BlockTypes.LADDER)
@@ -642,8 +657,25 @@ public final class MaterialConverter {
                     .add(Material.BOAT_JUNGLE, ItemTypes.JUNGLE_BOAT)
                     .add(Material.BOAT_ACACIA, ItemTypes.ACACIA_BOAT)
                     .add(Material.BOAT_DARK_OAK,ItemTypes.DARK_OAK_BOAT)
-                    //.add(Material.TOTEM, ItemTypes.)
-                    //.add(Material.SHULKER_SHELL, ItemTypes.)
+                    .add(Material.TOTEM, ItemTypes.TOTEM_OF_UNDYING)
+                    .add(Material.SHULKER_SHELL, ItemTypes.SHULKER_SHELL)
+                    .add(Material.WHITE_SHULKER_BOX, ItemTypes.WHITE_SHULKER_BOX) // Why Mojang? Why?
+                    .add(Material.ORANGE_SHULKER_BOX, ItemTypes.ORANGE_SHULKER_BOX)
+                    .add(Material.MAGENTA_SHULKER_BOX, ItemTypes.MAGENTA_SHULKER_BOX)
+                    .add(Material.LIGHT_BLUE_SHULKER_BOX, ItemTypes.LIGHT_BLUE_SHULKER_BOX)
+                    .add(Material.YELLOW_SHULKER_BOX, ItemTypes.YELLOW_SHULKER_BOX)
+                    .add(Material.LIME_SHULKER_BOX, ItemTypes.LIME_SHULKER_BOX)
+                    .add(Material.PINK_SHULKER_BOX, ItemTypes.PINK_SHULKER_BOX)
+                    .add(Material.GRAY_SHULKER_BOX, ItemTypes.GRAY_SHULKER_BOX)
+                    .add(Material.SILVER_SHULKER_BOX, ItemTypes.SILVER_SHULKER_BOX)
+                    .add(Material.CYAN_SHULKER_BOX, ItemTypes.CYAN_SHULKER_BOX)
+                    .add(Material.PURPLE_SHULKER_BOX, ItemTypes.PURPLE_SHULKER_BOX)
+                    .add(Material.BLUE_SHULKER_BOX, ItemTypes.BLUE_SHULKER_BOX)
+                    .add(Material.BROWN_SHULKER_BOX, ItemTypes.BROWN_SHULKER_BOX)
+                    .add(Material.GREEN_SHULKER_BOX, ItemTypes.GREEN_SHULKER_BOX)
+                    .add(Material.RED_SHULKER_BOX, ItemTypes.RED_SHULKER_BOX)
+                    .add(Material.BLACK_SHULKER_BOX, ItemTypes.BLACK_SHULKER_BOX)
+                    .add(Material.IRON_NUGGET, ItemTypes.IRON_NUGGET)
                     .add(Material.GOLD_RECORD, ItemTypes.RECORD_13)
                     .add(Material.GREEN_RECORD, ItemTypes.RECORD_CAT)
                     .add(Material.RECORD_3, ItemTypes.RECORD_BLOCKS)
@@ -677,7 +709,7 @@ public final class MaterialConverter {
         BLOCK_TYPE_CONVERTER.add(material, type);
 
         Optional<ItemType> itemType = type.getItem();
-        if (itemType.isPresent()) ITEM_TYPE_CONVERTER.add(material, itemType.get());
+        itemType.ifPresent(itemType1 -> ITEM_TYPE_CONVERTER.add(material, itemType1));
         return material;
     }
 
