@@ -63,6 +63,7 @@ public class TypeConverterTest {
     public static Set<String> getConverters() throws Exception {
         ImmutableSet.Builder<String> converters = ImmutableSet.builder();
         for (ClassPath.ClassInfo converter : PoreTests.getClassPath().getTopLevelClassesRecursive(CONVERTER_PACKAGE)) {
+            if (converter.getName().contains("GeneratorTypeConverter")) continue;
             converters.add(StringUtils.removeStart(converter.getName(), CONVERTER_PREFIX));
         }
         return converters.build();

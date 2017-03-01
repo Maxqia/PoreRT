@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -25,11 +25,15 @@ package blue.lapis.pore.impl;
 import blue.lapis.pore.Pore;
 import blue.lapis.pore.PoreVersion;
 import blue.lapis.pore.converter.type.attribute.InventoryTypeConverter;
+import blue.lapis.pore.converter.type.world.GeneratorTypeConverter;
+import blue.lapis.pore.converter.type.world.WorldArchetypeConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
+import blue.lapis.pore.converter.wrapper.world.ChunkGeneratorWrapper;
 import blue.lapis.pore.impl.command.PoreCommandMap;
 import blue.lapis.pore.impl.command.PoreConsoleCommandSender;
 import blue.lapis.pore.impl.enchantments.PoreEnchantment;
 import blue.lapis.pore.impl.entity.PorePlayer;
+import blue.lapis.pore.impl.generator.PoreChunkData;
 import blue.lapis.pore.impl.help.PoreHelpMap;
 import blue.lapis.pore.impl.inventory.PoreInventory;
 import blue.lapis.pore.impl.inventory.PoreItemFactory;
@@ -107,6 +111,8 @@ import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.util.GuavaCollectors;
 import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.world.WorldArchetype;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -476,9 +482,33 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
                 WrapperConverter.<org.spongepowered.api.world.World, PoreWorld>getConverter());
     }
 
+
     @Override
-    public World createWorld(WorldCreator creator) {
-        throw new NotImplementedException("TODO");
+    public ChunkGenerator.ChunkData createChunkData(World world) {
+        return PoreChunkData.of(((PoreWorld) world).getHandle().getRelativeBlockView());
+    }
+
+    @Override
+    public World createWorld(WorldCreator creator) { // todo disabling structures, generator wrapper
+        try {
+            WorldArchetype archetype = WorldArchetype.builder().from(WorldArchetypeConverter.of(creator.environment()))
+                    .generator(GeneratorTypeConverter.of(creator.type())).seed(creator.seed())
+                    .generateSpawnOnLoad(false)
+                    //.generator(type)
+                    .build(creator.name(), creator.name());
+            WorldProperties properties = Pore.getGame().getServer().createWorldProperties(creator.name(), archetype);
+
+            org.spongepowered.api.world.World world = Pore.getGame().getServer().loadWorld(properties).get();
+
+            world.getWorldGenerator().setBaseGenerationPopulator(new ChunkGeneratorWrapper(creator.generator()));
+            world.getProperties().setGenerateSpawnOnLoad(true); // this loads spawn with our generator
+            MinecraftServer.class.getMethod("func_71222_d").invoke(Pore.getGame().getServer()); //initialWorldChunkLoad
+
+            return PoreWorld.of(world);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override
@@ -871,11 +901,6 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
 
     @Override
     public int getIdleTimeout() {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public ChunkGenerator.ChunkData createChunkData(World world) {
         throw new NotImplementedException("TODO");
     }
 

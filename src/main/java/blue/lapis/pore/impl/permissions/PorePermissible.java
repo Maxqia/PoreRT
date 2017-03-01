@@ -1,33 +1,28 @@
 /*
- * Pore(RT)
- * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue>
- * Copyright (c) 2014-2016, Contributors
+ * PoreRT - A Bukkit to Sponge Bridge
  *
- * The MIT License
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
+ * Copyright (c) Contributors
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * An exception applies to this license, see the LICENSE file in the main directory for more information.
  */
 
 package blue.lapis.pore.impl.permissions;
 
 import blue.lapis.pore.Pore;
-import blue.lapis.pore.impl.scheduler.PoreBukkitScheduler;
 import blue.lapis.pore.util.PoreWrapper;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -37,14 +32,14 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.spongepowered.api.service.permission.Subject;
-import org.spongepowered.api.util.Tristate;
-
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
-public class PorePermissible extends PoreWrapper<Subject> implements Permissible {
+// We extend PoreWrapper<Object> here because Entity is permissable, while sponge's isn't
+public class PorePermissible extends PoreWrapper<Object> implements Permissible {
 
     private List<PermissionAttachment> attachments = new ArrayList<>();
 
@@ -52,11 +47,21 @@ public class PorePermissible extends PoreWrapper<Subject> implements Permissible
         super(handle);
     }
 
+    protected PorePermissible(Object handle) {
+        super(handle);
+    }
+
+    private boolean isSubject() {
+        return getHandle() instanceof Subject;
+    }
+
+    private Subject getSubject() {
+        return (Subject) getHandle();
+    }
+
     @Override
     public boolean isOp() {
-        // I'm hesitant to throw an UnsupportedOperationException
-        // because that might break a lot of perms plugins
-        return false;
+        return hasPermission("pore.op"); // Sponge defaults to true for an unknown permission node if you're an op
     }
 
     @Override
@@ -74,7 +79,11 @@ public class PorePermissible extends PoreWrapper<Subject> implements Permissible
 
     @Override
     public boolean isPermissionSet(String name) {
-        return getHandle().getPermissionValue(getHandle().getActiveContexts(), name) != Tristate.UNDEFINED;
+        if (isSubject()) {
+            Subject subject = getSubject();
+            return subject.getPermissionValue(subject.getActiveContexts(), name).asBoolean();
+        }
+        return false;
     }
 
     @Override
@@ -84,7 +93,11 @@ public class PorePermissible extends PoreWrapper<Subject> implements Permissible
 
     @Override
     public boolean hasPermission(String name) {
-        return getHandle().hasPermission(name);
+        if (isSubject()) {
+            Subject subject = getSubject();
+            return subject.hasPermission(name);
+        }
+        return false;
     }
 
     @Override
@@ -104,16 +117,18 @@ public class PorePermissible extends PoreWrapper<Subject> implements Permissible
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, final String name, boolean value, int ticks) {
-        return addAttachment(plugin, ticks);
+        PermissionAttachment attachment = addAttachment(plugin, ticks);
+        attachment.setPermission(name, value);
+        return attachment;
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         final PermissionAttachment attachment = new PermissionAttachment(plugin, this);
         attachments.add(attachment);
-        if (ticks != -1) {
+        if (ticks > 0) {
             Pore.getGame().getScheduler().createTaskBuilder()
-                    .delay(PoreBukkitScheduler.ticksToMillis(ticks), TimeUnit.MILLISECONDS)
+                    .delayTicks(ticks)
                     .execute(() -> removeAttachment(attachment)).submit(Pore.getPlugin());
         }
         recalculatePermissions();
@@ -133,7 +148,13 @@ public class PorePermissible extends PoreWrapper<Subject> implements Permissible
 
     @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        throw new NotImplementedException("TODO");
+        Set<PermissionAttachmentInfo> perms = new HashSet<>();
+        for (PermissionAttachment attachment : attachments) {
+            for (Entry<String, Boolean> entry : attachment.getPermissions().entrySet()) {
+                perms.add(new PermissionAttachmentInfo(this, entry.getKey(), attachment, entry.getValue()));
+            }
+        }
+        return perms;
     }
 
 }

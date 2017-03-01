@@ -45,12 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PoreBukkitScheduler implements BukkitScheduler {
-
-    private static final int MS_PER_TICK = 50;
 
     private static final AtomicInteger id = new AtomicInteger();
 
@@ -72,11 +69,6 @@ public class PoreBukkitScheduler implements BukkitScheduler {
             throw new IllegalPluginAccessException("Plugin attempted to register task while disabled");
         }
     }
-
-    public static long ticksToMillis(long ticks) {
-        return ticks * MS_PER_TICK;
-    }
-
 
     @Override
     public <T> Future<T> callSyncMethod(Plugin plugin, Callable<T> task) {
@@ -146,7 +138,7 @@ public class PoreBukkitScheduler implements BukkitScheduler {
     @Override
     public BukkitTask runTaskLater(Plugin plugin, Runnable task, long delay) throws IllegalArgumentException {
         validate(plugin, task);
-        return register(new PoreBukkitTask(newTask().delay(ticksToMillis(delay), TimeUnit.MILLISECONDS).execute(task)
+        return register(new PoreBukkitTask(newTask().delayTicks(delay).execute(task)
                 .submit(Pore.getPlugin(plugin)), id.incrementAndGet()));
     }
 
@@ -154,7 +146,7 @@ public class PoreBukkitScheduler implements BukkitScheduler {
     public BukkitTask runTaskLaterAsynchronously(Plugin plugin, Runnable task, long delay)
             throws IllegalArgumentException {
         validate(plugin, task);
-        return register(new PoreBukkitTask(newTask().async().delay(ticksToMillis(delay), TimeUnit.MILLISECONDS)
+        return register(new PoreBukkitTask(newTask().async().delayTicks(delay)
                 .execute(task).submit(Pore.getPlugin(plugin)), id.incrementAndGet()));
     }
 
@@ -162,8 +154,8 @@ public class PoreBukkitScheduler implements BukkitScheduler {
     public BukkitTask runTaskTimer(Plugin plugin, Runnable task, long delay, long period)
             throws IllegalArgumentException {
         validate(plugin, task);
-        return register(new PoreBukkitTask(newTask().delay(ticksToMillis(delay), TimeUnit.MILLISECONDS)
-                .interval(ticksToMillis(period), TimeUnit.MILLISECONDS).execute(task)
+        return register(new PoreBukkitTask(newTask().delayTicks(delay)
+                .intervalTicks(period).execute(task)
                 .submit(Pore.getPlugin(plugin)), id.incrementAndGet()));
     }
 
@@ -172,8 +164,7 @@ public class PoreBukkitScheduler implements BukkitScheduler {
             throws IllegalArgumentException {
         validate(plugin, task);
         return register(new PoreBukkitTask(newTask().async()
-                .delay(ticksToMillis(delay), TimeUnit.MILLISECONDS)
-                .interval(ticksToMillis(period), TimeUnit.MILLISECONDS)
+                .delayTicks(delay).intervalTicks(period)
                 .execute(task)
                 .submit(Pore.getPlugin(plugin)), id.incrementAndGet()));
     }

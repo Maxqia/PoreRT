@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -27,11 +27,10 @@ import blue.lapis.pore.converter.vector.LocationConverter;
 import blue.lapis.pore.converter.vector.VectorConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 import blue.lapis.pore.impl.PoreWorld;
+import blue.lapis.pore.impl.command.PoreCommandSender;
 import blue.lapis.pore.impl.metadata.PoreMetadataStore;
 import blue.lapis.pore.util.PoreText;
-import blue.lapis.pore.util.PoreWrapper;
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -42,9 +41,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.MetadataStore;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.spongepowered.api.data.key.Keys;
@@ -60,7 +56,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 //TODO: Determine if metadata methods should be implemented manually
-public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity.Entity {
+public class PoreEntity extends PoreCommandSender implements org.bukkit.entity.Entity {
 
     private static final MetadataStore<org.bukkit.entity.Entity> entityMeta =
             new PoreMetadataStore<org.bukkit.entity.Entity>();
@@ -80,6 +76,11 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
 
     protected PoreEntity(Entity handle) {
         super(handle);
+    }
+
+    @Override
+    public Entity getHandle() {
+        return (Entity) super.getHandle();
     }
 
     public net.minecraft.entity.Entity getMCHandle() {
@@ -200,23 +201,8 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     }
 
     @Override
-    public void sendMessage(String message) {
-        // silently fail
-    }
-
-    @Override
-    public void sendMessage(String[] messages) {
-
-    }
-
-    @Override
     public Server getServer() {
         return Pore.getServer();
-    }
-
-    @Override
-    public String getName() {
-        throw new NotImplementedException("TODO");
     }
 
     @Override
@@ -343,69 +329,6 @@ public class PoreEntity extends PoreWrapper<Entity> implements org.bukkit.entity
     @Override
     public void removeMetadata(String metadataKey, Plugin owningPlugin) {
         entityMeta.removeMetadata(this, metadataKey, owningPlugin);
-    }
-
-    @Override
-    public boolean isPermissionSet(String name) {
-        return false;
-    }
-
-    @Override
-    public boolean isPermissionSet(Permission perm) {
-        return false;
-    }
-
-    @Override
-    public boolean hasPermission(String name) {
-        return false;
-    }
-
-    @Override
-    public boolean hasPermission(Permission perm) {
-        return false;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
-    public void removeAttachment(PermissionAttachment attachment) {
-    }
-
-    @Override
-    public void recalculatePermissions() {
-    }
-
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return ImmutableSet.of();
-    }
-
-    @Override
-    public boolean isOp() {
-        return false;
-    }
-
-    @Override
-    public void setOp(boolean value) {
-        // do nothing
     }
 
     @Override

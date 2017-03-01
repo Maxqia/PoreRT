@@ -1,7 +1,7 @@
 /*
  * PoreRT - A Bukkit to Sponge Bridge
  *
- * Copyright (c) 2016, Maxqia <https://github.com/Maxqia> AGPLv3
+ * Copyright (c) 2016-2017, Maxqia <https://github.com/Maxqia> AGPLv3
  * Copyright (c) 2014-2016, Lapis <https://github.com/LapisBlue> MIT
  * Copyright (c) Contributors
  *
@@ -54,8 +54,13 @@ import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.event.message.MessageEvent.MessageFormatter;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.TextRepresentable;
+import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.transform.SimpleTextTemplateApplier;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -156,7 +161,6 @@ public final class Pore implements PoreEventManager {
         if (optPlayer.isPresent()) { // fire ASyncPlayerChatEvent and PlayerChatEvent
             Player player = optPlayer.get();
             MessageFormatter formatter = event.getFormatter();
-            String message = PoreText.convert(event.getMessage());
 
             SimpleTextTemplateApplier header = formatter.getHeader().get(0);
             String name = PoreText.convert(((TextRepresentable)header.getParameter(MessageEvent.PARAM_MESSAGE_HEADER)).toText());
@@ -178,12 +182,29 @@ public final class Pore implements PoreEventManager {
             PorePlayerChatEvent bukkitEvent =
                     new PorePlayerChatEvent(asyncBukkitEvent);
             Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+            format = bukkitEvent.getFormat();
 
-            String finalMessage = String.format(bukkitEvent.getFormat(),
-                    bukkitEvent.getPlayer().getDisplayName(), bukkitEvent.getMessage());
-            if (!finalMessage.equals(message)) { // texting is hard :(
-                event.setMessage(PoreText.convert(finalMessage));
+            event.getFormatter().getBody().get(0).setParameter(MessageEvent.PARAM_MESSAGE_BODY, PoreText.convert(bukkitEvent.getMessage()));
+            if (!bukkitEvent.getPlayer().getDisplayName().equals(player.getName())) {
+                event.getFormatter().getHeader().get(0).setParameter(MessageEvent.PARAM_MESSAGE_HEADER, PoreText.convert(bukkitEvent.getPlayer().getDisplayName()));
+            }
+
+            if (!format.equals("<%1$s> %2$s")) { // texting is hard :(
+                int bodyLoc = format.indexOf("%2$s");
+                body.setTemplate(replaceString(format.substring(bodyLoc, format.length()), "%2$s", MessageEvent.PARAM_MESSAGE_BODY));
+                header.setTemplate(replaceString(format.substring(0, bodyLoc), "%1$s", MessageEvent.PARAM_MESSAGE_HEADER));
             }
         }
+    }
+
+    private static TextTemplate replaceString(String string, String replace, String arg) {
+        List<String> formatHeader = Arrays.asList(string.split(replace));
+        List<Object> args = new ArrayList<Object>();
+        Iterator<String> iter = formatHeader.iterator();
+        while (iter.hasNext()) {
+            args.add(iter.next());
+            if (iter.hasNext()) args.add(TextTemplate.arg(arg));
+        }
+        return TextTemplate.of(args.toArray());
     }
 }
