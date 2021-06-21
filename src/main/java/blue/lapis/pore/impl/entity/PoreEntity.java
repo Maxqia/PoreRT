@@ -207,21 +207,23 @@ public class PoreEntity extends PoreCommandSender implements org.bukkit.entity.E
 
     @Override
     public org.bukkit.entity.Entity getPassenger() {
-        Entity passenger = null;
+        /*Entity passenger = null;
         Optional<List<EntitySnapshot>> passengers = getHandle().get(Keys.PASSENGERS);
         if (passengers.isPresent()) {
             passengers.get().get(0);
         }
-        return PoreEntity.of(passenger); // TODO : better sorting?
+        return PoreEntity.of(passenger); // TODO : better sorting?*/
+    	throw new NotImplementedException("TODO"); // later apis seems to go back to entities
     }
 
     @Override
     public boolean setPassenger(final org.bukkit.entity.Entity passenger) {
-        if (passenger != null) {
+        /*if (passenger != null) {
             return getHandle().get(Keys.PASSENGERS).get().add(((PoreEntity) passenger).getHandle().createSnapshot());
         } else {
             return getHandle().remove(Keys.PASSENGERS).isSuccessful();
-        }
+        }*/
+    	throw new NotImplementedException("TODO"); // see above
     }
 
     @Override

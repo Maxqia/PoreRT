@@ -55,13 +55,15 @@ public class PoreAbstractHorse extends PoreTameable implements AbstractHorse {
     }
 
     @Override
+    @Deprecated
     public Variant getVariant() {
-        return HorseConverter.of(getHandle().getHorseData().variant().get());
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
+    @Deprecated
     public void setVariant(Variant variant) {
-        getHandle().getHorseData().variant().set(HorseConverter.of(variant));
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override

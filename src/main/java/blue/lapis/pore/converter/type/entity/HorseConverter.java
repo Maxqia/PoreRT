@@ -31,31 +31,10 @@ import org.spongepowered.api.data.type.HorseColor;
 import org.spongepowered.api.data.type.HorseColors;
 import org.spongepowered.api.data.type.HorseStyle;
 import org.spongepowered.api.data.type.HorseStyles;
-import org.spongepowered.api.data.type.HorseVariant;
-import org.spongepowered.api.data.type.HorseVariants;
 
-@SuppressWarnings("deprecation")
 public final class HorseConverter {
 
     private HorseConverter() {
-    }
-
-    private static final Converter<Horse.Variant, HorseVariant> VARIANT_CONVERTER =
-            TypeConverter.builder(Horse.Variant.class, HorseVariant.class)
-                    .add(Horse.Variant.HORSE, HorseVariants.HORSE)
-                    .add(Horse.Variant.DONKEY, HorseVariants.DONKEY)
-                    .add(Horse.Variant.MULE, HorseVariants.MULE)
-                    .add(Horse.Variant.UNDEAD_HORSE, HorseVariants.UNDEAD_HORSE)
-                    .add(Horse.Variant.SKELETON_HORSE, HorseVariants.SKELETON_HORSE)
-                    .add(Horse.Variant.LLAMA, HorseVariants.LLAMA)
-                    .build();
-
-    public static HorseVariant of(Horse.Variant variant) {
-        return VARIANT_CONVERTER.convert(variant);
-    }
-
-    public static Horse.Variant of(HorseVariant variant) {
-        return VARIANT_CONVERTER.reverse().convert(variant);
     }
 
     private static final Converter<Horse.Color, HorseColor> COLOR_CONVERTER =

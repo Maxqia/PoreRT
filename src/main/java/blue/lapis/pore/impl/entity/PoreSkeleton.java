@@ -26,9 +26,9 @@
 
 package blue.lapis.pore.impl.entity;
 
-import blue.lapis.pore.converter.type.entity.SkeletonConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.spongepowered.api.entity.living.monster.Skeleton;
 
@@ -55,11 +55,11 @@ public class PoreSkeleton extends PoreMonster implements org.bukkit.entity.Skele
 
     @Override
     public SkeletonType getSkeletonType() {
-        return SkeletonConverter.of(getHandle().getSkeletonData().type().get());
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
     public void setSkeletonType(SkeletonType type) {
-        getHandle().offer(getHandle().getSkeletonData().type().set(SkeletonConverter.of(type)));
+    	throw new NotImplementedException("Deprecated");
     }
 }

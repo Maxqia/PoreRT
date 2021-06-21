@@ -26,7 +26,7 @@
 
 package blue.lapis.pore.impl.entity;
 
-import static org.spongepowered.api.data.manipulator.catalog.CatalogEntityData.ELDER_DATA;
+import org.apache.commons.lang3.NotImplementedException;
 
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
@@ -54,19 +54,14 @@ public class PoreGuardian extends PoreMonster implements org.bukkit.entity.Guard
     }
 
     @Override
+    @Deprecated
     public boolean isElder() {
-        return hasData(ELDER_DATA);
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
     @Deprecated
     public void setElder(boolean shouldBeElder) {
-        if (shouldBeElder != isElder()) {
-            if (shouldBeElder) {
-                getHandle().offer(getHandle().getOrCreate(ELDER_DATA).get().elder().set(true));
-            } else {
-                getHandle().remove(ELDER_DATA);
-            }
-        }
+    	throw new NotImplementedException("Deprecated");
     }
 }

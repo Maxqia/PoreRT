@@ -71,7 +71,7 @@ public class PoreAgeable extends PoreCreature implements org.bukkit.entity.Ageab
 
     @Override
     public void setBaby() {
-        getHandle().offer(getHandle().getOrCreate(AGEABLE_DATA).get().baby().set(true));
+        getHandle().offer(getHandle().getOrCreate(AGEABLE_DATA).get().adult().set(false));
     }
 
     @Override

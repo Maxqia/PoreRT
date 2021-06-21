@@ -824,7 +824,7 @@ public class PoreServer extends PoreWrapper<org.spongepowered.api.Server> implem
         }
 
         Inventory.Builder inventory = Inventory.builder().property(
-                InventoryDimension.PROPERTY_NAM, new InventoryDimension(9, size / 9));
+                InventoryDimension.PROPERTY_NAME, new InventoryDimension(9, size / 9));
 
         return finalizeInventory(inventory, owner, title);
     }

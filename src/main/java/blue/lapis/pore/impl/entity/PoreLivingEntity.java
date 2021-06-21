@@ -350,21 +350,25 @@ public class PoreLivingEntity extends PoreEntity implements LivingEntity {
 
     @Override
     public boolean isLeashed() {
-        return getHandle().get(Keys.LEASH_HOLDER).isPresent();
+    	//TODO FIXME, reintroduced in later versions
+    	throw new NotImplementedException("FIXME");
+        //return getHandle().get(Keys.LEASH_HOLDER).isPresent();
     }
 
     @Override
     public Entity getLeashHolder() throws IllegalStateException {
-        if (isLeashed()) {
+    	throw new NotImplementedException("FIXME");
+        /*if (isLeashed()) {
             return PoreEntity.of(getHandle().get(Keys.LEASH_HOLDER).get());
         } else {
             throw new IllegalStateException("Not leashed");
-        }
+        }*/
     }
 
     @Override
     public boolean setLeashHolder(Entity holder) {
-        return getHandle().offer(Keys.LEASH_HOLDER, ((PoreEntity) holder).getHandle().createSnapshot()).isSuccessful();
+    	throw new NotImplementedException("FIXME");
+        //return getHandle().offer(Keys.LEASH_HOLDER, ((PoreEntity) holder).getHandle().createSnapshot()).isSuccessful();
     }
 
     @Override

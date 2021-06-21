@@ -26,15 +26,13 @@
 
 package blue.lapis.pore.impl.entity;
 
-import blue.lapis.pore.converter.type.entity.ProfessionConverter;
 import blue.lapis.pore.converter.wrapper.WrapperConverter;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
-import org.spongepowered.api.data.type.ZombieTypes;
 import org.spongepowered.api.entity.living.monster.Zombie;
 
-@SuppressWarnings("deprecation")
 public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie {
 
     public static PoreZombie of(Zombie handle) {
@@ -57,41 +55,35 @@ public class PoreZombie extends PoreMonster implements org.bukkit.entity.Zombie 
 
     @Override
     public boolean isBaby() {
-        return getHandle().getAgeData().baby().get();
+        return getHandle().getAgeData().adult().get();
     }
 
     @Override
     public void setBaby(boolean isBaby) {
-        getHandle().getAgeData().baby().set(isBaby);
+        getHandle().getAgeData().adult().set(!isBaby);
     }
 
     @Override
     @Deprecated
     public boolean isVillager() {
-        return getHandle().getZombieData().type().equals(ZombieTypes.VILLAGER);
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
     @Deprecated
     public void setVillager(boolean isVillager) {
-        if (isVillager != isVillager()) {
-            if (isVillager) {
-                getHandle().getZombieData().type().set(ZombieTypes.VILLAGER);
-            } else {
-                getHandle().getZombieData().type().set(ZombieTypes.NORMAL);
-            }
-        }
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
     @Deprecated
     public void setVillagerProfession(Profession profession) {
-        getHandle().getZombieData().profession().setTo(ProfessionConverter.of(profession));
+    	throw new NotImplementedException("Deprecated");
     }
 
     @Override
     @Deprecated
     public Profession getVillagerProfession() {
-        return ProfessionConverter.of(getHandle().getZombieData().profession().get().orElse(null));
+    	throw new NotImplementedException("Deprecated");
     }
 }
