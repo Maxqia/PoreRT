@@ -30,7 +30,7 @@ import blue.lapis.pore.converter.type.TypeConverter;
 
 import com.google.common.base.Converter;
 import org.bukkit.Statistic;
-import org.spongepowered.api.statistic.StatisticGroups;
+import org.spongepowered.api.statistic.StatisticTypes;
 import org.spongepowered.api.statistic.Statistics;
 
 public final class StatisticConverter {
@@ -44,75 +44,79 @@ public final class StatisticConverter {
                     .add(Statistic.ARMOR_CLEANED, Statistics.ARMOR_CLEANED)
                     .add(Statistic.BANNER_CLEANED, Statistics.BANNER_CLEANED)
                     .add(Statistic.BEACON_INTERACTION, Statistics.BEACON_INTERACTION)
-                    .add(Statistic.BOAT_ONE_CM, Statistics.BOAT_DISTANCE)
+                    .add(Statistic.BOAT_ONE_CM, Statistics.BOAT_ONE_CM)
                     .add(Statistic.BREWINGSTAND_INTERACTION, Statistics.BREWINGSTAND_INTERACTION)
                     .add(Statistic.CAKE_SLICES_EATEN, Statistics.CAKE_SLICES_EATEN)
                     .add(Statistic.CAULDRON_FILLED, Statistics.CAULDRON_FILLED)
                     .add(Statistic.CAULDRON_USED, Statistics.CAULDRON_USED)
                     .add(Statistic.CHEST_OPENED, Statistics.CHEST_OPENED)
-                    .add(Statistic.CLIMB_ONE_CM, Statistics.CLIMB_DISTANCE)
+                    .add(Statistic.CLIMB_ONE_CM, Statistics.CLIMB_ONE_CM)
                     .add(Statistic.CRAFTING_TABLE_INTERACTION, Statistics.CRAFTING_TABLE_INTERACTION)
-                    .add(Statistic.CROUCH_ONE_CM, Statistics.CROUCH_DISTANCE)
+                    .add(Statistic.CROUCH_ONE_CM, Statistics.CROUCH_ONE_CM)
                     .add(Statistic.DAMAGE_DEALT, Statistics.DAMAGE_DEALT)
                     .add(Statistic.DAMAGE_TAKEN, Statistics.DAMAGE_TAKEN)
                     .add(Statistic.DEATHS, Statistics.DEATHS)
                     .add(Statistic.DISPENSER_INSPECTED, Statistics.DISPENSER_INSPECTED)
-                    .add(Statistic.DIVE_ONE_CM, Statistics.DIVE_DISTANCE)
-                    .add(Statistic.DROP, Statistics.ITEMS_DROPPED)
+                    .add(Statistic.DIVE_ONE_CM, Statistics.DIVE_ONE_CM)
+                    .add(Statistic.DROP, Statistics.DROP)
                     .add(Statistic.DROPPER_INSPECTED, Statistics.DROPPER_INSPECTED)
                     .add(Statistic.ENDERCHEST_OPENED, Statistics.ENDERCHEST_OPENED)
-                    .add(Statistic.FALL_ONE_CM, Statistics.FALL_DISTANCE)
+                    .add(Statistic.FALL_ONE_CM, Statistics.FALL_ONE_CM)
                     .add(Statistic.FISH_CAUGHT, Statistics.FISH_CAUGHT)
                     .add(Statistic.FLOWER_POTTED, Statistics.FLOWER_POTTED)
-                    .add(Statistic.FLY_ONE_CM, Statistics.FLY_DISTANCE)
+                    //.add(Statistic.FLY_ONE_CM, Statistics.FLY_ONE_CM) //TODO why was this removed?
                     .add(Statistic.FURNACE_INTERACTION, Statistics.FURNACE_INTERACTION)
                     .add(Statistic.HOPPER_INSPECTED, Statistics.HOPPER_INSPECTED)
-                    .add(Statistic.HORSE_ONE_CM, Statistics.HORSE_DISTANCE)
-                    .add(Statistic.ITEM_ENCHANTED, Statistics.ITEMS_ENCHANTED)
+                    .add(Statistic.HORSE_ONE_CM, Statistics.HORSE_ONE_CM)
+                    .add(Statistic.ITEM_ENCHANTED, Statistics.ITEM_ENCHANTED)
                     .add(Statistic.JUMP, Statistics.JUMP)
-                    .add(Statistic.JUNK_FISHED, Statistics.JUNK_FISHED)
+                    //.add(Statistic.JUNK_FISHED, Statistics.JUNK_FISHED)
                     .add(Statistic.LEAVE_GAME, Statistics.LEAVE_GAME)
-                    .add(Statistic.MINECART_ONE_CM, Statistics.MINECART_DISTANCE)
+                    .add(Statistic.MINECART_ONE_CM, Statistics.MINECART_ONE_CM)
                     .add(Statistic.MOB_KILLS, Statistics.MOB_KILLS)
                     .add(Statistic.NOTEBLOCK_PLAYED, Statistics.NOTEBLOCK_PLAYED)
                     .add(Statistic.NOTEBLOCK_TUNED, Statistics.NOTEBLOCK_TUNED)
-                    .add(Statistic.PIG_ONE_CM, Statistics.PIG_DISTANCE)
+                    .add(Statistic.PIG_ONE_CM, Statistics.PIG_ONE_CM)
                     .add(Statistic.PLAYER_KILLS, Statistics.PLAYER_KILLS)
                     .add(Statistic.PLAY_ONE_TICK, Statistics.TIME_PLAYED)
                     .add(Statistic.RECORD_PLAYED, Statistics.RECORD_PLAYED)
-                    .add(Statistic.SPRINT_ONE_CM, Statistics.SPRINT_DISTANCE)
-                    .add(Statistic.SWIM_ONE_CM, Statistics.SWIM_DISTANCE)
+                    .add(Statistic.SPRINT_ONE_CM, Statistics.SPRINT_ONE_CM)
+                    .add(Statistic.SWIM_ONE_CM, Statistics.SWIM_ONE_CM)
                     .add(Statistic.TALKED_TO_VILLAGER, Statistics.TALKED_TO_VILLAGER)
                     .add(Statistic.TIME_SINCE_DEATH, Statistics.TIME_SINCE_DEATH)
                     .add(Statistic.TRADED_WITH_VILLAGER, Statistics.TRADED_WITH_VILLAGER)
                     .add(Statistic.TRAPPED_CHEST_TRIGGERED, Statistics.TRAPPED_CHEST_TRIGGERED)
-                    .add(Statistic.TREASURE_FISHED, Statistics.TREASURE_FISHED)
-                    .add(Statistic.WALK_ONE_CM, Statistics.WALK_DISTANCE)
+                    //.add(Statistic.TREASURE_FISHED, Statistics.TREASURE_FISHED)
+                    .add(Statistic.WALK_ONE_CM, Statistics.WALK_ONE_CM)
                     .build();
 
-    public static final Converter<Statistic, org.spongepowered.api.statistic.StatisticGroup> GROUP_CONVERTER =
-            TypeConverter.builder(Statistic.class, org.spongepowered.api.statistic.StatisticGroup.class)
-                    .add(Statistic.BREAK_ITEM, StatisticGroups.BREAK_ITEM)
-                    .add(Statistic.CRAFT_ITEM, StatisticGroups.CRAFT_ITEM)
-                    .add(Statistic.ENTITY_KILLED_BY, StatisticGroups.KILLED_BY_ENTITY)
-                    .add(Statistic.KILL_ENTITY, StatisticGroups.HAS_KILLED_ENTITY)
-                    .add(Statistic.MINE_BLOCK, StatisticGroups.MINE_BLOCK)
-                    .add(Statistic.USE_ITEM, StatisticGroups.USE_ITEM)
+    public static final Converter<Statistic, org.spongepowered.api.statistic.StatisticType> TYPE_CONVERTER =
+            TypeConverter.builder(Statistic.class, org.spongepowered.api.statistic.StatisticType.class)
+            		.add(Statistic.DROP, StatisticTypes.ITEMS_DROPPED)
+            		.add(Statistic.PICKUP, StatisticTypes.ITEMS_PICKED_UP)
+            		.add(Statistic.ENTITY_KILLED_BY, StatisticTypes.KILLED_BY_ENTITY)
+                    .add(Statistic.BREAK_ITEM, StatisticTypes.ITEMS_BROKEN)
+                    .add(Statistic.CRAFT_ITEM, StatisticTypes.ITEMS_CRAFTED)
+                    .add(Statistic.ENTITY_KILLED_BY, StatisticTypes.KILLED_BY_ENTITY)
+                    .add(Statistic.KILL_ENTITY, StatisticTypes.ENTITIES_KILLED)
+                    .add(Statistic.MINE_BLOCK, StatisticTypes.BLOCKS_BROKEN)
+                    .add(Statistic.USE_ITEM, StatisticTypes.ITEMS_USED)
                     .build();
 
-    public static org.spongepowered.api.statistic.Statistic asStdStat(Statistic statistic) {
+
+    public static org.spongepowered.api.statistic.Statistic of(Statistic statistic) {
         return STD_CONVERTER.convert(statistic);
     }
 
-    public static org.spongepowered.api.statistic.StatisticGroup asGroupStat(Statistic statistic) {
-        return GROUP_CONVERTER.convert(statistic);
+    public static org.spongepowered.api.statistic.StatisticType asTypeStat(Statistic statistic) {
+        return TYPE_CONVERTER.convert(statistic);
     }
 
     public static Statistic of(org.spongepowered.api.statistic.Statistic statistic) {
         return STD_CONVERTER.reverse().convert(statistic);
     }
 
-    public static Statistic of(org.spongepowered.api.statistic.StatisticGroup statistic) {
-        return GROUP_CONVERTER.reverse().convert(statistic);
+    public static Statistic of(org.spongepowered.api.statistic.StatisticType statistic) {
+        return TYPE_CONVERTER.reverse().convert(statistic);
     }
 }
